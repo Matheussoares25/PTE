@@ -131,48 +131,6 @@
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    <script src="js/functions.js"></script>
+    
 
-        document.getElementById("loginForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-
-
-            const nome = $('#Email').val();
-            const senha = $('#senha').val();
-
-
-
-            const formData = new FormData();
-            formData.append("email", nome),
-            formData.append("senha", senha)
-
-
-            $.ajax({
-                type: 'POST',
-                url: 'verificalogin.php',
-                data: formData,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-
-                        $('#Resposta').html('<p>Login bem-sucedido</p>');
-                        window.location.href = "logado.html";
-                        return;
-
-                    } else {
-                        $('#Resposta').html('<p>Usuário ou senha incorretos</p>');
-                        return;
-                    }
-                },
-                error: function () {
-                    $('#Resposta').html('<p>Ocorreu um erro na requisição.</p>');
-                }
-            });
-        });
-    </script>
-
-</body>
-
-</html>
