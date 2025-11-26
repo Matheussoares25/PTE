@@ -47,17 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senhaHash = MD5($senha);
 
 
-
-
-
-
     //essa query Insere um novo cadastro no banco
     $sql = "INSERT INTO usuarios (Email,senha,ativos,Foto) VALUES ('$email','$senhaHash',1,'$conteudo')";
 
     $bd = mysqli_query($conexao, $sql);
-
-
-
 
 
     if ($bd) {
