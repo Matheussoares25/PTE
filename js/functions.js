@@ -24,7 +24,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
             if (response.success) {
 
                 $('#Resposta').html('<p>Login bem-sucedido</p>');
-                window.location.href = "logado.html";
+                window.location.href = "noticias.html";
                 return;
 
             } else {
