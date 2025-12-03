@@ -20,10 +20,7 @@ if (!token) {
             }
         });
 }
-function oflog(){
-    localStorage.clear();
-    window.location.href = "index.html";
-}
+
 
 buscarTreinamentos();
 treinamentosConcluidos();

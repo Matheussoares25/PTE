@@ -227,4 +227,39 @@ if (document.getElementById("cadastro") != null) {
 
 
 
+async function oflog() {
+const idUser = localStorage.getItem("idUser");
+    Swal.fire({
+        icon: 'question',
+        title: 'Deseja realmente sair?',
+        showCancelButton: true,
+        confirmButtonColor: '#d32323ff',
+        cancelButtonColor: "#07d429ff",
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Nao',
+    }).then(async(result) => {
+        if(result.isConfirmed){
+            const formData = new FormData();
+            formData.append("idUser", idUser);
+            try {
+                const response = await fetch('control/logout.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if(data.success){
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("idUser");
+                    window.location.href = "index.html";
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }else{
+           
+        }
+        
+    })
+  
+}
 

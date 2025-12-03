@@ -21,10 +21,7 @@ if (!token) {
     });
 }
 
-function oflog(){
-    localStorage.clear();
-    window.location.href = "index.html";
-}
+
 Noticias();
 
 async function Noticias(){
@@ -47,9 +44,6 @@ async function Noticias(){
             `).join("");
 
         document.getElementById("ListaNoticias").innerHTML = html;
-
-
-
 
 
     }catch(error){
