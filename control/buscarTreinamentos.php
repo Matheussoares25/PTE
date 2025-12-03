@@ -5,10 +5,13 @@ error_reporting(E_ALL);
 
 header("Content-Type: application/json");
 
+
 include "conn.php";
+include("auth.php"); 
+
 try {
     $idUser = $_POST['id'] ?? '';
-    
+
     $conexao = new Conexao();
     $pdo = $conexao->conn;
 

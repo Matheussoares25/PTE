@@ -1,38 +1,40 @@
-const token = localStorage.getItem('token');
 
-if (!token) {
-    alert("Você precisa realizar login primeiro");
-    window.location.href = "index.html";
-} else {
-    const formData = new FormData();
-    formData.append('token', token);
-
-    fetch('control/verificatoken.php', {
-        method: 'POST',
-        body: formData
-    })
-        .then(res => res.json())
-        .then(data => {
-            if (!data.valido) {
-                localStorage.removeItem('token');
-                alert("login expirado, faça login novamente");
-                window.location.href = "index.html";
-            }
-        });
-}
 
 
 buscarTreinamentos();
 treinamentosConcluidos();
 async function buscarTreinamentos() {
     try {
-        
-        const res = await fetch("control/buscarTreinamentos.php",{
+
+        const idUser = localStorage.getItem("idUser");
+
+        const data = new FormData();
+        data.append("id", idUser);
+
+
+        const res = await fetch("control/buscarTreinamentos.php", {
             method: "POST",
-            data: {id: localStorage.getItem("idUser"),}
+            body: data,
+            credentials: "include",
+
         });
-    
+
         const resposta = await res.json();
+
+        if (resposta.erro) {
+            Swal.fire({
+                icon: "error",
+                title: "Acesso negado",
+                text: dados.erro
+            });
+
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1500);
+
+            return;
+        }
 
         const html = resposta.map(t => `
                     <div class="mb-3">
@@ -58,12 +60,35 @@ async function buscarTreinamentos() {
 
 async function treinamentosConcluidos() {
     try {
-        const res = await fetch("control/treinamentosConcluidos.php",{
+
+        const idUser = localStorage.getItem("idUser");
+
+        const data = new FormData();
+        data.append("id", idUser);
+
+
+        const res = await fetch("control/treinamentosConcluidos.php", {
             method: "POST",
             dataType: "json",
-            data: {id: localStorage.getItem("idUser"),}
+            body: data,
+            credentials: "include"
         });
         const dados = await res.json();
+
+        if (dados.erro) {
+            Swal.fire({
+                icon: "error",
+                title: "Acesso negado",
+                text: dados.erro
+            });
+
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1500);
+
+            return;
+        }
 
         document.getElementById("Concluidos").innerHTML = dados.map(item => `
             <tr>

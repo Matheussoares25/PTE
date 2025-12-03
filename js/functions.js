@@ -14,7 +14,8 @@ if (document.getElementById("login") != null) {
         try {
             const response = await fetch('control/verificalogin.php', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: "include"
             });
 
             const data = await response.json();
@@ -23,6 +24,7 @@ if (document.getElementById("login") != null) {
                 $('#Resposta').html('<p>Login bem-sucedido</p>');
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("idUser", data.id);
+                localStorage.setItem("tipoUsuario", data.tipo);
 
                 const Toast = Swal.mixin({
                     toast: true,
@@ -163,7 +165,8 @@ if (document.getElementById("cadastro") != null) {
                 try {
                     const response = await fetch('control/cadastro.php', {
                         method: 'POST',
-                        body: formData
+                        body: formData,
+                        credentials: "include"
                     });
 
                     const data = await response.json();
@@ -228,38 +231,28 @@ if (document.getElementById("cadastro") != null) {
 
 
 async function oflog() {
-const idUser = localStorage.getItem("idUser");
     Swal.fire({
-        icon: 'question',
+        icon: 'warning',
         title: 'Deseja realmente sair?',
+        showConfirmButton: true,
         showCancelButton: true,
-        confirmButtonColor: '#d32323ff',
-        cancelButtonColor: "#07d429ff",
         confirmButtonText: 'Sim',
         cancelButtonText: 'Nao',
-    }).then(async(result) => {
-        if(result.isConfirmed){
-            const formData = new FormData();
-            formData.append("idUser", idUser);
-            try {
-                const response = await fetch('control/logout.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                if(data.success){
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("idUser");
-                    window.location.href = "index.html";
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }else{
-           
+        backdrop: true,
+        scrollbarPadding: false
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            await fetch("control/logout.php", {
+                method: "POST",
+                credentials: "include"
+            });
+            localStorage.removeItem("token");
+            localStorage.removeItem("idUser");
+            localStorage.removeItem("tipoUsuario");
+            window.location.href = "index.html";
         }
-        
     })
+
   
 }
 

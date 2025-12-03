@@ -1,10 +1,10 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 include("conn.php");
-
+include("auth.php"); 
 try{
     $idUser = $_POST['id'] ?? '';
-    
+
     $conexao = new Conexao();
     $pdo = $conexao->conn;
 

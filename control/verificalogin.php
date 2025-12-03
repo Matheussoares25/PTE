@@ -4,20 +4,16 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
+session_start(); 
+session_regenerate_id(true);
 
 include("conn.php");
 
-
 header('Content-Type: application/json; charset=utf-8');
-
-
 
 $response = ['success' => false];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    header('Content-Type: application/json; charset=UTF-8');
 
     try {
 
@@ -27,7 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['email'] ?? '';
         $senha = $_POST['senha'] ?? '';
 
-        $stmt = $pdo->prepare("SELECT  id, senha FROM usuarios WHERE email = :email ");
+       
+        $stmt = $pdo->prepare("SELECT id, senha, tipo 
+            FROM usuarios 
+            WHERE email = :email
+        ");
         $stmt->bindParam(':email', $email);
         $stmt->execute();   
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -45,19 +45,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-          
+        // 🔥 INICIA A SESSION DO USUÁRIO
+        $_SESSION['id'] = $res['id'];
+        $_SESSION['tipo'] = $res['tipo']; // comum / admin
+
+        // Continua usando o token se quiser
         $token = bin2hex(random_bytes(32)); 
 
-        
-        $stmtUpdate = $pdo->prepare("UPDATE usuarios SET token = :token WHERE id = :id");
+        $stmtUpdate = $pdo->prepare("
+            UPDATE usuarios SET token = :token WHERE id = :id
+        ");
         $stmtUpdate->bindParam(':token', $token);
         $stmtUpdate->bindParam(':id', $res['id']);
         $stmtUpdate->execute();
 
-          echo json_encode([
+        echo json_encode([
             'success' => true,
             'token' => $token,
-            'id' => $res['id']
+            'id'    => $res['id'],
+            'tipo'  => $res['tipo'] // 🔥 retorna ao front
         ]);
         exit;
 
@@ -71,7 +77,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-
-
 
 ?>

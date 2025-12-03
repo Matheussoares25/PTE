@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 header('Content-Type: application/json; charset=utf-8');
 
 include("conn.php");
+include("auth.php"); 
 
 try {
     $conexao = new Conexao();
