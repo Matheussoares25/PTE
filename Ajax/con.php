@@ -4,7 +4,7 @@ class Conexao{
     private $host = "localhost";
     private $usuario = "nauta";
     private $senha = "123";
-    Private $banco = "escola";
+    Private $banco = "NautaFilas";
     public $conn;
 
     public function __construct(){

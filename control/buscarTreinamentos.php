@@ -7,6 +7,8 @@ header("Content-Type: application/json");
 
 include "conn.php";
 try {
+    $idUser = $_POST['id'] ?? '';
+    
     $conexao = new Conexao();
     $pdo = $conexao->conn;
 

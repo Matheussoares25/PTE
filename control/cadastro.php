@@ -4,64 +4,69 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 include("conn.php");
 
-header(header: 'Content-Type: application/json; charset=utf-8');
-
-
+header('Content-Type: application/json; charset=utf-8');
 
 $response = ['success' => false];
 
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    try {
 
-    $email = $_POST['email'] ?? '';
-    $senha = $_POST['senha'] ?? '';
+        $conexao = new Conexao();
+        $pdo = $conexao->conn;
 
-    $foto = $_FILES['foto'] ?? null;
+        $email = $_POST['email'] ?? '';
+        $senha = $_POST['senha'] ?? '';
+        $foto  = $_FILES['foto'] ?? null;
 
+       
+        if (empty($email) || empty($senha)) {
+            echo json_encode(["success" => false, "mensagem" => "Email e senha obrigatórios"]);
+            exit;
+        }
 
-    if (!isset($_FILES['foto'])) {
-        echo json_encode(["sucesso" => false, "mensagem" => true]);
-        exit;
+        if (!$foto || $foto['error'] !== UPLOAD_ERR_OK) {
+            echo json_encode(["success" => false, "mensagem" => "Foto é obrigatória"]);
+            exit;
+        }
+
+        // verifico se o email ja ta cadastrado
+        $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = :email LIMIT 1");
+        $stmt->bindValue(':email', $email);
+        $stmt->execute();
+
+        if ($stmt->fetch()) {
+            echo json_encode(["Existe" => true]);
+            exit;
+        }
+
         
+        $conteudo = file_get_contents($foto['tmp_name']);
+
+        $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+       
+        $queryInsert = $pdo->prepare("INSERT INTO usuarios (Email, senha, ativos, Foto) VALUES (:email, :senha, 1, :foto)");
+        $queryInsert->bindValue(':email', $email);
+        $queryInsert->bindValue(':senha', $senhaHash);
+        $queryInsert->bindValue(':foto', $conteudo, PDO::PARAM_LOB);
+
+        if ($queryInsert->execute()) {
+            $response = ['success' => true];
+        } else {
+            $erro = $queryInsert->errorInfo();
+            $response = ['success' => false, 'erro' => $erro[2]];
+        }
+
+    } catch (PDOException $e) {
+        $response = [
+            'success' => false,
+            'erro' => $e->getMessage()
+        ];
     }
-
-    $conteudo = file_get_contents($_FILES['foto']['tmp_name']);
-    $conteudo = mysqli_real_escape_string($conexao, $conteudo);
-
-
-    //essa query verifica se ja existe alguem com esse email
-    $verificar = "SELECT * FROM usuarios WHERE email = '$email'";
-    $res = mysqli_query($conexao, $verificar);
-
-    if (mysqli_num_rows($res) > 0) {
-        echo json_encode(["success" => false, 'Existe' => true]);
-        exit;
-    }
-
-
-    $senhaHash = MD5($senha);
-
-
-    //essa query Insere um novo cadastro no banco
-    $sql = "INSERT INTO usuarios (Email,senha,ativos,Foto) VALUES ('$email','$senhaHash',1,'$conteudo')";
-
-    $bd = mysqli_query($conexao, $sql);
-
-
-    if ($bd) {
-        $response = ['success' => true];
-    }
-
-
 }
 
 echo json_encode($response);
-
-
-
 ?>
