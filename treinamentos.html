@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <title>Noticias Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+
+<body>
+    <style>
+        .navbar-nav .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+
+        .navbar-nav .nav-link:hover {
+            color: #dfeaff !important;
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+
+    <body>
+
+        <nav class="navbar navbar-expand-lg" style="background-color: #4682B4;">
+            <div class="container-fluid">
+
+
+                <a class="navbar-brand text-white" href="#">PTE</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link text-white" href="treinamentos.html">Treinamentos</a>
+                        <a class="nav-link text-white" href="">Desempenho</a>
+                        <a class="nav-link text-white" href="#">Ranking</a>
+                        <a class="nav-link text-white" href="noticias.html">Noticias</a>
+                        <a class="nav-link text-white" href="#">Certificados</a>
+                        <button type="button" onclick="oflog()" class="btn btn-primary">Sair</button>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="container mt-4">
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <h4 class="mb-4">Treinamentos Concluídos</h4>
+
+                    <div class="table-responsive">
+                        <table id="Tbconcluidos"
+                            class="table table-striped table-hover table-bordered align-middle shadow-sm">
+
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="Concluidos">
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h4 class="mb-4">Treinamentos Pendentes</h4>
+
+                    <div class=" rowd-flex align-items-center mb-3" id="listaTreinamentos"
+                        style="border: 2px solid black; padding: 15px;">
+                        <i class="bi bi-play-circle-fill text-secondary me-2" style="font-size: 1.7rem;"></i>
+                        <div class="flex-grow-1 border-bottom pb-2"></div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+    </body>
+
+</html>
+<script src="js/treinamentos.js"></script>

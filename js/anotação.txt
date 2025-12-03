@@ -1,0 +1,140 @@
+
+<!-- include ("conn.php");
+
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+$email = $_POST['email'] ?? '';
+$senha = $_POST['senha']?? '';
+
+ $sqlVerifica = "SELECT * FROM usuarios WHERE email = '$email'";
+    $resultado = mysqli_query($conexao, $sqlVerifica);
+
+    if (mysqli_num_rows($resultado) > 0) {
+        echo "Já existe um usuário cadastrado com esse e-mail.";
+        exit; 
+    }
+$senhaHash = MD5($senha);
+
+
+$sql="INSERT INTO usuarios (email,senha) VALUES ('$email','$senhaHash')";
+
+$bd = mysqli_query($conexao, $sql);
+
+if ($bd) {
+        echo "Cadastro realizado com sucesso!";
+
+        
+    } else {
+        echo "Erro ao inserir dados: " . mysqli_error($conexao);
+    }
+
+} --> 
+
+
+
+PEDIR SENHA DUAS VEZES NO Cadastro
+PEDIR SENHA DUAS VEZES PARA ALATERAR A SENHA 
+
+BOTAO DE EXCLUIR NA LISTA DE CADASTRADOS
+BOTAO DE ALTERAR NA LISTA DE CADASTRADOS
+
+FOTO DE USUARIO NA LISTA DE CADASTRADOS;
+
+VERIFICAÇÃO DE SENHA NO FORMULARIO DE ALTERAÇÃO DE DADOS DO USUARIO
+NA TELA DE LOGIN TAMBEM É VERIFICADO A SENHA DO USUARIO
+
+
+
+
+paginas de navegaçao (index(login),logados,restaurar,cadastro)
+
+utilizei (Ajax na de login e na de cadastro), as outras fiz usando metedo fetch
+
+toda verificação de senha utilizei MD5.
+não utilizei preparemnt em nenhum arquivo php
+cada função tem seu arquivo php,bem como cada pagina de navegação possui seu proprio javaScript dentro do proprio arquivo HTML
+
+
+
+HTML (BODY) Bootstrap
+
+
+
+
+ESTRUTURA DE REQUISIÇÃO AJAX (formData)
+
+$.ajax({
+            type: 'POST',
+            url: 'cadastro.php',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'Json',
+            success: function (response) {
+                if (response.success) {
+                    $('#Resposta').html('<p>Usuario cadastrado com sucesso</P>');
+                    return;
+
+                } else if (response.Existe) {
+                    alert("usuario ja cadastrado");
+                } else if (response.mensagem) {
+                    alert("nenhuma foto cadastrada");
+                } else {
+                    alert("Falha ao cadastrar usuario");
+                }
+
+            },
+            error: function () {
+                $('#Resposta').html('<p>Ocorreu um erro na requisição</P>');
+            }
+        });
+
+
+ESTRUTURA DE REQUISIÇÃO FETCH
+
+
+
+function restaurar(email) {
+                if (confirm(`deseja restaurar esse usuario (${email}) a lista de cadastrados?`)) {
+
+estrutura fetch  :>>  fetch("restaurar.php", {
+                        method: "POST",
+estrutura sem formData:> headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: email }),
+                    })
+
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("usuario recuperado com sucesso");
+                                location.reload();
+                                return;
+                            } else {
+                                alert("erro ao recuperar usuario");
+                                location.reload();
+                                return;
+                            }
+                        });
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

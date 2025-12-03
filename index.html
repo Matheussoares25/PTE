@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PTE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <style>
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            
+        }
+
+      
+        nav.navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .login-card {
+            width: 350px;
+            background: #fff;
+            padding: 35px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(70, 130, 180, 0.15);
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-inner {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #4682B4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .title-login {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .btn-primary {
+            width: 100%;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #4682B4 !important;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 3px;
+            color: #555;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid" style="background-color: #4682B4;">
+            <a class="navbar-brand" href="#" style="color: white;">PTE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+
+    <div class="login-card">
+
+    
+        <div class="logo-circle">
+            <div class="logo-inner">PTE</div>
+        </div>
+
+      
+        <h4 class="title-login">Login</h4>
+
+        <form class="col" id="login" method="POST">
+            <div class="mb-3">
+                <label for="Nome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="Email" placeholder="email de Usuário" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="senha" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="senha" placeholder="Senha de acesso" required>
+            </div>
+
+            <p id="Resposta"></p>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+

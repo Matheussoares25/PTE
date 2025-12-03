@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        #Tabela th {
+            background-color: #4682B4;
+            color: white;
+            text-align: left;
+            padding: 12px;
+            font-size: 1.1rem;
+            width: 1000px;
+        }
+
+        #Tabela td {
+            border: 1px solid #000000;
+            padding: 10px;
+            font-size: 1rem;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+        }
+
+        .btn btn-primary {
+            margin-right: 25%;
+
+        }
+
+        #formEditar {
+            margin: auto;
+            width: 50%;
+            margin-top: 5%;
+            margin-bottom: 10%;
+            border: 1px black solid;
+            border-radius: 5px;
+        }
+
+        .mb-3 {
+            padding-top: 15px;
+            pad: 5%;
+        }
+
+        .conteudo {
+            padding: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" style="margin-top: 0px;padding: 0px;">
+        <div class="container-fluid" style="background-color: #4682B4;">
+            <a class="navbar-brand" href="#" style="color: white;">NautaSoft/Cadastrados</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+        </div>
+    </nav>
+
+    <div class="alert alert-success" role="alert" style="margin-top: 0%;">
+        Login realizado com sucesso
+    </div>
+
+
+    <div class="container">
+        <div class="row" style="max-width: 100;">
+            <div class="col-6 col-md-4">
+                <div class="list-group" style="width: 400px;">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        The current link item
+                    </a>
+                    <a href="cadastrar.html" class="list-group-item list-group-item-action">Cadastrar Usuario</a>
+                    <a href="restaurar.html" class="list-group-item list-group-item-action">Restaurar Usuarios</a>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6" style="width: 50%;">
+                <table id="Tabela" style="border: 1px rgb(28, 30, 143) solid;">
+                    <tr>
+                        <th>Foto</th>
+                        <th style="border: 1px solid black;">Usuarios cadastrados</th>
+                        <th style="width: 10px; font-size: 18px;">ID </th>
+
+                    </tr>
+            </div>
+            </table>
+        </div>
+
+        <div class="container text-center">
+            <div class="col-sm">
+
+                <form id="formEditar">
+                    <div class="conteudo">
+                        <h3>Editar Usuário</h3>
+                        
+                        <input type="hidden" id="emailAntigo">
+                        <input type="email" class="form-control" id="atualEmail" readonly
+                            placeholder="Selecione um Usuario"
+                            style="background-color: #4682B4; color: rgb(255, 255, 255);">
+                        <div class="mb-3">
+                            <label for="novoEmail" class="form-label">Novo Email:</label>
+                            <input type="email" class="form-control" id="novoEmail" required>
+                        </div>
+                        <div class="mb-3 ">
+                            <label for="senha" class="form-label">senhaAntiga</label>
+                            <input type="password" class="form-control" id="senhaAntiga" nplaceholder="Digite sua senha"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="novaSenha" class="form-label">Nova Senha:</label>
+                            <input type="password" class="form-control" id="novaSenha">
+                        </div>
+                        <div class="mb-3">
+                            <input type="file" id="foto" name="foto" accept="image/*" placeholder="Foto">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+
+                        <div class="text-end">
+                            <a href="restaurar.html" class="btn btn-primary">Restaurar Usuarios</a>
+                            <p id="Resposta"></p>
+                        </div>
+
+                </form>
+                <p id="Resposta"></p>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        //trago os dados para mostrar na tabela
+        fetch("dados.php")
+            .then(res => res.json())
+            .then(data => {
+                const Tabela = document.getElementById("Tabela");
+                Tabela.innerHTML += data.map(p => `
+        <tr>
+            <td><img src="${p.Foto}" width="80" height="80" style="border-radius: 50%; border: 1px solid,"></td>
+            <td>${p.Email}
+                <div class="text-end" >
+             <div class="btn-group">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Opções
+                </button>
+                <ul class="dropdown-menu">
+                    <button class="dropdown-item" type="button"  aria-expanded="false" onclick="editarUsuario('${p.Email}')">Editar Usuario</button<
+                </ul>
+                 <ul class="dropdown-menu">
+                    <button class="dropdown-item" type="button"  aria-expanded="false" onclick="excluirUsuario('${p.Email}')">Excluir Usuario</button<
+                </ul>
+                </div>
+                <div class="btn-group">
+                </div>
+                </div>
+              <td>${p.id_user}</td>
+           
+            </td>
+
+        </tr>`).join('');
+            });
+
+        //criei a função editar usuario (onde guardo os valores dos campos digitados);
+
+        function editarUsuario(Email) {
+            $('#atualEmail').val(Email);
+            $('#emailAntigo').val(Email);
+            $('#novaSenha').val("");  
+            $('#foto').val("");
+            $('#fotoedit').val(Email);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        $('#formEditar').on('submit', function (event) {
+            event.preventDefault();
+
+            const emailAntigo = $('#emailAntigo').val();
+            const novoEmail = $('#novoEmail').val();
+            const novaSenha = $('#novaSenha').val();
+            const senhaAntiga = $('#senhaAntiga').val();
+            const upFoto = $("#foto")[0].files[0];
+            window.scrollTo(0, document.body.scrollHeight);
+
+
+            
+// Usei o FormData para enviar os dados juntos atraves do fetch
+            const formData = new FormData();
+            formData.append("emailAntigo", emailAntigo);
+            formData.append("novoEmail", novoEmail);
+            formData.append("novaSenha", novaSenha);
+            formData.append("senhaAntiga", senhaAntiga);
+            formData.append("foto", upFoto)
+
+            // fiz uma requisao ao PHP
+            fetch("alterar.php", {
+                method: "POST",
+                body: formData
+            })
+
+
+                //uso o .then para receber o resultado bruto e manipular ele.
+                
+                .then(res => res.json())
+                .then(data => {
+                    if (data.sucesso) {
+                        alert("Usuario atualizado com sucesso");
+                        location.reload();
+                        return;
+                    } else if (data.sErrada) {
+                        alert("Senha errada");
+                        
+                        return;
+                    } else {
+                        if (confirm("Usuario cadastrado ou inativo,Deseja resataurar usuario?")) {
+
+                            window.location.href = "restaurar.html";
+                        }
+
+                    }
+
+
+                });
+                
+
+
+
+
+
+
+        });
+
+        function excluirUsuario(email) {
+
+
+            if (confirm(`Deseja realmente excluir o usuário ${email}?`)) {
+
+
+
+                if (confirm(`Voce esta excluindo o usuario ${email}`)) {
+                    fetch("excluir.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: email }),
+                    })
+
+
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.sucesso) {
+                                alert("usuario excluido com sucesso");
+                                location.reload();
+                                return;
+
+                            } else {
+                                alert("erro servidor");
+                                return;
+                            }
+                            location.reload();
+                        })
+                        .catch(() => {
+                            alert("erro ao comunicar com servidor");
+                        });
+                }
+
+            }
+        }
+
+
+
+
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

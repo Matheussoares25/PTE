@@ -1,0 +1,27 @@
+
+CREATE DATABASE IF NOT EXISTS Cadastrados
+DEFAULT CHARACTER SET utf8mb4
+COLLATE utf8mb4_0900_ai_ci;
+
+USE Cadastrados;
+
+
+CREATE TABLE IF NOT EXISTS usuarios (
+  Email VARCHAR(250) NOT NULL,
+  senha VARCHAR(260) NOT NULL,
+  id_user INT NOT NULL AUTO_INCREMENT,
+  ativos INT DEFAULT NULL,
+  Foto MEDIUMBLOB,
+  PRIMARY KEY (id_user)
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE IF NOT EXISTS treinamentos (
+  id_treinamentos INT NOT NULL AUTO_INCREMENT,
+  Nome VARCHAR(250) NOT NULL,
+  status_treinamento INT NOT NULL,
+  Data DATE NOT NULL,
+  PRIMARY KEY (id_treinamentos)
+)

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="loginform">
+        <label for="nome">Insira seu nome</label>
+        <input type="text" id="nome" name="nome" required>
+        <label for="senha"> insira sua senha</label>
+        <input type="email" id="email" name="email" required>
+        <input type="hidden" name="acao" id="acao" value="cadastrar">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <table id="listar" name="listar">
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+        </tr>
+
+    </table>
+</body>
+
+</html>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    listarUsuarios();
+
+    document.getElementById("loginform").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var acao = document.getElementById("acao").value;
+        var nome = document.getElementById("nome").value;
+        var email = document.getElementById("email").value;
+
+        if (acao === "cadastrar") {
+            $.ajax({
+                url: 'processa_login.php',
+                type: 'POST',
+                data: { nome: nome, email: email },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        alert('Login bem-sucedido!');
+                    } else {
+                        alert('Falha no login: ' + response.message);
+                    }
+                },
+
+
+            });
+        }
+
+
+        if (acao === "alterar") {
+
+            $.ajax({
+                url: 'alterar.php',
+                type: 'POST',
+                data: { email: email, nome: nome },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        alert('Usuário alterado com sucesso!');
+                    } else {
+                        alert('Falha ao alterar usuário: ' + response.message);
+                    }
+                },
+                error: function (err) {
+                    console.log('Erro ao alterar usuário:', err);
+                }
+            });
+
+            $("#acao").val("cadastrar");
+
+
+        }
+
+    });
+
+    function alterar(email, nome) {
+        $("#acao").val("alterar");
+        $("#email").val(email);
+        $("#nome").val(nome);
+    }
+
+    function listarUsuarios() {
+
+
+        fetch('lista.php')
+            .then(res => res.json())
+            .then(data => {
+                const tabela = document.getElementById("listar");
+                tabela.innerHTML += data.res.map(p => `<tr>
+                    <td>${p.nome}</td>
+                    <td>${p.email}</td>
+                    <td><button type="button" class="btn btn-primary btn-sm" onclick="alterar('${p.email}', '${p.nome}')">
+                            alterar usuário
+                        </button></td>
+                </tr>`).join('');
+            });
+
+
+
+        // $.ajax({
+        //     url: 'lista.php',
+        //     type: 'GET',
+        //     dataType: 'json',
+        //     success: function (res) {
+
+        //         if (!res.success) {
+        //             alert("Nenhum aluno encontrado");
+        //             return;
+        //         }
+
+        //         let tabela = document.getElementById("listar");
+
+        //         tabela.innerHTML = `
+        //     <tr>
+        //         <th>Nome</th>
+        //         <th>Email</th>
+        //     </tr>
+        // `;
+
+        //         res.res.forEach(function (usuario) {
+        //             $("#listar").append(`
+        //         <tr>
+        //             <td>${usuario.nome}</td>
+        //             <td>${usuario.email}</td>
+        //             <td><button type="button" class="btn btn-primary btn-sm" onclick="alterar('${usuario.email}', '${usuario.nome}')">
+        //                     alterar usuário
+        //                 </button></td>
+        //         </tr>
+        //     `);
+        //         });
+        //     },
+        //     error: function (err) {
+        //         console.log('Erro ao listar usuarios:', err);
+        //     }
+        // })
+    }
+
+
+
+</script>
