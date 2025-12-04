@@ -7,7 +7,7 @@ header("Content-Type: application/json");
 
 
 include "conn.php";
-include("auth.php"); 
+include("auth.php");
 
 try {
     $idUser = $_POST['id'] ?? '';
@@ -15,7 +15,10 @@ try {
     $conexao = new Conexao();
     $pdo = $conexao->conn;
 
-    $sql = $pdo->prepare("SELECT id, nome FROM treinamentos WHERE status = 1");
+    $sql = $pdo->prepare("SELECT a.id_usuario,a.id_curso,a.status_curso,c.nome  FROM use_treinamentos AS a 
+INNER JOIN usuarios AS b ON a.id_usuario = b.id 
+LEFT JOIN treinamentos AS c ON a.id_curso = c.id WHERE a.id_usuario = :idUser");
+    $sql->bindParam("idUser", $idUser);
     $sql->execute();
 
     $treinamentos = $sql->fetchAll(PDO::FETCH_ASSOC);

@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // verifico se o email ja ta cadastrado
         $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = :email LIMIT 1");
         $stmt->bindValue(':email', $email);
         $stmt->execute();
@@ -41,14 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["Existe" => true]);
             exit;
         }
-
+        
         
         $conteudo = file_get_contents($foto['tmp_name']);
 
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
        
-        $queryInsert = $pdo->prepare("INSERT INTO usuarios (Email, senha, ativos, Foto) VALUES (:email, :senha, 1, :foto)");
+        $queryInsert = $pdo->prepare("INSERT INTO usuarios (Email, senha, ativos, Foto, tipo) VALUES (:email, :senha, 1, :foto, 2)");
         $queryInsert->bindValue(':email', $email);
         $queryInsert->bindValue(':senha', $senhaHash);
         $queryInsert->bindValue(':foto', $conteudo, PDO::PARAM_LOB);

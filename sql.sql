@@ -1,55 +1,50 @@
 
-CREATE DATABASE IF NOT EXISTS PTE
-DEFAULT CHARACTER SET utf8mb4
+
+CREATE DATABASE IF NOT EXISTS `pte` 
+CHARACTER SET utf8mb4 
 COLLATE utf8mb4_0900_ai_ci;
 
-USE PTE;
+USE `pte`;
 
 
 CREATE TABLE IF NOT EXISTS `noticias` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `titulo` VARCHAR(80) NOT NULL,
-    `conteudo` VARCHAR(255) NOT NULL,
-    `data_noticia` DATETIME DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB 
-  AUTO_INCREMENT=3 
-  DEFAULT CHARSET=utf8mb4 
-  COLLATE=utf8mb4_0900_ai_ci;
-
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `titulo` VARCHAR(80) NOT NULL,
+  `conteudo` VARCHAR(255) NOT NULL,
+  `data_noticia` DATETIME DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE IF NOT EXISTS `treinamentos` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(50) DEFAULT NULL,
-    `status` TINYINT(1) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB 
-  AUTO_INCREMENT=4 
-  DEFAULT CHARSET=utf8mb4 
-  COLLATE=utf8mb4_0900_ai_ci;
-
-  INSERT INTO `treinamentos` (`id`, `nome`, `status`) VALUES
-	(1, 'teste', 2),
-	(2, 'Treinamento nota fiscal', 1),
-	(3, 'Treinamento recebimento', 1);
-
-
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(50) DEFAULT NULL,
+  `status` TINYINT(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE IF NOT EXISTS `usuarios` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `Email` VARCHAR(250) NOT NULL,
-    `senha` VARCHAR(260) NOT NULL,
-    `ativos` INT DEFAULT NULL,
-    `Foto` MEDIUMBLOB,
-    `token` VARCHAR(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB 
-  AUTO_INCREMENT=213 
-  DEFAULT CHARSET=utf8mb4 
-  COLLATE=utf8mb4_0900_ai_ci;
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(250) NOT NULL,
+  `senha` VARCHAR(260) NOT NULL,
+  `ativos` INT DEFAULT NULL,
+  `Foto` MEDIUMBLOB,
+  `token` VARCHAR(255) DEFAULT NULL,
+  `tipo` VARCHAR(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-
-
+CREATE TABLE IF NOT EXISTS `use_treinamentos` (
+  `id_treinamento` INT NOT NULL AUTO_INCREMENT,
+  `id_usuario` INT NOT NULL,
+  `id_curso` INT NOT NULL,
+  `status_curso` VARCHAR(1) DEFAULT NULL,
+  `data_curso` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_treinamento`),
+  KEY `id_usuario` (`id_usuario`),
+  KEY `id_curso` (`id_curso`),
+  CONSTRAINT `use_treinamentos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `use_treinamentos_ibfk_2` FOREIGN KEY (`id_curso`) REFERENCES `treinamentos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

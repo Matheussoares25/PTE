@@ -5,6 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start(); 
+
 session_regenerate_id(true);
 
 include("conn.php");
@@ -47,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 🔥 INICIA A SESSION DO USUÁRIO
         $_SESSION['id'] = $res['id'];
-        $_SESSION['tipo'] = $res['tipo']; // comum / admin
+        $_SESSION['tipo'] =  (int)$res['tipo']; // comum / admin
 
         // Continua usando o token se quiser
         $token = bin2hex(random_bytes(32)); 
