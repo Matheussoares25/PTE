@@ -147,7 +147,7 @@ async function treinamentosADM() {
                             <strong>${t.nome}</strong>
                         </div>
                         <span>
-    <button class="btn btn-primary" onclick="editTreinamento()">INFO</button>
+    <button class="btn btn-primary" onclick="editTreinamento('${t.id}')">INFO</button>
 </span>
                     </div>`).join("");
 
@@ -162,20 +162,31 @@ async function treinamentosADM() {
 }
 
 
-async function editTreinamento() {
+async function editTreinamento(id) {
+
+    const formdata = new FormData();
+    formdata.append("id", id);
+
+    const res = await fetch("control/buscaT.php", {
+        method: "POST",
+        credentials: "include",
+        body: formdata
+    });
+
+    const dados = await res.json();
     
+
     Swal.fire({
-        title: "Informações do Curso",
-        width: "80%",
-        html: `
-            <div class="text-start">
-
-                <p><strong>ID:</strong> </p>
-                <p><strong>Nome:</strong> </p>
-                <p><strong>Data de Criação:</strong> </p>
-
-            </div>
-        `,
+    title: "Informações do Curso",
+    width: "80%",
+    html: `
+        <div class="text-start">
+            <p><strong>ID: </strong> ${dados[0].id}</p>
+            <p><strong>Nome: </strong> ${dados[0].nome}</p>
+            <p><strong>Status: </strong> ${dados[0].status}</p>
+            <p><strong>Criado em: </strong> ${dados[0].criado}</p>
+        </div>
+    `,
 
         showConfirmButton: true,
         showDenyButton: true,
@@ -189,6 +200,12 @@ async function editTreinamento() {
         }
 
         if (result.isDenied) {
+
+            const formdata = new FormData();
+            formdata.append("id", id);
+
+            
+
             Swal.fire({
     title: "Cadastrados no Curso",
     width: "80%",
