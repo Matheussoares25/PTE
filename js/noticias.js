@@ -15,24 +15,28 @@ async function Noticias() {
         const dados = await res.json();
 
         const html = dados.map(n => `
-        <div class="card mb-4">
-            <div class="card-body">
+<div class="card card-modern mb-4">
+    <div class="card-body">
 
-                <h5 class="card-title">${n.titulo}</h5>
-                <p class="card-text">${n.conteudo}</p>
-                <p class="card-text"><small class="text-muted">${n.data_noticia}</small></p>
+        <h5 class="card-title">${n.titulo}</h5>
+        <p class="card-text">${n.conteudo}</p>
+        <p class="card-text">
+            <small class="text-muted">${n.data_noticia}</small>
+        </p>
 
-                <button class="btneditar btn btn-success" onclick="editarNoticia(${n.id})">
-                    Editar Notícia
-                </button>
+        <div class="btn-group-modern">
+            <button class="btn btn-card btn-edit btneditar" onclick="editarNoticia(${n.id})">
+                <i class="bi bi-pencil-square me-1"></i> Editar
+            </button>
 
-                <button class="btneditar btn btn-danger" onclick="exNoticia(${n.id})">
-                    Excluir Noticia
-                </button>
-
-            </div>
+            <button class="btn btn-card btn-del btneditar" onclick="exNoticia(${n.id})">
+                <i class="bi bi-trash me-1"></i> Excluir
+            </button>
         </div>
-    `).join("");
+
+    </div>
+</div>
+`).join("");
 
         document.getElementById("ListaNoticias").innerHTML = html;
 
@@ -59,9 +63,11 @@ async function Noticias() {
 const cargo = localStorage.getItem("tipoUsuario");
 
 if (cargo != 2) {
-    document.getElementById("btnadm").style.display = "none";
-
+    document.querySelectorAll(".btnadm").forEach(el => {
+        el.style.display = "none";
+    });
 }
+
 
 async function addNoticia() {
     Swal.fire({

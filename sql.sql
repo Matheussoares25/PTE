@@ -1,53 +1,69 @@
 
 
-CREATE DATABASE IF NOT EXISTS `pte` 
-CHARACTER SET utf8mb4 
-COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `pte`
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_0900_ai_ci;
 
 USE `pte`;
 
-
 CREATE TABLE IF NOT EXISTS `noticias` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `titulo` VARCHAR(80) NOT NULL,
-  `conteudo` VARCHAR(255) NOT NULL,
-  `data_noticia` DATETIME DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(80) NOT NULL,
+  `conteudo` varchar(255) NOT NULL,
+  `data_noticia` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+)
+ENGINE=InnoDB
+AUTO_INCREMENT=9
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `treinamentos` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(50) DEFAULT NULL,
-  `status` TINYINT(1) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `criado` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+)
+ENGINE=InnoDB
+AUTO_INCREMENT=4
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE IF NOT EXISTS `usuarios` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(250) NOT NULL,
-  `senha` VARCHAR(260) NOT NULL,
-  `ativos` INT DEFAULT NULL,
-  `Foto` MEDIUMBLOB,
-  `token` VARCHAR(255) DEFAULT NULL,
-  `tipo` VARCHAR(1) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(250) NOT NULL,
+  `senha` varchar(260) NOT NULL,
+  `ativos` int DEFAULT NULL,
+  `Foto` mediumblob,
+  `token` varchar(255) DEFAULT NULL,
+  `tipo` varchar(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+)
+ENGINE=InnoDB
+AUTO_INCREMENT=225
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `use_treinamentos` (
-  `id_treinamento` INT NOT NULL AUTO_INCREMENT,
-  `id_usuario` INT NOT NULL,
-  `id_curso` INT NOT NULL,
-  `status_curso` VARCHAR(1) DEFAULT NULL,
-  `data_curso` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_treinamento`),
+  `matricula` int NOT NULL AUTO_INCREMENT,
+  `id_usuario` int NOT NULL,
+  `id_curso` int NOT NULL,
+  `status_curso` varchar(1) DEFAULT NULL,
+  `data_curso` datetime DEFAULT CURRENT_TIMESTAMP,
+  `data_fim` datetime DEFAULT NULL,
+  PRIMARY KEY (`matricula`) USING BTREE,
   KEY `id_usuario` (`id_usuario`),
   KEY `id_curso` (`id_curso`),
-  CONSTRAINT `use_treinamentos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `use_treinamentos_ibfk_2` FOREIGN KEY (`id_curso`) REFERENCES `treinamentos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `use_treinamentos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `use_treinamentos_ibfk_2` FOREIGN KEY (`id_curso`) REFERENCES `treinamentos` (`id`)
+)
+ENGINE=InnoDB
+AUTO_INCREMENT=9
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
 
 
-coluna criado DATATIME na tabela treinamentos
+
+
