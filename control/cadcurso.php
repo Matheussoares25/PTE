@@ -15,10 +15,22 @@ try {
     $iduser = $_POST["usuario"] ?? '';
     $idcurso = $_POST['idcurso'] ?? '';
 
-    $sql = $pdo->prepare("INSERT INTO use_treinamentos 
-        (id_usuario, id_curso, status_curso) 
-        VALUES (:iduser, :idcurso, 1)");
+    $verifica = $pdo->prepare("SELECT * FROM use_treinamentos WHERE id_usuario = :iduser AND id_curso = :idcurso LIMIT 1");
+    $verifica->bindParam(":iduser", $iduser);
+    $verifica->bindParam(":idcurso", $idcurso);
+    $verifica->execute();
 
+    $registro = $verifica->fetch(PDO::FETCH_ASSOC); 
+
+    if ($registro) {
+        echo json_encode([
+            "EXISTE" => true,
+        ]);
+        exit;
+    }
+
+
+    $sql = $pdo->prepare("INSERT INTO use_treinamentos (id_usuario, id_curso, status_curso)  VALUES (:iduser, :idcurso, 1)");
     $sql->bindParam(":iduser", $iduser);
     $sql->bindParam(":idcurso", $idcurso);
 

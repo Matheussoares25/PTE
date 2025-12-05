@@ -221,6 +221,7 @@ async function editTreinamento(id) {
             const dados = await resposta.json();
 
             const nome = dados.treinamentos[0].nome;
+            const idcurso = dados.treinamentos[0].id;
 
             Swal.fire({
                 title: `
@@ -281,16 +282,11 @@ async function editTreinamento(id) {
     </td>
 
     <td style="padding:8px; text-align:center;">
-        <button style="
-            background:#3085d6;
-            color:white;
-            border:none;
-            padding:6px 10px;
-            border-radius:4px;
-            cursor:pointer;
-        ">
-            <i class="fa-solid fa-trash"></i>
-        </button>
+        <button 
+    style="background:#3085d6; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;"
+    onclick="delmat(${item.id_usuario}, ${idcurso}, '${item.email}')"
+    <i class="fa-solid fa-trash"></i>
+</button>
     </td>
 </tr>
 `;
@@ -403,7 +399,16 @@ async function editTreinamento(id) {
                                 timer: 3000,
                                 showConfirmButton: false
                             });
-                        }else{
+                        }else if(dados.EXISTE){
+                            Swal.fire({
+                                icon: "error", 
+                                title: "Usuário Ja Cadastrado",
+                                html: `O usuário ja esta cadastrado nesse curso`,
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        }
+                        else{
                             alert("errao")
                         }
                     })
@@ -413,3 +418,72 @@ async function editTreinamento(id) {
     });
 }
 
+function delmat(idUsuario, idCurso, emailUsuario) {
+
+    Swal.fire({
+        title: "Excluir Matrícula",
+        html: `
+            <p class="mb-3">Tem certeza que deseja excluir a matrícula deste usuário?</p>
+            <p class="text-danger"><strong>Esta ação é irreversível!</strong></p>
+            <label>Digite novamente para confirmar <i>${emailUsuario}</i><label>
+            <input id="confirmEmail" type="email" class="swal2-input" placeholder="Digite o e-mail do usuário para confirmar">
+        `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Excluir",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        preConfirm: () => {
+            const emailDigitado = document.getElementById("confirmEmail").value.trim();
+
+            if (emailDigitado === "") {
+                Swal.showValidationMessage("Digite o e-mail para confirmar!");
+                return false;
+            }
+
+            if (emailDigitado !== emailUsuario) {
+                Swal.showValidationMessage("O e-mail não confere!");
+                return false;
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            let dados = new FormData();
+            dados.append("id_usuario", idUsuario);
+            dados.append("id_curso", idCurso);
+
+            fetch("control/delmat.php", {
+                method: "POST",
+                body: dados
+            })
+            .then(res => res.json())
+            .then(resp => {
+                if(resp.sucesso){
+                Swal.fire({
+                    icon: "success",
+                    title: "Matrícula excluída!",
+                    text: "O usuário foi removido do treinamento.",
+                    confirmButtonColor: "#3085d6"
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro!",
+                    text: resp.erro || "Não foi possível remover a matrícula."
+                });
+            }
+               
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro!",
+                    text: "Não foi possível remover a matrícula.",
+                });
+            });
+
+        }
+    });
+}

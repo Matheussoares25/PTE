@@ -256,8 +256,3 @@ async function oflog() {
   
 }
 
- if (localStorage.getItem("tipoUsuario") != 2) {
-            document.querySelectorAll(".btneditar").forEach(btn => {
-                btn.style.display = "none";
-            });
-        }
