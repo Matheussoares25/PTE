@@ -97,6 +97,7 @@ if (document.getElementById("cadastro") != null) {
         }
 
         const email = $('#email').val();
+        const nome = $('#nome').val();
         const senha = $('#senha').val();
         const upFoto = $('#foto')[0].files[0];
 
@@ -107,6 +108,7 @@ if (document.getElementById("cadastro") != null) {
 
         const formData = new FormData();
         formData.append("email", email);
+        formData.append("nome", nome);
         formData.append("senha", senha);
         formData.append("foto", upFoto);
 

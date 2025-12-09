@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo = $conexao->conn;
 
         $email = $_POST['email'] ?? '';
+        $nome = $_POST['nome'] ?? '';
         $senha = $_POST['senha'] ?? '';
         $foto  = $_FILES['foto'] ?? null;
 
@@ -47,8 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
        
-        $queryInsert = $pdo->prepare("INSERT INTO usuarios (Email, senha, ativos, Foto, tipo) VALUES (:email, :senha, 1, :foto, 2)");
+        $queryInsert = $pdo->prepare("INSERT INTO usuarios (Email, senha, ativos, Foto, tipo,nome) VALUES (:email, :senha, 1, :foto, 2, :nome)");
         $queryInsert->bindValue(':email', $email);
+        $queryInsert->bindValue(':nome', $nome);
         $queryInsert->bindValue(':senha', $senhaHash);
         $queryInsert->bindValue(':foto', $conteudo, PDO::PARAM_LOB);
 
