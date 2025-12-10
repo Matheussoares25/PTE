@@ -3,7 +3,7 @@ class Conexao{
     private $host = "localhost";
     private $usuario = "nauta";
     private $senha = "123";
-    Private $banco = "PTE";
+    Private $banco = "pte";
     public $conn;
 
     public function __construct(){

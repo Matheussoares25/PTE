@@ -1,0 +1,97 @@
+
+.card-modern {
+    border-radius: 14px;
+    border: none;
+    padding: 22px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    transition: 0.25s;
+    background: #ffffff;
+}
+
+.card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 26px rgba(0,0,0,0.12);
+}
+
+.card-modern h5 {
+    font-weight: 700;
+    color: #2b2b2b;
+}
+
+.card-modern p {
+    color: #555;
+    line-height: 1.5;
+}
+
+
+.btn-card {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+
+.btn-edit {
+    background: #0d6efd;
+    border: none;
+}
+.btn-edit:hover {
+    background: #0b5ed7;
+}
+
+.btn-del {
+    background: #dc3545;
+    border: none;
+}
+.btn-del:hover {
+    background: #bb2d3b;
+}
+
+
+.btn-group-modern {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+
+.btn-add {
+    padding: 12px 28px;
+    font-size: 17px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+.btn-add:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+}
+
+.swal2-popup {
+    border-radius: 16px !important;
+    padding: 20px !important;
+}
+
+.swal-title-modern {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.swal2-html-container input,
+.swal2-html-container select {
+    border-radius: 10px !important;
+    padding-left: 40px !important;
+    font-size: 15px;
+}
+
+.subTitle{
+    font-weight: 700;
+    font-size: 3.0rem;
+    font-family: 'Times New Roman', Times, serif;
+}
+
