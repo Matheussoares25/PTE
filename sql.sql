@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `Foto` mediumblob,
   `token` varchar(255) DEFAULT NULL,
   `tipo` varchar(1) NOT NULL,
+  `nome` varchar (50) NOT NULL,
   PRIMARY KEY (`id`)
 )
 ENGINE=InnoDB

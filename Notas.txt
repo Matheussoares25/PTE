@@ -1,0 +1,35 @@
+primeiro acesso termos da plataforma dnv Termos
+
+tela de start curso com termo dnv
+
+so libera dps de assist o video
+
+Tem aviso q ele so pode acessar uma vez a prova;
+
+
+apos fazer uma prova vc tem em % qnt acertou; 3 tentativas
+só libera o proximo modulo se acertar 70%;
+
+
+opção do adm liberar a prova dnv;
+
+
+
+
+pagina propria pra cadastrar treinamento
+
+
+Nome do curso
+
+Nome do modulo
+
+Uploud video aula
+Uploado fotos 
+Modelar prova dentro do modulo 
+
+Tabela especifica para modulos
+Tabela especifica para midia (cada midia vai ta relacionada a um modulto)
+Tabela especifica para Provas (As questoes tem 5 alternativas e voce decide qual é a correta), (gera prova ela tem seu id da prova,tem questoes(questoes tambem vai ser uma tabela) questoes vao estar relacionada a uma prova e uma prova vai ta relacionada a um modulo;
+
+
+

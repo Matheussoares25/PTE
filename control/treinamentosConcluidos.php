@@ -11,7 +11,7 @@ try{
 
     $querySelect = $pdo->prepare("SELECT a.id_usuario,a.id_curso,a.status_curso,c.nome  FROM use_treinamentos AS a 
 INNER JOIN usuarios AS b ON a.id_usuario = b.id 
-LEFT JOIN treinamentos AS c ON a.id_curso = c.id WHERE a.id_usuario = :idUser AND a.status_curso = 2");
+LEFT JOIN treinamentos AS c ON a.id_curso = c.id WHERE a.id_usuario = :idUser AND a.status_curso = 1");
     $querySelect->bindParam("idUser", $idUser);
     $querySelect->execute();    
 

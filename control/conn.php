@@ -1,8 +1,8 @@
 <?php
 class Conexao{
     private $host = "localhost";
-    private $usuario = "nauta";
-    private $senha = "123";
+    private $usuario = "root";
+    private $senha = "123456";
     Private $banco = "pte";
     public $conn;
 
