@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-session_start(); 
+session_start();
 
 session_regenerate_id(true);
 
@@ -24,13 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['email'] ?? '';
         $senha = $_POST['senha'] ?? '';
 
-       
-        $stmt = $pdo->prepare("SELECT id, senha, tipo 
+
+        $stmt = $pdo->prepare("SELECT id, senha, tipo, acess 
             FROM usuarios 
             WHERE email = :email
         ");
         $stmt->bindParam(':email', $email);
-        $stmt->execute();   
+        $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$res) {
@@ -46,26 +46,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 🔥 INICIA A SESSION DO USUÁRIO
+
         $_SESSION['id'] = $res['id'];
-        $_SESSION['tipo'] =  (int)$res['tipo']; // comum / admin
+        $_SESSION['tipo'] = (int) $res['tipo'];
 
-        // Continua usando o token se quiser
-        $token = bin2hex(random_bytes(32)); 
 
-        $stmtUpdate = $pdo->prepare("
-            UPDATE usuarios SET token = :token WHERE id = :id
-        ");
+        $token = bin2hex(random_bytes(32));
+
+        $stmtUpdate = $pdo->prepare("UPDATE usuarios SET token = :token WHERE id = :id");
         $stmtUpdate->bindParam(':token', $token);
         $stmtUpdate->bindParam(':id', $res['id']);
         $stmtUpdate->execute();
 
-        echo json_encode([
+
+        $stmtAcess = $pdo->prepare("UPDATE usuarios SET acess = 1 WHERE id = :id AND acess = 0");
+        $stmtAcess->bindParam(':id', $res['id']);
+        $stmtAcess->execute();
+
+        $dados = [
             'success' => true,
             'token' => $token,
-            'id'    => $res['id'],
-            'tipo'  => $res['tipo'] // 🔥 retorna ao front
-        ]);
+            'id' => $res['id'],
+            'tipo' => $res['tipo']
+        ];
+
+        if ($res['acess'] == 0) {
+            $dados['PACESS'] = true;
+            $stmtAcess = $pdo->prepare("UPDATE usuarios SET acess = 1 WHERE id = :id AND acess = 0");
+            $stmtAcess->bindParam(':id', $res['id']);
+            $stmtAcess->execute();
+
+
+        }
+
+        echo json_encode($dados);
+
+
         exit;
 
     } catch (Exception $e) {
