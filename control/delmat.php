@@ -2,7 +2,7 @@
 header("Content-Type: application/json");
 
 include "conn.php";
-include "auth.php";
+include "authADM.php";
 
 try {
     $pdo = (new Conexao())->conn;

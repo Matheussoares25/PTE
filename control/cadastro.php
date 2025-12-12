@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
        
-        $queryInsert = $pdo->prepare("INSERT INTO usuarios (Email, senha, ativos, Foto, tipo,nome) VALUES (:email, :senha, 1, :foto, 2, :nome)");
+        $queryInsert = $pdo->prepare("INSERT INTO usuarios (Email, senha, ativos, Foto, tipo,nome,acess) VALUES (:email, :senha, 1, :foto, 2, :nome,0)");
         $queryInsert->bindValue(':email', $email);
         $queryInsert->bindValue(':nome', $nome);
         $queryInsert->bindValue(':senha', $senhaHash);
