@@ -1,7 +1,4 @@
 <?php
-
-
-
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -25,10 +22,10 @@ try {
     $qntAll = $sql->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($qntAll as &$u) {
-    $u['Foto'] = "data:image/jpeg;base64," . base64_encode($u['Foto']);
-}
+        $u['Foto'] = "data:image/jpeg;base64," . base64_encode($u['Foto']);
+    }
 
-    echo json_encode([ "qnt" => $qntAll ]);
+    echo json_encode(["qnt" => $qntAll]);
 
 
 } catch (Exception $e) {

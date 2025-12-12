@@ -1,8 +1,8 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 include("conn.php");
-include("auth.php"); 
-try{
+include("auth.php");
+try {
     $idUser = $_POST['id'] ?? '';
 
     $conexao = new Conexao();
@@ -13,7 +13,7 @@ try{
 INNER JOIN usuarios AS b ON a.id_usuario = b.id 
 LEFT JOIN treinamentos AS c ON a.id_curso = c.id WHERE a.id_usuario = :idUser AND a.status_curso = 2");
     $querySelect->bindParam("idUser", $idUser);
-    $querySelect->execute();    
+    $querySelect->execute();
 
     $treinamentos = $querySelect->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($treinamentos);
