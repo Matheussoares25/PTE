@@ -1,0 +1,159 @@
+[1mdiff --git a/cadTreinamento.html b/cadTreinamento.html[m
+[1mindex 5c6ae59..094da62 100644[m
+[1m--- a/cadTreinamento.html[m
+[1m+++ b/cadTreinamento.html[m
+[36m@@ -281,4 +281,5 @@[m
+ [m
+ <script src="js/functions.js"></script>[m
+ <script src="js/cursos.js"></script>[m
+[31m-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>[m
+\ No newline at end of file[m
+[32m+[m[32m<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>[m
+[32m+[m[32m<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>[m
+\ No newline at end of file[m
+[1mdiff --git a/control/conn.php b/control/conn.php[m
+[1mindex 7c2b2a7..7673a24 100644[m
+[1m--- a/control/conn.php[m
+[1m+++ b/control/conn.php[m
+[36m@@ -1,8 +1,8 @@[m
+ <?php[m
+ class Conexao{[m
+     private $host = "localhost";[m
+[31m-    private $usuario = "root";[m
+[31m-    private $senha = "123456";[m
+[32m+[m[32m    private $usuario = "nauta";[m
+[32m+[m[32m    private $senha = "123";[m
+     Private $banco = "pte";[m
+     public $conn;[m
+ [m
+[1mdiff --git a/control/dadosAula.php b/control/dadosAula.php[m
+[1mindex d67446b..f4d6fe0 100644[m
+[1m--- a/control/dadosAula.php[m
+[1m+++ b/control/dadosAula.php[m
+[36m@@ -7,7 +7,8 @@[m [mtry {[m
+     $conexao = new Conexao();[m
+     $pdo = $conexao->conn;[m
+ [m
+[31m-    $id = $_POST["id"] ?? 0;[m
+[32m+[m[32m    $id = $_POST["idAula"] ?? 0;[m
+[32m+[m
+ [m
+ [m
+     $sql = $pdo->prepare("SELECT * FROM Midias WHERE id_aula = :id");[m
+[1mdiff --git a/control/editarAula.php b/control/editarAula.php[m
+[1mindex 317dae8..00d4f56 100644[m
+[1m--- a/control/editarAula.php[m
+[1m+++ b/control/editarAula.php[m
+[36m@@ -33,6 +33,7 @@[m [mtry {[m
+         $ins->bindParam(":idAula", $idAula, PDO::PARAM_INT);[m
+         $ins->bindParam(":conteudo", $stream, PDO::PARAM_LOB);[m
+         $ins->execute();[m
+[32m+[m[32m        var_dump($stream);[m
+ [m
+         if (is_resource($stream)) {[m
+             fclose($stream);[m
+[1mdiff --git a/js/cursos.js b/js/cursos.js[m
+[1mindex 921443c..830ce19 100644[m
+[1m--- a/js/cursos.js[m
+[1m+++ b/js/cursos.js[m
+[36m@@ -62,7 +62,9 @@[m [mfunction carregarCursosSidebar() {[m
+ function abrirCurso(id, nome) {[m
+     localStorage.setItem("idCurso", id);[m
+     document.getElementById("cursoName").innerText = nome;[m
+[31m-[m
+[32m+[m[41m    [m
+[32m+[m[32m    document.getElementById("EditAula").style.display = "none";[m
+[32m+[m[41m   [m
+     document.getElementById("AddModulo").style.display = "";[m
+     document.getElementById("FormModulo").style.display = "";[m
+ [m
+[36m@@ -72,6 +74,7 @@[m [mfunction abrirCurso(id, nome) {[m
+ [m
+ async function abrirModulo(id, nome) {[m
+     document.getElementById("cadCursos").style.display = "none";[m
+[32m+[m[32m    document.getElementById("EditAula").style.display = "none";[m
+     localStorage.setItem("idModulo", id);[m
+     localStorage.setItem("nomeModulo", nome);[m
+ [m
+[36m@@ -94,8 +97,8 @@[m [masync function abrirModulo(id, nome) {[m
+ [m
+     const html = dados.aulas.map(a => `[m
+         <tr>[m
+[31m-            <td>${a.id_aula}</td>[m
+[31m-            <td>${a.nome_aula ?? "Aula sem nome"}</td>[m
+[32m+[m[32m            <td>${a.nome_aula}</td>[m
+[32m+[m[32m            <td>${a.id ?? "Aula sem nome"}</td>[m
+             <td>[m
+                 <button class="btn btn-primary" onclick="editarAula(${a.id_aula})">[m
+                     <i class="fa-solid fa-pen-to-square"></i>[m
+[36m@@ -110,31 +113,37 @@[m [masync function abrirModulo(id, nome) {[m
+ [m
+ }[m
+ [m
+[31m-async function abrirAula(id, nome, idModulo) {[m
+[31m-    document.getElementById("cadCursos").style.display = "none";[m
+[31m-    document.getElementById("EditAula").style.display = "";[m
+[31m-    localStorage.setItem("idAula", id);[m
+[31m-    localStorage.setItem("nomeAula", nome);[m
+[31m-    localStorage.setItem("idModulo", idModulo);[m
+[32m+[m[32m// async function abrirAula(id, nome, idModulo) {[m
+[32m+[m[32m//     document.getElementById("cadCursos").style.display = "none";[m
+[32m+[m[32m//     document.getElementById("EditModulo").style.display = "none";[m
+[32m+[m[32m//     document.getElementById("EditAula").style.display = "";[m
+[32m+[m[32m//     localStorage.setItem("idAula", id);[m
+[32m+[m[32m//     localStorage.setItem("nomeAula", nome);[m
+[32m+[m[32m//     localStorage.setItem("idModulo", idModulo);[m
+[32m+[m
+[32m+[m[32m//     document.getElementById("nAula").innerHTML = "Editar Aula" + "\n" + nome ?? "SEM NOME ";[m
+[32m+[m[32m//     document.getElementById("nomeAula").value = nome;[m
+[32m+[m[32m//     console.log("teste")[m
+[32m+[m[41m    [m
+[32m+[m[41m    [m
+[32m+[m[32m//     formdata = new FormData();[m
+[32m+[m[32m//     formdata.append("idAula", id);[m
+[32m+[m[41m     [m
+ [m
+[31m-    document.getElementById("nAula").innerHTML = "Editar Aula" + "\n" + nome ?? "SEM NOME ";[m
+[31m-    document.getElementById("NameAula").value = nome;[m
+[32m+[m[32m//     const res = await fetch("control/dadosAula.php", {[m
+[32m+[m[32m//         method: "POST",[m
+[32m+[m[32m//         body: formdata,[m
+[32m+[m[32m//         credentials: "include"[m
+[32m+[m[32m//     });[m
+ [m
+[31m-    formdata = new FormData();[m
+[31m-    formdata.append("idAula", id);[m
+[31m-     [m
+[32m+[m[32m//     const dados = await res.json();[m
+ [m
+[31m-    fetch("control/dadosAula.php", {[m
+[31m-        method: "POST",[m
+[31m-        body: formdata,[m
+[31m-        credentials: "include"[m
+[31m-    });[m
+ [m
+[31m-    const dados = res.json();[m
+[31m-    alert("foi")[m
+[31m-    console.log(dados);[m
+[31m-    document.getElementById("videoAula").src = dados.video;[m
+[31m-}[m
+[32m+[m[41m  [m
+[32m+[m[32m//     console.log(dados);[m
+[32m+[m[32m//     document.getElementById("videoAula").src = dados.dados.video[m
+[32m+[m[32m// ;[m
+[32m+[m[32m// }[m
+ [m
+ async function salvarAula() {[m
+     const idAula = localStorage.getItem("idAula");[m
+[36m@@ -169,11 +178,6 @@[m [masync function salvarAula() {[m
+     }[m
+ }[m
+ [m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+ async function cadCurso() {[m
+     const nome = document.getElementById('NameCurso').value;[m
+ [m

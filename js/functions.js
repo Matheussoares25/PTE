@@ -6,6 +6,7 @@ if (document.getElementById("login") != null) {
 
         const nome = $('#Email').val();
         const senha = $('#senha').val();
+        
 
         const formData = new FormData();
         formData.append("email", nome);
@@ -19,6 +20,11 @@ if (document.getElementById("login") != null) {
             });
 
             const data = await response.json();
+
+            if(data.PACESS){
+                alert("teste");
+            }
+
 
             if (data.success) {
                 $('#Resposta').html('<p>Login bem-sucedido</p>');
@@ -71,7 +77,7 @@ if (document.getElementById("login") != null) {
                     showConfirmButton: true,
                 });
 
-            } else {
+            }else {
                 $('#Resposta').html('<p>Erro ao fazer login</p>');
             }
 
