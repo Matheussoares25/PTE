@@ -6,37 +6,77 @@ include "authADM.php";
 try {
     $pdo = (new Conexao())->conn;
 
-    $idAula   = intval($_POST["idAula"] ?? 0);
+    $idAula = intval($_POST["idAula"] ?? 0);
     $idModulo = intval($_POST["idModulo"] ?? 0);
     $nomeAula = trim($_POST["nomeAula"] ?? '');
+    $desc = $_POST['desc'] ?? '';
+    $video = $_FILES['video'] ?? null;
 
-
-    $sql = $pdo->prepare("UPDATE Aulas SET nome_aula = :nomeAula WHERE id = :idAula AND id_modulo = :idModulo
+    // Atualiza nome da aula
+    $sql = $pdo->prepare("
+        UPDATE Aulas SET nome_aula = :nomeAula
+        WHERE id = :idAula AND id_modulo = :idModulo
     ");
     $sql->execute([
         ":nomeAula" => $nomeAula,
-        ":idAula"   => $idAula,
+        ":idAula" => $idAula,
         ":idModulo" => $idModulo
     ]);
 
+    // Verifica se já existe Midia para aula
+    $sqlSelect = $pdo->prepare("
+        SELECT id FROM Midias WHERE id_aula = :idAula LIMIT 1
+    ");
+    $sqlSelect->bindValue(":idAula", $idAula);
+    $sqlSelect->execute();
+    $midiaExiste = $sqlSelect->fetch(PDO::FETCH_ASSOC);
 
-    if (isset($_FILES["video"]) && $_FILES["video"]["error"] === UPLOAD_ERR_OK && $_FILES["video"]["size"] > 0) {
-
-        $tmp = $_FILES["video"]["tmp_name"];
-
-
-        $stream = fopen($tmp, 'rb');
-
-        $ins = $pdo->prepare("INSERT INTO Midias (id_aula, conteudo) VALUES (:idAula, :conteudo)
+    // Se existe, atualiza descrição
+    if ($midiaExiste) {
+        $sqlDesc = $pdo->prepare("
+            UPDATE Midias SET desc_midia = :descM WHERE id_aula = :idAula
         ");
+        $sqlDesc->execute([
+            ":descM" => $desc,
+            ":idAula" => $idAula
+        ]);
+    } 
+    // Se não existe, cria novo registro
+    else {
+        $sqlDesc = $pdo->prepare("
+            INSERT INTO Midias (id_aula, desc_midia) 
+            VALUES (:idAula, :descM)
+        ");
+        $sqlDesc->execute([
+            ":idAula" => $idAula,
+            ":descM" => $desc
+        ]);
+    }
 
-        $ins->bindParam(":idAula", $idAula, PDO::PARAM_INT);
-        $ins->bindParam(":conteudo", $stream, PDO::PARAM_LOB);
-        $ins->execute();
+    // Se houver vídeo enviado, atualiza/insere vídeo
+    if (!empty($video["tmp_name"])) {
 
-        if (is_resource($stream)) {
-            fclose($stream);
+        $stream = fopen($video["tmp_name"], "rb");
+
+        if ($midiaExiste) {
+            // Atualiza conteudo da midia existente
+            $sql = $pdo->prepare("
+                UPDATE Midias SET conteudo = :conteudo
+                WHERE id_aula = :idAula
+            ");
+        } else {
+            // Cria nova midia com conteúdo
+            $sql = $pdo->prepare("
+                INSERT INTO Midias (id_aula, conteudo)
+                VALUES (:idAula, :conteudo)
+            ");
         }
+
+        $sql->bindParam(":idAula", $idAula, PDO::PARAM_INT);
+        $sql->bindParam(":conteudo", $stream, PDO::PARAM_LOB);
+        $sql->execute();
+
+        fclose($stream);
     }
 
     echo json_encode(["sucesso" => true]);

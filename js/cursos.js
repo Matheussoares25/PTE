@@ -63,6 +63,8 @@ function abrirCurso(id, nome) {
     localStorage.setItem("idCurso", id);
     document.getElementById("cursoName").innerText = nome;
 
+    document.getElementById("EditAula").style.display = "none";
+
     document.getElementById("AddModulo").style.display = "";
     document.getElementById("FormModulo").style.display = "";
 
@@ -72,6 +74,7 @@ function abrirCurso(id, nome) {
 
 async function abrirModulo(id, nome) {
     document.getElementById("cadCursos").style.display = "none";
+    document.getElementById("EditAula").style.display = "none";
     localStorage.setItem("idModulo", id);
     localStorage.setItem("nomeModulo", nome);
 
@@ -94,8 +97,8 @@ async function abrirModulo(id, nome) {
 
     const html = dados.aulas.map(a => `
         <tr>
-            <td>${a.id_aula}</td>
-            <td>${a.nome_aula ?? "Aula sem nome"}</td>
+            <td>${a.nome_aula}</td>
+            <td>${a.id ?? "Aula sem nome"}</td>
             <td>
                 <button class="btn btn-primary" onclick="editarAula(${a.id_aula})">
                     <i class="fa-solid fa-pen-to-square"></i>
@@ -112,43 +115,58 @@ async function abrirModulo(id, nome) {
 
 async function abrirAula(id, nome, idModulo) {
     document.getElementById("cadCursos").style.display = "none";
+    document.getElementById("EditModulo").style.display = "none";
     document.getElementById("EditAula").style.display = "";
     localStorage.setItem("idAula", id);
     localStorage.setItem("nomeAula", nome);
     localStorage.setItem("idModulo", idModulo);
 
     document.getElementById("nAula").innerHTML = "Editar Aula" + "\n" + nome ?? "SEM NOME ";
-    document.getElementById("NameAula").value = nome;
+    document.getElementById("nomeAula").value = nome;
+    console.log("teste")
+
 
     formdata = new FormData();
     formdata.append("idAula", id);
-     
 
-    fetch("control/dadosAula.php", {
+
+    const res = await fetch("control/dadosAula.php", {
         method: "POST",
         body: formdata,
         credentials: "include"
     });
 
-    const dados = res.json();
-    alert("foi")
-    console.log(dados);
-    document.getElementById("videoAula").src = dados.video;
+    const dados = await res.json();
+
+
+    console.log(dados)
+
+
+    if (dados.sucesso && dados.dados?.conteudo) {
+    document.getElementById("ResVideo").src = dados.dados.conteudo;
+}
+
+
 }
 
 async function salvarAula() {
     const idAula = localStorage.getItem("idAula");
     const idModulo = localStorage.getItem("idModulo");
     const nomeAula = document.getElementById("nomeAula").value;
-    const video = document.getElementById("videoAula").files[0];
+    const desc = document.getElementById("descricaoAula").value;
+    
+
+    console.log(desc);
 
     let formdata = new FormData();
     formdata.append("idAula", idAula);
     formdata.append("idModulo", idModulo);
     formdata.append("nomeAula", nomeAula);
+    formdata.append("desc", desc);
 
-    if (video) {
-        formdata.append("video", video);
+    const fileVideo = document.getElementById("fileVideo").files[0];
+    if (fileVideo) {
+        formdata.append("video", fileVideo);
     }
 
     const res = await fetch("control/editarAula.php", {
@@ -168,11 +186,6 @@ async function salvarAula() {
         alert("Erro ao editar aula");
     }
 }
-
-
-
-
-
 
 async function cadCurso() {
     const nome = document.getElementById('NameCurso').value;
@@ -218,48 +231,111 @@ async function cadCurso() {
 }
 
 async function cadModulo() {
+    Swal.fire({
+    title: 'Criar módulo curso:',
+    width: '900px',
+    showConfirmButton: false,
+    showCloseButton: true,
+    html: `
+        <div class="card card-custom">
+            <div class="card-body p-4">
 
-    const nome = document.getElementById('NameModulo').value;
-    const idCurso = localStorage.getItem("idCurso");
+                <h3 id="NomeMod"></h3>
 
-    formdata = new FormData();
-    formdata.append("idCurso", idCurso);
-    formdata.append("nome", nome);
+                <div class="mb-3 text-start">
+                    <label class="form-label">Nome do Módulo</label>
+                    <input type="text" class="form-control" id="NameModuloe"
+                        placeholder="Ex: Introdução, Primeiros Conceitos, Parte 1...">
+                    <button class="btn btn-success mt-2" id="btnEditarModulo">
+                        Editar nome do módulo
+                    </button>
+                </div>
 
-    fetch("control/cadModulo.php", {
-        method: "POST",
-        body: formdata,
-        credentials: "include"
-    })
-        .then(res => res.json())
-        .then(data => {
-            const idModulo = data.dados.id;
-            localStorage.setItem("idModulo", idModulo);
+                <div class="mb-3 text-start">
+                    <label class="form-label fw-semibold">Aulas do Módulo</label>
 
-            if (data.sucesso) {
-                alert("Modulo cadastrado com sucesso");
-                carregarCursosSidebar();
-                document.getElementById("FormModulo").style.display = "";
-                return;
-            } else if (data.Existe) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Ja existe um modulo com esse nome',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Fechar',
-                    backdrop: true,
-                    scrollbarPadding: false
-                })
-                return;
-            }
-            else {
-                alert("Erro ao cadastrar modulo");
-                return;
-            }
-        });
+                    <div class="table-responsive shadow-sm rounded">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th style="width: 50%">Nome da Aula</th>
+                                    <th style="width: 15%">ID</th>
+                                    <th style="width: 20%">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaAulas"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <button class="btn btn-success mb-3" id="btnAddAula">
+                    Adicionar Aula
+                </button>
+
+                <hr>
+
+                <h5 class="mb-3">
+                    <button onclick="criaModulo()" class="btn btn-success"> Salvar</button>
+                </h5>
+
+                <ul class="list-group" id="lista-modulos"></ul>
+
+            </div>
+        </div>
+    `,
+    didOpen: () => {
+        // Eventos dentro do Swal
+        document.getElementById('btnEditarModulo')
+            .addEventListener('click', criaModulo);
+
+        document.getElementById('btnAddAula')
+            .addEventListener('click', criaAula);
+    }
+});
+
+
+    // const nome = document.getElementById('NameModulo').value;
+    // const idCurso = localStorage.getItem("idCurso");
+
+    // formdata = new FormData();
+    // formdata.append("idCurso", idCurso);
+    // formdata.append("nome", nome);
+
+    // fetch("control/cadModulo.php", {
+    //     method: "POST",
+    //     body: formdata,
+    //     credentials: "include"
+    // })
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         const idModulo = data.dados.id;
+    //         localStorage.setItem("idModulo", idModulo);
+
+    //         if (data.sucesso) {
+    //             alert("Modulo cadastrado com sucesso");
+    //             carregarCursosSidebar();
+    //             document.getElementById("FormModulo").style.display = "";
+    //             return;
+    //         } else if (data.Existe) {
+    //             Swal.fire({
+    //                 icon: 'warning',
+    //                 title: 'Ja existe um modulo com esse nome',
+    //                 showConfirmButton: true,
+    //                 confirmButtonText: 'Fechar',
+    //                 backdrop: true,
+    //                 scrollbarPadding: false
+    //             })
+    //             return;
+    //         }
+    //         else {
+    //             alert("Erro ao cadastrar modulo");
+    //             return;
+    //         }
+    //     });
 }
 
 async function criaModulo() {
+    
 
     let nome;
 
@@ -287,7 +363,7 @@ async function criaModulo() {
     const dados = await res.json();
 
     if (dados.sucesso) {
-        alert("Modulo criado com sucesso");
+
         carregarCursosSidebar();
 
         document.getElementById("FormModulo").style.display = "";

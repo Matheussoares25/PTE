@@ -28,3 +28,14 @@ Tabela especifica para Provas (As questoes tem 5 alternativas e voce decide qual
 
 
 
+Alteração limite php 
+upload_max_filesize = 50M
+post_max_size = 50M
+
+caminho php.ini 
+
+<?php
+phpinfo();
+?>
+
+Loaded Configuration File
