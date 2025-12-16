@@ -16,7 +16,7 @@ try {
     $midia = $sql->fetch(PDO::FETCH_ASSOC);
 
     if ($midia) {
-        // CONVERTE PARA BASE64
+        
         $base64 = base64_encode($midia['conteudo']);
 
         $ext = pathinfo($midia['desc_midia'], PATHINFO_EXTENSION) ?: "webm";

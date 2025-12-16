@@ -20,7 +20,7 @@ try {
     $pdo = $con->conn;
 
     $sql = $pdo->prepare("SELECT * FROM Aulas WHERE id_modulo = :id_modulo
-    ");
+    and excluido = 0");
     $sql->bindValue(":id_modulo", $id_modulo,);
     $sql->execute();
 

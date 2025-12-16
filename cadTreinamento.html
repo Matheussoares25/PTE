@@ -125,7 +125,7 @@
     <div class="main-content">
 
         <div id="cadCursos">
-            <div class="container mt-5">
+            <div class="container mt-5" id="cadastroCurso">
                 <div class="card card-custom mx-auto">
                     <div class="header-blue">
                         <i class="bi bi-grid-fill"></i> Cadastro de Cursos
@@ -147,13 +147,13 @@
                 </div>
             </div>
 
-            <div class="container mt-5" id="AddModulo" >
+            <!-- <div class="container mt-5" id="AddModulo"  style="display: none;">
                 <div class="card card-custom mx-auto p-3">
                     <button class="btn btn-success" onclick="cadModulo()">Adicionar Módulo
                         <i class="fa-solid fa-plus"></i>
                     </button>
                 </div>
-            </div>
+            </div> -->
 
             <div class="container mt-5" id="FormModulo" style="display: none;">
                 <div class="card card-custom mx-auto">
@@ -215,7 +215,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-success" onclick="criaAula()">Adicionar Aula</button>
+                    <button class="btn btn-success" onclick="criaUmaAula()">Adicionar Aula</button>
 
                     <hr>
 
@@ -251,6 +251,14 @@
                             <div class="mb-3 mt-3">
                                 <label class="form-label fw-semibold">Enviar Vídeo da Aula</label>
                                 <input type="file" id="fileVideo" accept="video/*">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Descrição Atual</label>
+                                <textarea class="form-control" id="descAtual" rows="3"
+                                    placeholder="Digite uma breve descrição do conteúdo da aula..." disabled></textarea>
                             </div>
                         </div>
 

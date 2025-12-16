@@ -15,15 +15,16 @@ try{
     $nome = $_POST["nome"] ?? '';
     $idcurso = $_POST["idCurso"] ?? '';
     
-    // $sqlV = "SELECT * FROM Modulos where nome_modolu = :nome";
-    // $stmt = $pdo->prepare($sqlV);
-    // $stmt->bindParam(':nome', $nome);
-    // $stmt->execute();
-    // $treinamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // if (count($treinamentos) > 0) {
-    //     echo json_encode(['Existe' => true]);
-    //     exit;
-    // }
+    $sqlV = "SELECT * FROM Modulos where nome_modolu = :nome";
+    $stmt = $pdo->prepare($sqlV);
+    $stmt->bindParam(':nome', $nome);
+    $stmt->execute();
+    $treinamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    if (count($treinamentos) > 0) {
+        echo json_encode(['Existe' => true]);
+        exit;
+    }
 
     $sqlInsert = "INSERT INTO Modulos (id_curso) VALUES (:idcurso)";
     $stmt = $pdo->prepare($sqlInsert);

@@ -12,42 +12,45 @@ try {
     $conexao = new Conexao();
     $pdo = $conexao->conn;
 
-    $iduser = $_POST["usuario"] ?? '';
-    $idcurso = $_POST['idcurso'] ?? '';
+    $nome = $_POST["nome"] ?? '';
 
-    $verifica = $pdo->prepare("SELECT * FROM use_treinamentos WHERE id_usuario = :iduser AND id_curso = :idcurso LIMIT 1");
-    $verifica->bindParam(":iduser", $iduser);
-    $verifica->bindParam(":idcurso", $idcurso);
-    $verifica->execute();
+  
+    $sqlV = "SELECT * FROM treinamentos WHERE nome = :nome";
+    $stmt = $pdo->prepare($sqlV);
+    $stmt->bindParam(':nome', $nome);
+    $stmt->execute();
+    $treinamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $registro = $verifica->fetch(PDO::FETCH_ASSOC); 
-
-    if ($registro) {
-        echo json_encode([
-            "EXISTE" => true,
-        ]);
+    if (count($treinamentos) > 0) {
+        echo json_encode(['Existe' => true]);
         exit;
     }
 
+ 
+    $sqlInsert = "INSERT INTO treinamentos (nome) VALUES (:nome)";
+    $stmt = $pdo->prepare($sqlInsert);
+    $stmt->bindParam(':nome', $nome);
+    $stmt->execute();
 
-    $sql = $pdo->prepare("INSERT INTO use_treinamentos (id_usuario, id_curso, status_curso)  VALUES (:iduser, :idcurso, 1)");
-    $sql->bindParam(":iduser", $iduser);
-    $sql->bindParam(":idcurso", $idcurso);
+  
+    $id = $pdo->lastInsertId();
 
-    $executou = $sql->execute();
+  
+    $sqlS = "SELECT * FROM treinamentos WHERE id = :id";
+    $stmt = $pdo->prepare($sqlS);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $novoTreinamento = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($executou) {
-        echo json_encode(["sucesso" => true]);
-    } else {
-        echo json_encode([
-            "sucesso" => false, 
-            "erro" => "Falha ao inserir no banco"
-        ]);
-    }
-
-} catch (Exception $e) {
     echo json_encode([
-        "sucesso" => false, 
-        "erro" => $e->getMessage()
+        'sucesso' => true,
+        'dados' => $novoTreinamento
+    ]);
+
+} catch (PDOException $e) {
+    echo json_encode([
+        'sucesso' => false,
+        'erro' => $e->getMessage()
     ]);
 }
+?>

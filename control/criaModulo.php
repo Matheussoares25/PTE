@@ -3,6 +3,7 @@ header("Content-Type: application/json");
 include "conn.php";
 include "authADM.php";
 
+
 try {
 
     $conexao = new Conexao();
@@ -10,29 +11,24 @@ try {
 
     $qtd = intval($_POST['qtd'] ?? 0);
     $nome = $_POST['nome'] ?? '';
-    $id_modulo = $_POST['idModulo'] ?? null;
     $idCurso = $_POST['idCurso'] ?? null;
 
-
-
-   
-
-    $sqlNomeMod = $pdo->prepare("UPDATE Modulos set nome_modolu = :nome WHERE id = :id_modulo");
-    $sqlNomeMod->bindParam(':id_modulo', $id_modulo);
-    $sqlNomeMod->bindParam(':nome', $nome);
+    $sqlNomeMod = $pdo->prepare("INSERT INTO modulos (nome_modolu, id_curso) values (:nomeCurso, :idCurso)");
+    $sqlNomeMod->bindParam(':idCurso', $idCurso);
+    $sqlNomeMod->bindParam(':nomeCurso', $nome);
     $sqlNomeMod->execute();
 
 
-    if ($qtd) {
+    $id_modulo = $pdo->lastInsertId();
+
+    if ($qtd > 0) {
         $sql = $pdo->prepare(
-            "INSERT INTO Aulas (id_modulo) VALUES (:id_modulo)"
+            "INSERT INTO Aulas (id_modulo, excluido) VALUES (:id_modulo, 0)"
         );
 
         for ($i = 1; $i <= $qtd; $i++) {
-
             $sql->execute([
-                ':id_modulo' => $id_modulo,
-
+                ':id_modulo' => $id_modulo
             ]);
         }
     }

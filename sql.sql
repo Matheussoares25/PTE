@@ -82,7 +82,7 @@ CREATE TABLE `Aulas` (
 
 CREATE TABLE `Midias` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nome_midia` varchar(100) DEFAULT NULL,
+  `desc_midia` varchar(100) DEFAULT NULL,
   `id_aula` int DEFAULT NULL,
   `conteudo` longblob,
   PRIMARY KEY (`id`),

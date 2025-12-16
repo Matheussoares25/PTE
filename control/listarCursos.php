@@ -6,21 +6,25 @@ include("authADM.php");
 try {
     $pdo = (new Conexao())->conn;
 
-   
     $stmt = $pdo->query("
         SELECT 
             t.id AS id_treinamento,
             t.nome AS nome_treinamento,
+
             m.id AS id_modulo,
-            m.nome_modolu AS nome_modolu,
+            m.nome_modolu AS nome_modulo,
+
             a.id AS id_aula,
-            a.nome_aula AS nome_aula,
-            a.id_modulo
+            a.nome_aula AS nome_aula
+
         FROM treinamentos t
         LEFT JOIN Modulos m 
-               ON m.id_curso = t.id
+            ON m.id_curso = t.id
+
         LEFT JOIN Aulas a 
-               ON a.id_modulo = m.id
+            ON a.id_modulo = m.id
+           AND a.excluido = 0
+
         ORDER BY t.id DESC, m.id ASC, a.id ASC
     ");
 
@@ -33,6 +37,7 @@ try {
         $tid = $row['id_treinamento'];
         $mid = $row['id_modulo'];
 
+        // Curso
         if (!isset($resultado[$tid])) {
             $resultado[$tid] = [
                 'id' => $tid,
@@ -41,17 +46,17 @@ try {
             ];
         }
 
-
+        // Módulo (MESMO SEM AULA)
         if ($mid && !isset($resultado[$tid]['modulos'][$mid])) {
             $resultado[$tid]['modulos'][$mid] = [
                 'id_modulo' => $mid,
-                'nome_modulo' => $row['nome_modolu'],
+                'nome_modulo' => $row['nome_modulo'],
                 'aulas' => []
             ];
         }
 
-
-        if ($row['id_aula']) {
+        // Aula (só se existir)
+        if (!empty($row['id_aula'])) {
             $resultado[$tid]['modulos'][$mid]['aulas'][] = [
                 'id_aula' => $row['id_aula'],
                 'nome_aula' => $row['nome_aula']
@@ -59,16 +64,14 @@ try {
         }
     }
 
-
+    // Reindexa arrays
     foreach ($resultado as &$curso) {
         $curso['modulos'] = array_values($curso['modulos']);
     }
-    $resultado = array_values($resultado);
-
 
     echo json_encode([
         'sucesso' => true,
-        'cursos' => $resultado
+        'cursos' => array_values($resultado)
     ]);
 
 } catch (Exception $e) {
