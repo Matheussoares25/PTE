@@ -1,5 +1,4 @@
 
-
 buscarTreinamentos();
 treinamentosConcluidos();
 async function buscarTreinamentos() {
@@ -41,9 +40,7 @@ async function buscarTreinamentos() {
                              <i class="bi bi-play-circle-fill text-secondary me-2" style="font-size: 1.7rem;"></i>
                             <strong>${t.nome}</strong>
                         </div>
-                         <a href="treinamento.php?id=${t.id}" class="btn btn-sm btn-primary mt-2">
-                                  Acessar
-                        </a>
+                         <button onclick="acessarCurso(${t.id_curso})">Acessar</button>
                     </div>
         `).join("");
 
@@ -486,4 +483,40 @@ function delmat(idUsuario, idCurso, emailUsuario) {
 
         }
     });
+}
+
+async function acessarCurso(idCurso) {
+    localStorage.setItem("idCurso", idCurso);
+  const dados = new FormData();
+  dados.append("id", idCurso);
+
+  console.log(idCurso);
+
+  try {
+    const res = await fetch("control/acessarCurso.php", {
+      method: "POST",
+      body: dados,
+      credentials: "include"
+    });
+
+    const retorno = await res.json();
+
+    if (retorno.sucesso) {
+      window.location.href = "treinamentoUs.html";
+    } else {
+      Swal.fire(
+        "Erro",
+        retorno.msg || "Não foi possível acessar o curso",
+        "error"
+      );
+    }
+
+  } catch (e) {
+    console.error(e);
+    Swal.fire(
+      "Erro",
+      "Erro de comunicação com o servidor",
+      "error"
+    );
+  }
 }

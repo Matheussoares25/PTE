@@ -257,10 +257,15 @@ async function oflog() {
             localStorage.removeItem("token");
             localStorage.removeItem("idUser");
             localStorage.removeItem("tipoUsuario");
+            localStorage.clear();
             window.location.href = "index.html";
         }
     })
 
   
 }
+
+
+
+
 

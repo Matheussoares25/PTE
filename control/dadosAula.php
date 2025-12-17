@@ -9,7 +9,7 @@ try {
 
     $id = $_POST["idAula"] ?? 0;
 
-    $sql = $pdo->prepare("SELECT desc_midia, conteudo FROM Midias WHERE id_aula = :id");
+    $sql = $pdo->prepare("SELECT desc_midia, conteudo FROM midias WHERE id_aula = :id");
     $sql->bindParam(":id", $id);
     $sql->execute();
 

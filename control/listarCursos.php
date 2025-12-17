@@ -18,10 +18,10 @@ try {
             a.nome_aula AS nome_aula
 
         FROM treinamentos t
-        LEFT JOIN Modulos m 
+        LEFT JOIN modulos m 
             ON m.id_curso = t.id
 
-        LEFT JOIN Aulas a 
+        LEFT JOIN aulas a 
             ON a.id_modulo = m.id
            AND a.excluido = 0
 

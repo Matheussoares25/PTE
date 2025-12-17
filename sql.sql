@@ -3,6 +3,23 @@ CREATE DATABASE IF NOT EXISTS `pte`
 USE `pte`;
 
 
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(250) NOT NULL,
+  `senha` varchar(260) NOT NULL,
+  `ativos` int DEFAULT NULL,
+  `Foto` mediumblob,
+  `token` varchar(255) DEFAULT NULL,
+  `tipo` varchar(1) NOT NULL,
+  `nome` varchar(80) NOT NULL,
+  `acess` tinyint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=229 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Copiando dados para a tabela pte.usuarios: ~1 rows (aproximadamente)
+INSERT INTO `usuarios` (`id`, `email`, `senha`, `ativos`, `Foto`, `token`, `tipo`, `nome`, `acess`) VALUES
+	(228, 'matheusaparecido779944@gmail.com', '$2y$10$kAUAwGqiUzqLUpTFHSbyXun2QB3q61qGM1gYUnTSWLvL6HhWqeCrG', 1, NULL, '595b693f674f56d49fbc8546b81f62f76ea0b4330c1e505f63b8dc493face111', '2', 'matheus', 1);
+
 CREATE TABLE IF NOT EXISTS `alternativas` (
   `id` int NOT NULL AUTO_INCREMENT,
   `option_one` varchar(100) DEFAULT '120',
@@ -32,6 +49,14 @@ CREATE TABLE IF NOT EXISTS `midias` (
   CONSTRAINT `Midias_Aulas_FK` FOREIGN KEY (`id_aula`) REFERENCES `aulas` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE IF NOT EXISTS `treinamentos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `criado` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 CREATE TABLE IF NOT EXISTS `modulos` (
@@ -56,14 +81,6 @@ CREATE TABLE IF NOT EXISTS `noticias` (
 
 
 
-CREATE TABLE IF NOT EXISTS `treinamentos` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(50) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT NULL,
-  `criado` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 
 CREATE TABLE IF NOT EXISTS `use_treinamentos` (
   `matricula` int NOT NULL AUTO_INCREMENT,
@@ -80,22 +97,7 @@ CREATE TABLE IF NOT EXISTS `use_treinamentos` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-CREATE TABLE IF NOT EXISTS `usuarios` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(250) NOT NULL,
-  `senha` varchar(260) NOT NULL,
-  `ativos` int DEFAULT NULL,
-  `Foto` mediumblob,
-  `token` varchar(255) DEFAULT NULL,
-  `tipo` varchar(1) NOT NULL,
-  `nome` varchar(80) NOT NULL,
-  `acess` tinyint DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=229 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Copiando dados para a tabela pte.usuarios: ~1 rows (aproximadamente)
-INSERT INTO `usuarios` (`id`, `email`, `senha`, `ativos`, `Foto`, `token`, `tipo`, `nome`, `acess`) VALUES
-	(228, 'matheusaparecido779944@gmail.com', '$2y$10$kAUAwGqiUzqLUpTFHSbyXun2QB3q61qGM1gYUnTSWLvL6HhWqeCrG', 1, NULL, '595b693f674f56d49fbc8546b81f62f76ea0b4330c1e505f63b8dc493face111', '2', 'matheus', 1);
 
 
 

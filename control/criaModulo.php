@@ -23,7 +23,7 @@ try {
 
     if ($qtd > 0) {
         $sql = $pdo->prepare(
-            "INSERT INTO Aulas (id_modulo, excluido) VALUES (:id_modulo, 0)"
+            "INSERT INTO aulas (id_modulo, excluido) VALUES (:id_modulo, 0)"
         );
 
         for ($i = 1; $i <= $qtd; $i++) {

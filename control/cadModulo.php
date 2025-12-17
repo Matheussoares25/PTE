@@ -15,7 +15,7 @@ try{
     $nome = $_POST["nome"] ?? '';
     $idcurso = $_POST["idCurso"] ?? '';
     
-    $sqlV = "SELECT * FROM Modulos where nome_modolu = :nome";
+    $sqlV = "SELECT * FROM modulos where nome_modolu = :nome";
     $stmt = $pdo->prepare($sqlV);
     $stmt->bindParam(':nome', $nome);
     $stmt->execute();
@@ -26,14 +26,14 @@ try{
         exit;
     }
 
-    $sqlInsert = "INSERT INTO Modulos (id_curso) VALUES (:idcurso)";
+    $sqlInsert = "INSERT INTO modulos (id_curso) VALUES (:idcurso)";
     $stmt = $pdo->prepare($sqlInsert);
     $stmt->bindValue(':idcurso', $idcurso);
     $stmt->execute();
     $id = $pdo->lastInsertId();
 
   
-    $sqlS = "SELECT * FROM Modulos WHERE id = :id";
+    $sqlS = "SELECT * FROM modulos WHERE id = :id";
     $stmt = $pdo->prepare($sqlS);
     $stmt->bindParam(':id', $id);
     $stmt->execute();

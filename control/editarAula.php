@@ -13,7 +13,7 @@ try {
     $video = $_FILES['video'] ?? null;
 
   
-    $sql = $pdo->prepare(" UPDATE Aulas SET nome_aula = :nomeAula
+    $sql = $pdo->prepare(" UPDATE aulas SET nome_aula = :nomeAula
         WHERE id = :idAula AND id_modulo = :idModulo
     ");
     $sql->execute([
@@ -22,7 +22,7 @@ try {
         ":idModulo" => $idModulo
     ]);
 
-    $sqlSelect = $pdo->prepare("SELECT id FROM Midias WHERE id_aula = :idAula LIMIT 1
+    $sqlSelect = $pdo->prepare("SELECT id FROM midias WHERE id_aula = :idAula LIMIT 1
     ");
     $sqlSelect->bindValue(":idAula", $idAula);
     $sqlSelect->execute();
@@ -31,7 +31,7 @@ try {
   
     if ($midiaExiste) {
         if(!$desc == ""){
-        $sqlDesc = $pdo->prepare("UPDATE Midias SET desc_midia = :descM WHERE id_aula = :idAula
+        $sqlDesc = $pdo->prepare("UPDATE midias SET desc_midia = :descM WHERE id_aula = :idAula
         ");
         $sqlDesc->execute([
             ":descM" => $desc,
@@ -42,7 +42,7 @@ try {
     } 
    
     else {
-        $sqlDesc = $pdo->prepare("INSERT INTO Midias (id_aula, desc_midia) 
+        $sqlDesc = $pdo->prepare("INSERT INTO midias (id_aula, desc_midia) 
             VALUES (:idAula, :descM)
         ");
         $sqlDesc->execute([
@@ -59,13 +59,13 @@ try {
         if ($midiaExiste) {
             
             $sql = $pdo->prepare("
-                UPDATE Midias SET conteudo = :conteudo
+                UPDATE midias SET conteudo = :conteudo
                 WHERE id_aula = :idAula
             ");
         } else {
             
             $sql = $pdo->prepare("
-                INSERT INTO Midias (id_aula, conteudo)
+                INSERT INTO midias (id_aula, conteudo)
                 VALUES (:idAula, :conteudo)
             ");
         }

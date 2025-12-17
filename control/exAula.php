@@ -9,7 +9,7 @@ try {
 
     $id = $_POST["id"] ?? 0;
 
-    $sql = $pdo->prepare("UPDATE Aulas SET excluido = 1 WHERE id = :id");
+    $sql = $pdo->prepare("UPDATE aulas SET excluido = 1 WHERE id = :id");
     $sql->bindParam(":id", $id);
     $sql->execute();
 

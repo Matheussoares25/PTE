@@ -10,7 +10,7 @@ try {
 
     $idModulo = $_POST["idModulo"] ?? 0;
 
-    $sql = $pdo->prepare("INSERT INTO Aulas (id_modulo, excluido) VALUES (:id_modulo, 0)");
+    $sql = $pdo->prepare("INSERT INTO aulas (id_modulo, excluido) VALUES (:id_modulo, 0)");
     $sql->bindParam(":id_modulo", $idModulo);
     $sql->execute();
 
