@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json");
 include "conn.php";
-include "authADM.php";
+include "auth.php";
 
 try {
     $conexao = new Conexao();

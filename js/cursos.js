@@ -150,11 +150,6 @@ async function abrirAula(id, nome, idModulo) {
         document.getElementById("descAtual").innerText = "";
     }
 
-
-
-
-
-
     console.log(dados)
 
 

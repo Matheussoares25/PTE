@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 include "conn.php";
-include "authADM.php";
+include "auth.php";
 
 $id_modulo = $_POST["idModulo"] ?? 0;
 
