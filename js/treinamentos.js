@@ -202,7 +202,7 @@ async function editTreinamento(id) {
     }).then(async result => {
 
         if (result.isConfirmed) {
-            editarCurso();
+               window.location = "cadTreinamento.html"
         }
 
         if (result.isDenied) {

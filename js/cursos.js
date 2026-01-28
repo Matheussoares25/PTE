@@ -180,26 +180,42 @@ async function salvarAula() {
     formdata.append("nomeAula", nomeAula);
     formdata.append("desc", desc);
 
+    const loading = document.getElementById("loading");
+
+    loading.style.display = "block";
+
+
     const fileVideo = document.getElementById("fileVideo").files[0];
     if (fileVideo) {
         formdata.append("video", fileVideo);
     }
+    try {
+        const res = await fetch("control/editarAula.php", {
+            method: "POST",
+            body: formdata,
+            credentials: "include"
+        });
 
-    const res = await fetch("control/editarAula.php", {
-        method: "POST",
-        body: formdata,
-        credentials: "include"
-    });
+        const dados = await res.json();
 
-    const dados = await res.json();
+        if (dados.sucesso) {
+            alert("Aula editada com sucesso");
+            carregarCursosSidebar();
+            console.log(nomeAula);
+            location.reload();
 
-    if (dados.sucesso) {
-        alert("Aula editada com sucesso");
-        carregarCursosSidebar();
-        console.log(nomeAula);
-       
-    } else {
-        alert("Erro ao editar aula");
+        } else {
+            alert("Erro ao editar aula");
+        }
+    } catch (err) {
+        Swal.fire({
+            title: "Erro na requisição",
+            html: "ocorreu um erro inesperado na requisição",
+            icon: "alert",
+
+        });
+    } finally {
+        loading.style.display = "none";
     }
 }
 

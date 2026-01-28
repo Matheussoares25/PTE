@@ -51,6 +51,21 @@
             width: calc(100% - var(--sidebar-width));
         }
 
+        .loud {
+            background: rgba(29, 96, 134, 0.5);
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            padding-top: auto;
+        }
+
+        #spiner {
+            margin: auto;
+        }
+
         .list-group-item {
             cursor: pointer;
         }
@@ -276,8 +291,19 @@
                         <button class="btn btn-success px-4" onclick="salvarAula()">
                             <i class="fa-solid fa-check me-1"></i> Salvar Aula
                         </button>
+
                     </div>
 
+                    <div id="loading" style="display: none;">
+                        <div class="loud d-flex justify-content-center" style="display: none;">
+                            <div id="spiner" class="spinner-border" role="status">
+                                <div class="container text-white">PTE</div>
+                            </div>
+                        </div>
+
+                        <div class="loud d-flex justify-content-center text-white" style="display: none;">Salvando
+                            conteudo da Aula...</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -294,4 +320,4 @@
 <script src="js/functions.js"></script>
 <script src="js/cursos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

@@ -1,5 +1,7 @@
 <?php
 header("Content-Type: application/json");
+ini_set('memory_limit', '512M');
+
 include "conn.php";
 include "auth.php";
 

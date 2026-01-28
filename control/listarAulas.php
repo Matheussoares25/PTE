@@ -21,7 +21,7 @@ try {
 
     $sql = $pdo->prepare("SELECT * FROM aulas WHERE id_modulo = :id_modulo
     and excluido = 0");
-    $sql->bindValue(":id_modulo", $id_modulo,);
+    $sql->bindValue(":id_modulo", $id_modulo);
     $sql->execute();
 
     $aulas = $sql->fetchAll(PDO::FETCH_ASSOC);
