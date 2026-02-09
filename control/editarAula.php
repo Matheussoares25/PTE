@@ -12,7 +12,7 @@ try {
     $desc = $_POST['desc'] ?? '';
     $video = $_FILES['video'] ?? null;
 
-  
+
     $sql = $pdo->prepare(" UPDATE aulas SET nome_aula = :nomeAula
         WHERE id = :idAula AND id_modulo = :idModulo
     ");
@@ -28,20 +28,20 @@ try {
     $sqlSelect->execute();
     $midiaExiste = $sqlSelect->fetch(PDO::FETCH_ASSOC);
 
-  
+
     if ($midiaExiste) {
-        if(!$desc == ""){
-        $sqlDesc = $pdo->prepare("UPDATE midias SET desc_midia = :descM WHERE id_aula = :idAula
+        if (!$desc == "") {
+            $sqlDesc = $pdo->prepare("UPDATE midias SET desc_midia = :descM WHERE id_aula = :idAula
         ");
-        $sqlDesc->execute([
-            ":descM" => $desc,
-            ":idAula" => $idAula
-            
-        ]);
-    }else{};
-    } 
-   
-    else {
+            $sqlDesc->execute([
+                ":descM" => $desc,
+                ":idAula" => $idAula
+
+            ]);
+        } else {
+        }
+        ;
+    } else {
         $sqlDesc = $pdo->prepare("INSERT INTO midias (id_aula, desc_midia) 
             VALUES (:idAula, :descM)
         ");
@@ -51,30 +51,41 @@ try {
         ]);
     }
 
-   
+
     if (!empty($video["tmp_name"])) {
 
-        $stream = fopen($video["tmp_name"], "rb");
+        $ext = pathinfo($video["name"], PATHINFO_EXTENSION);
+        $nomeArquivo = "aula_" . $idAula . "." . $ext;
 
-        if ($midiaExiste) {
-            
-            $sql = $pdo->prepare("
-                UPDATE midias SET conteudo = :conteudo
-                WHERE id_aula = :idAula
-            ");
-        } else {
-            
-            $sql = $pdo->prepare("
-                INSERT INTO midias (id_aula, conteudo)
-                VALUES (:idAula, :conteudo)
-            ");
+        $diretorio = __DIR__ . "/../uploads/videos/";
+        $caminhoFinal = $diretorio . $nomeArquivo;
+        $caminhoBanco = "/uploads/videos/" . $nomeArquivo;
+
+        if (!is_dir($diretorio)) {
+            mkdir($diretorio, 0755, true);
         }
 
-        $sql->bindParam(":idAula", $idAula, PDO::PARAM_INT);
-        $sql->bindParam(":conteudo", $stream, PDO::PARAM_LOB);
-        $sql->execute();
+        if (!move_uploaded_file($video["tmp_name"], $caminhoFinal)) {
+            throw new Exception("Erro ao salvar o vídeo no servidor");
+        }
 
-        fclose($stream);
+        if ($midiaExiste) {
+            $sql = $pdo->prepare("
+            UPDATE midias 
+            SET caminho_video = :caminho
+            WHERE id_aula = :idAula
+        ");
+        } else {
+            $sql = $pdo->prepare("
+            INSERT INTO midias (id_aula, caminho_video)
+            VALUES (:idAula, :caminho)
+        ");
+        }
+
+        $sql->execute([
+            ":idAula" => $idAula,
+            ":caminho" => $caminhoBanco
+        ]);
     }
 
     echo json_encode(["sucesso" => true]);

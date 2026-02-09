@@ -153,9 +153,10 @@ async function abrirAula(id, nome, idModulo) {
     console.log(dados)
 
 
-    if (dados.sucesso && dados.dados?.conteudo) {
-        document.getElementById("ResVideo").src = dados.dados.conteudo;
+    if (dados.sucesso && dados.dados?.video) {
+        document.getElementById("ResVideo").src = dados.dados.video;
     }
+
 
 
 }

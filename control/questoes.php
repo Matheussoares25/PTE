@@ -14,7 +14,7 @@ try {
 
 
    $sql = $pdo->prepare("SELECT q.id AS id_questao,q.pergunta,a.id AS id_alternativa,a.texto FROM questoes q
-  INNER JOIN alternativas a 
+  LEFT JOIN alternativas a 
     ON a.id_questao = q.id
   WHERE q.id_prova = :idProva
   ORDER BY q.id, a.id

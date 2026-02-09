@@ -206,6 +206,25 @@ try {
           font-size: 14px;
           line-height: 1.5;
         }
+        #AulasMod {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#AulasMod li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+#AulasMod li:hover {
+  background: #f0f2f5;
+}
       </style>
 </head>
 
@@ -224,10 +243,10 @@ try {
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <div class="navbar-nav align-items-lg-center gap-lg-3">
 
-          <a class="nav-link text-white fw-semibold" href="treinamentos.html">Treinamentos</a>
+          <a class="nav-link text-white fw-semibold" href="/treinamentos.html">Treinamentos</a>
           <a class="nav-link text-white fw-semibold btnadm" href="#">Desempenho</a>
-          <a class="nav-link text-white fw-semibold" href="ranking.html">Ranking</a>
-          <a class="nav-link text-white fw-semibold" href="noticias.html">Notícias</a>
+          <a class="nav-link text-white fw-semibold" href="/ranking.html">Ranking</a>
+          <a class="nav-link text-white fw-semibold" href="/noticias.html">Notícias</a>
           <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
 
           <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
@@ -381,10 +400,10 @@ try {
       document.getElementById("descAula").innerText = dados.dados.desc_midia;
     }
 
-    if (dados.sucesso && dados.dados && dados.dados.conteudo) {
+    if (dados.sucesso && dados.dados && dados.dados.video) {
       document.querySelector(".video-container").innerHTML = `
             <video controls autoplay style="width:100%; height:100%;">
-                <source src="${dados.dados.conteudo}" type="video/mp4">
+                <source src="${dados.dados.video}" type="video/mp4">
                 Seu navegador não suporta vídeo.
             </video>
         `;
@@ -450,3 +469,5 @@ try {
 
 
 </script>
+
+<script src="/js/functions.js"></script>

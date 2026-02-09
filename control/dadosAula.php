@@ -11,23 +11,18 @@ try {
 
     $id = $_POST["idAula"] ?? 0;
 
-    $sql = $pdo->prepare("SELECT desc_midia, conteudo FROM midias WHERE id_aula = :id");
+    $sql = $pdo->prepare("SELECT desc_midia, caminho_video FROM midias WHERE id_aula = :id");
     $sql->bindParam(":id", $id);
     $sql->execute();
 
     $midia = $sql->fetch(PDO::FETCH_ASSOC);
 
-    if ($midia) {
-        
-        $base64 = base64_encode($midia['conteudo']);
-
-        $ext = pathinfo($midia['desc_midia'], PATHINFO_EXTENSION) ?: "webm";
-
+    if ($midia && $midia["caminho_video"]) {
         echo json_encode([
             "sucesso" => true,
             "dados" => [
                 "desc_midia" => $midia['desc_midia'],
-                "conteudo" => "data:video/$ext;base64,$base64"
+                "video" => $midia["caminho_video"]
             ]
         ]);
     } else {
