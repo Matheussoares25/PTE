@@ -28,25 +28,49 @@ function carregarCursosSidebar() {
 
                 curso.modulos.forEach(mod => {
 
-                    lista.innerHTML += `
-                        <li class="list-group-item" 
-                            style="padding-left:25px; cursor:pointer;"
-                            onclick="abrirModulo(${mod.id_modulo}, '${mod.nome_modulo}')">
-                            <i class="fa-solid fa-layer-group text-success"></i>
-                            ${mod.nome_modulo}
-                        </li>
-                    `;
 
+                    lista.innerHTML += `
+        <li class="list-group-item" 
+            style="padding-left:25px; cursor:pointer;"
+            onclick="abrirModulo(${mod.id_modulo}, '${mod.nome_modulo}')">
+          
+            ${mod.nome_modulo}
+        </li>
+    `;
 
                     mod.aulas.forEach(aula => {
+
+                        var icon = "";
+                        var text = "";
+                        var func = "";
+
+                        if (aula.tipo == 1) {
+                            icon = `<i class="fa-solid fa-circle-play text-danger"></i>`;
+                            text = `Aula sem nome `;
+                            func = "abrirAula";
+
+
+                        }
+
+                        else if (aula.tipo == 2) {
+                            icon = `<i class="fa-solid fa-book-tanakh" style="color: rgb(99, 230, 190);"></i>`;
+                            text = `Prova sem nome `;
+                            func = "abrirProva";
+                        }
+
+
+
+
+
                         lista.innerHTML += `
         <li class="list-group-item"
             style="padding-left:45px; cursor:pointer;"
-            onclick="abrirAula(${aula.id_aula}, '${aula.nome_aula}', ${mod.id_modulo})">
-            <i class="fa-solid fa-circle-play text-danger"></i>
-            ${aula.nome_aula ?? "Aula sem nome"}
+            onclick="${func}(${aula.id_aula}, '${aula.nome_aula}', ${mod.id_modulo})">
+            ${icon}
+            ${aula.nome_aula ?? text}
         </li>
     `;
+
                     });
                 });
 
@@ -101,7 +125,7 @@ async function abrirModulo(id, nome) {
     const html = dados.aulas.map(a => `
         <tr>
             <td>${a.nome_aula}</td>
-            <td>${a.id ?? "Aula sem nome"}</td>
+            <td>${a.id ?? "NOT FUND NAME"}</td>
             <td>
                 <button class="btn btn-primary"  onclick="abrirAula(${a.id}, '${a.nome_aula}', '${a.id_modulo}')">
                     <i class="fa-solid fa-pen-to-square"></i>
@@ -120,6 +144,7 @@ async function abrirAula(id, nome, idModulo) {
     document.getElementById("ResVideo").src = "";
     document.getElementById("cadCursos").style.display = "none";
     document.getElementById("EditModulo").style.display = "none";
+    document.getElementById('EditProva').style.display = "none";
 
     document.getElementById("EditAula").style.display = "";
     localStorage.setItem("idAula", id);
@@ -161,6 +186,116 @@ async function abrirAula(id, nome, idModulo) {
 
 }
 
+async function abrirProva(id, nome, idModulo) {
+    document.getElementById("cadCursos").style.display = "none";
+    document.getElementById("EditModulo").style.display = "none";
+
+    document.getElementById('EditProva').style.display = "";
+
+    document.getElementById("nomeProva").value = nome;
+
+    let dados = new FormData();
+    dados.append("idProva", id);
+
+    try {
+
+        const res = await fetch("control/questoes.php", {
+            method: "POST",
+            body: dados
+        });
+
+        const content = await res.json();
+
+        const container = document.getElementById("containerQuestoes");
+        container.innerHTML = "";
+
+        if (!content.Questoes || content.Questoes.length === 0) {
+            container.innerHTML = `<p class="text-muted">Nenhuma questão encontrada</p>`;
+            return;
+        }
+
+        content.Questoes.forEach((questao, index) => {
+
+            let htmlAlternativas = "";
+
+            questao.alternativas.forEach(alternativa => {
+                htmlAlternativas += `
+                    <h5>${alternativa.texto}</h5>
+                    <button> Editar Alternativa</button>
+                `;
+            });
+
+            container.innerHTML += `
+                <div class="card p-3 mt-3 shadow-sm">
+                    <h6>Questão ${index + 1}</h6>
+                    <p>${questao.pergunta.trim()}</p>
+                    <h5>
+                        ${htmlAlternativas}
+                    </h5>
+                </div>
+            `;
+        });
+
+    } catch (erro) {
+        console.error("Erro ao carregar questões:", erro);
+    }
+}
+
+
+
+async function salvarProva() {
+     const idAula = localStorage.getItem("idAula");
+    const idModulo = localStorage.getItem("idModulo");
+    const nomeProva = document.getElementById("nomeProva").value;
+   
+
+    if (nomeProva === "null" || nomeProva === "") {
+        alert("Preencha o nome da Prova");
+        return;
+    }
+
+    let dados = new FormData();
+    dados.append("nomeP", nomeProva);
+    dados.append("idAula", idAula);
+    dados.append("idModulo", idModulo);
+
+
+    try{
+        const res = await fetch("control/editProva.php",{
+            method: "POST",
+            body: dados,
+            credentials: "include"
+        })
+    }catch(err){
+
+    }
+    
+}
+
+async function criarQuestao() {
+    const idAula = localStorage.getItem("idAula");
+    const idModulo = localStorage.getItem("idModulo");
+    const nomeAula = document.getElementById("nomeAula").value;
+    
+
+    let formdata = new FormData();
+    formdata.append("idAula", idAula);
+    formdata.append("idModulo", idModulo);
+    formdata.append("nomeAula", nomeAula);
+    formdata.append("desc", desc);
+
+    try{
+        const res = await fetch("control/criaUmaQuestao.php",{
+            method: "POST",
+            body: formdata,
+            credentials: "include"
+        })
+
+        
+    }catch(err){
+        alert ("ERRO DESCONHECIDO")    }
+}
+
 async function salvarAula() {
     const idAula = localStorage.getItem("idAula");
     const idModulo = localStorage.getItem("idModulo");
@@ -173,7 +308,7 @@ async function salvarAula() {
     }
 
 
-    console.log(desc);
+    
 
     let formdata = new FormData();
     formdata.append("idAula", idAula);
@@ -200,10 +335,18 @@ async function salvarAula() {
         const dados = await res.json();
 
         if (dados.sucesso) {
-            alert("Aula editada com sucesso");
-            carregarCursosSidebar();
-            console.log(nomeAula);
-            location.reload();
+            Swal.fire({
+                title: "Dados Salvos",
+                html: "Os dados desta aula foram salvos",
+                icon: "success",
+                timer: 2500
+
+            }).then(() => {
+                carregarCursosSidebar();
+                location.reload();
+            })
+
+
 
         } else {
             alert("Erro ao editar aula");
@@ -243,6 +386,32 @@ async function criaUmaAula() {
         })
     }
 }
+
+async function criaUmaProva() {
+    const idModulo = localStorage.getItem("idModulo");
+
+    const formdata = new FormData();
+    formdata.append("idModulo", idModulo);
+
+    const res = await fetch("control/criaUmaProva.php", {
+        method: "POST",
+        body: formdata,
+        credentials: "include"
+    });
+    const dados = await res.json();
+
+    if (dados.sucesso) {
+        carregarCursosSidebar();
+        Swal.fire({
+            icon: 'success',
+            title: 'Aula Criada com sucesso',
+            showConfirmButton: false,
+            timer: 1500
+        })
+    }
+}
+
+
 
 async function cadCurso() {
     const nome = document.getElementById('NameCurso').value;

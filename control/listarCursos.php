@@ -15,7 +15,8 @@ try {
             m.nome_modolu AS nome_modulo,
 
             a.id AS id_aula,
-            a.nome_aula AS nome_aula
+            a.nome_aula AS nome_aula,
+            a.tipo as Tipo
 
         FROM treinamentos t
         LEFT JOIN modulos m 
@@ -59,7 +60,8 @@ try {
         if (!empty($row['id_aula'])) {
             $resultado[$tid]['modulos'][$mid]['aulas'][] = [
                 'id_aula' => $row['id_aula'],
-                'nome_aula' => $row['nome_aula']
+                'nome_aula' => $row['nome_aula'],
+                'tipo' => $row['Tipo']
             ];
         }
     }

@@ -43,3 +43,7 @@ phpinfo();
 ?>
 
 
+
+Criar o arquivo php para criar a questao dentro da prova, parte do adm
+
+
