@@ -4,3 +4,18 @@ TREINAMENTO FALTA:
 pagina de subir curso,,
 
 SWAL FIRE botao editar curso,
+
+
+fazer funcionalidade do botao editar (Questoes);
+
+fazer botao para excluir modulo;
+
+
+fazer interface do usario para Provas;
+
+
+
+
+Sql:
+pensar na maneira de salvar resultados de provas dos usuarios, uma tabela para guardar o historico de provas, qm fez, qnd fez, e quantos acertos
+e tirar % de acertos;

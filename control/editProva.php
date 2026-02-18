@@ -13,6 +13,7 @@ try{
     $sql = $pdo->prepare("UPDATE aulas set nome_aula = :nomeProva where id = :idProva and id_modulo = :idModulo");
     $sql -> execute([":nomeProva" => $nomeP, ":idProva" => $idAula, ":idModulo" => $idModulo]);
 
+    echo json_encode(["sucesso" => true]);
 
 
 }

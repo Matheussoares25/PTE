@@ -10,6 +10,7 @@ try {
     $pdo = $conexao->conn;
 
     $idProva = $_POST["idProva"] ?? "";
+    
 
 
 
@@ -27,22 +28,25 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 $questoes = [];
 
 foreach ($resultado as $linha) {
-  $id = $linha["id_questao"];
 
-  if (!isset($questoes[$id])) {
-    $questoes[$id] = [
-      "id" => $id,
-      "pergunta" => $linha["pergunta"],
-      "alternativas" => []
-    ];
-  }
+    $id = $linha["id_questao"];
 
-  $questoes[$id]["alternativas"][] = [
-    "id_alternativa" => $linha["id_alternativa"],
-    "texto" => $linha["texto"],
-    
-  ];
+    if (!isset($questoes[$id])) {
+        $questoes[$id] = [
+            "id" => $id,
+            "pergunta" => $linha["pergunta"],
+            "alternativas" => []
+        ];
+    }
+
+    if (!empty($linha["id_alternativa"])) {
+        $questoes[$id]["alternativas"][] = [
+            "id_alternativa" => $linha["id_alternativa"],
+            "texto" => $linha["texto"],
+        ];
+    }
 }
+
 
 echo json_encode([
   "Questoes" => array_values($questoes)
