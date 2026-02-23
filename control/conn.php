@@ -2,7 +2,7 @@
 class Conexao{
     private $host = "localhost";
     private $usuario = "root";
-    private $senha = "123456";
+    private $senha = "root";
     Private $banco = "pte";
     public $conn;
 

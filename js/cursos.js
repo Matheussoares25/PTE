@@ -387,6 +387,8 @@ async function salvarAula() {
     formdata.append("video", fileVideo);
   }
   try {
+    console.log(fileVideo);
+
     const res = await fetch("control/editarAula.php", {
       method: "POST",
       body: formdata,
@@ -402,8 +404,8 @@ async function salvarAula() {
         icon: "success",
         timer: 2500,
       }).then(() => {
-        carregarCursosSidebar();
-        location.reload();
+        
+        
       });
     } else {
       alert("Erro ao editar aula");

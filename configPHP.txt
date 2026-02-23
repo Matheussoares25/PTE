@@ -1,0 +1,54 @@
+primeiro acesso termos da plataforma dnv Termos (SO FAZER O SWAL FIRE);
+
+tela de start curso com termo dnv
+
+so libera dps de assist o video
+
+Tem aviso q ele so pode acessar uma vez a prova;
+
+
+apos fazer uma prova vc tem em % qnt acertou; 3 tentativas
+só libera o proximo modulo se acertar 70%;
+
+
+opção do adm liberar a prova dnv;
+
+
+
+
+
+
+Uploud video aula
+Uploado fotos 
+Modelar prova dentro do modulo 
+
+Tabela especifica para modulos
+Tabela especifica para midia (cada midia vai ta relacionada a um modulto)
+Tabela especifica para Provas (As questoes tem 5 alternativas e voce decide qual é a correta), (gera prova ela tem seu id da prova,tem questoes(questoes tambem vai ser uma tabela) questoes vao estar relacionada a uma prova e uma prova vai ta relacionada a um modulo;
+
+
+
+Alteração limite php 
+
+caminho php.ini 
+Loaded Configuration File
+
+upload_max_filesize = 50M
+post_max_size = 50M
+
+
+
+<?php
+phpinfo();
+?>
+
+
+
+Criar o arquivo php para criar a questao dentro da prova, parte do adm
+
+
+
+//
+
+["error"]=> int(1) = erro referente a configuração do php; 
+dado erro com var_dump ($_files);

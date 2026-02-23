@@ -30,7 +30,7 @@ try {
 
 
     if ($midiaExiste) {
-        if (!$desc == "") {
+        if ($desc != "") {
             $sqlDesc = $pdo->prepare("UPDATE midias SET desc_midia = :descM WHERE id_aula = :idAula
         ");
             $sqlDesc->execute([
@@ -51,13 +51,19 @@ try {
         ]);
     }
 
+    $diretorio = __DIR__ . "/../uploads/videos/";
+
 
     if (!empty($video["tmp_name"])) {
 
         $ext = pathinfo($video["name"], PATHINFO_EXTENSION);
         $nomeArquivo = "aula_" . $idAula . "." . $ext;
 
-        $diretorio = __DIR__ . "/../uploads/videos/";
+        
+
+        
+
+        
         $caminhoFinal = $diretorio . $nomeArquivo;
         $caminhoBanco = "/uploads/videos/" . $nomeArquivo;
 
@@ -87,6 +93,9 @@ try {
             ":caminho" => $caminhoBanco
         ]);
     }
+
+    
+   
 
     echo json_encode(["sucesso" => true]);
 

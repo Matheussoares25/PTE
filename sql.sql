@@ -17,6 +17,11 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO pte.usuarios (email,senha,ativos,Foto,token,tipo,nome,acess) VALUES
+	 ('matheusaparecido779944@gmail.com','$2y$10$kAUAwGqiUzqLUpTFHSbyXun2QB3q61qGM1gYUnTSWLvL6HhWqeCrG',1,NULL,'da3b0df56c7e164b46d44de8cd78161710c23be8eb7c214543726614b4a76993','2','matheus',1);
+
+
+
 
 CREATE TABLE IF NOT EXISTS `treinamentos` (
   `id` int NOT NULL AUTO_INCREMENT,
