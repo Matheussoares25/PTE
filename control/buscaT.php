@@ -26,6 +26,8 @@ LEFT JOIN treinamentos AS c ON c.id = a.id_curso WHERE a.id_curso = :id");
     $sql1->bindParam("id", $idTreinamento);
     $sql1->execute();
     $treinamentos2 = $sql1->fetchAll(PDO::FETCH_ASSOC);
+
+    
     
 
     $sql2 = $pdo->prepare("SELECT email,id FROM usuarios where ativos = 1 and tipo = 1");

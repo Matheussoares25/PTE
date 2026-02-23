@@ -321,9 +321,7 @@ async function criarQuestao() {
       const alternativa2 = document.getElementById("alternativa2").value;
       const alternativa3 = document.getElementById("alternativa3").value;
       const alternativa4 = document.getElementById("alternativa4").value;
-      const correta = document.querySelector(
-        'input[name="correta"]:checked',
-      ).value;
+      const correta = document.querySelector('input[name="correta"]:checked',).value;
 
       let dados = new FormData();
       dados.append("pergunta", pergunta);
@@ -387,8 +385,6 @@ async function salvarAula() {
     formdata.append("video", fileVideo);
   }
   try {
-    console.log(fileVideo);
-
     const res = await fetch("control/editarAula.php", {
       method: "POST",
       body: formdata,
@@ -404,8 +400,8 @@ async function salvarAula() {
         icon: "success",
         timer: 2500,
       }).then(() => {
-        
-        
+        carregarCursosSidebar();
+        location.reload();
       });
     } else {
       alert("Erro ao editar aula");
