@@ -1,3 +1,13 @@
+window.onload = function () {
+    if(this.localStorage.getItem("tipoUsuario") == 1){
+       document.getElementById("UserComum").style.display = "block";
+       document.getElementById("UserAdm").style.display = "none";
+    }else{
+        document.getElementById("UserComum").style.display = "none";
+        document.getElementById("UserAdm").style.display = "block";
+    }
+   
+}
 
 if (document.getElementById("login") != null) {
 
@@ -25,12 +35,16 @@ if (document.getElementById("login") != null) {
                 alert("teste");
             }
 
+           
+
 
             if (data.success) {
                 $('#Resposta').html('<p>Login bem-sucedido</p>');
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("idUser", data.id);
                 localStorage.setItem("tipoUsuario", data.tipo);
+
+
 
                 const Toast = Swal.mixin({
                     toast: true,

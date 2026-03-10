@@ -50,6 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['id'] = $res['id'];
         $_SESSION['tipo'] = (int) $res['tipo'];
 
+        
+        
+
 
         $token = bin2hex(random_bytes(32));
 

@@ -1,3 +1,11 @@
+function fecharModulo() {
+  document.getElementById("EditModulo").style.display = "none";
+  document.getElementById("EditAula").style.display = "none";
+  document.getElementById("FormModulo").style.display = "none";
+  document.getElementById("EditProva").style.display = "none";
+  document.getElementById("cadCursos").style.display = "block";
+}
+
 document.addEventListener("DOMContentLoaded", carregarCursosSidebar);
 function carregarCursosSidebar() {
   fetch("control/listarCursos.php")
@@ -5,7 +13,7 @@ function carregarCursosSidebar() {
     .then((data) => {
       const lista = document.getElementById("listaCursos");
       lista.innerHTML = "";
-  
+
       if (!data.sucesso || data.cursos.length === 0) {
         lista.innerHTML = `
                     <li class="list-group-item text-center text-muted">
@@ -13,7 +21,7 @@ function carregarCursosSidebar() {
                     </li>`;
         return;
       }
-  
+
       data.cursos.forEach((curso) => {
         lista.innerHTML += `
                     <li class="list-group-item cursor-pointer" 
@@ -24,7 +32,7 @@ function carregarCursosSidebar() {
                         </strong>
                     </li>
                 `;
-  
+
         curso.modulos.forEach((mod) => {
           lista.innerHTML += `
         <li class="list-group-item" 
@@ -34,12 +42,12 @@ function carregarCursosSidebar() {
             ${mod.nome_modulo}
         </li>
     `;
-  
+
           mod.aulas.forEach((aula) => {
             var icon = "";
             var text = "";
             var func = "";
-  
+
             if (aula.tipo == 1) {
               icon = `<i class="fa-solid fa-circle-play text-danger"></i>`;
               text = `Aula sem nome `;
@@ -49,7 +57,7 @@ function carregarCursosSidebar() {
               text = `Prova sem nome `;
               func = "abrirProva";
             }
-  
+
             lista.innerHTML += `
         <li class="list-group-item"
             style="padding-left:45px; cursor:pointer;"
@@ -60,11 +68,11 @@ function carregarCursosSidebar() {
     `;
           });
         });
-  
+
         lista.innerHTML += "<hr>";
       });
     });
-  }
+}
 
 function abrirCurso(id, nome) {
   localStorage.setItem("idCurso", id);
@@ -80,6 +88,7 @@ function abrirCurso(id, nome) {
 async function abrirModulo(id, nome) {
   document.getElementById("cadCursos").style.display = "none";
   document.getElementById("EditAula").style.display = "none";
+  document.getElementById("FormModulo").style.display = "none";
   localStorage.setItem("idModulo", id);
   localStorage.setItem("nomeModulo", nome);
 
@@ -124,6 +133,7 @@ async function abrirAula(id, nome, idModulo) {
   document.getElementById("cadCursos").style.display = "none";
   document.getElementById("EditModulo").style.display = "none";
   document.getElementById("EditProva").style.display = "none";
+  document.getElementById("FormModulo").style.display = "none";
 
   document.getElementById("EditAula").style.display = "";
   localStorage.setItem("idAula", id);
@@ -249,12 +259,10 @@ async function salvarProva() {
         title: "Prova editada com sucesso",
         showConfirmButton: false,
         timer: 1500,
-      })
-      carregarCursosSidebar()
-      
-
+      });
+      carregarCursosSidebar();
     }
-  } catch (err) { }
+  } catch (err) {}
 }
 
 //Função para criar as questoções de avaliação
@@ -321,7 +329,9 @@ async function criarQuestao() {
       const alternativa2 = document.getElementById("alternativa2").value;
       const alternativa3 = document.getElementById("alternativa3").value;
       const alternativa4 = document.getElementById("alternativa4").value;
-      const correta = document.querySelector('input[name="correta"]:checked',).value;
+      const correta = document.querySelector(
+        'input[name="correta"]:checked',
+      ).value;
 
       let dados = new FormData();
       dados.append("pergunta", pergunta);
@@ -468,6 +478,29 @@ async function criaUmaProva() {
 async function cadCurso() {
   const nome = document.getElementById("NameCurso").value;
 
+  if (nome == "null" || nome == "") {
+    {
+      Swal.fire({
+        title: `Preencha Todos Campos`,
+        html: `Preencha o campo com nome do curso`,
+        icon: "error",
+      });
+      return;
+    }
+  }
+
+  let letras = nome.length;
+  if (letras <= 3 || letras >= 30) {
+    {
+      Swal.fire({
+        title: `Nome Invalido`,
+        html: `O Nome do Curso deve conter entre 3 e 30 letras`,
+        icon: "error",
+      });
+      return;
+    }
+  }
+
   if (nome == "") {
     Swal.fire({
       title: `Preencha Todos Campos`,
@@ -517,7 +550,7 @@ async function cadCurso() {
     });
 }
 
-async function cadModulo() {
+async function NameModulo() {
   Swal.fire({
     title: `Criar módulo curso`,
     width: "900px",
@@ -538,41 +571,31 @@ async function cadModulo() {
                         Editar nome do módulo
                     </button>
                 </div>
-
-                <div class="mb-3 text-start">
-                    <label class="form-label">Quantidade de aulas</label>
-                    <input type="number" class="form-control" id="qtdAulass"
-                    placeholder="Ex: 5" min="1">
-                </div>
                 <hr>
 
-                <ul class="list-group" id="lista-modulos"></ul>
+        
 
             </div>
         </div>
     `,
     preConfirm: async () => {
       const nomeModulo = document.getElementById("nameismod").value;
-      const qtdAulas = document.getElementById("qtdAulass").value.trim();
-      const idCurso = localStorage.getItem("idCurso");
+
+      const idModulo = localStorage.getItem("idModulo");
+
+      console.log("ID MODULO:", idModulo);
 
       formdata = new FormData();
       formdata.append("nome", nomeModulo);
-      formdata.append("qtd", qtdAulas);
-      formdata.append("idCurso", idCurso);
+      formdata.append("idModulo", idModulo);
 
       if (nomeModulo == "") {
         Swal.showValidationMessage("Informe o nome do módulo");
         return false;
       }
 
-      if (!qtdAulas || qtdAulas <= 0) {
-        Swal.showValidationMessage("Informe a quantidade de aulas");
-        return false;
-      }
-
       try {
-        const res = await fetch("control/criaModulo.php", {
+        const res = await fetch("control/NameModulo.php", {
           method: "POST",
           body: formdata,
           credentials: "include",
@@ -582,6 +605,15 @@ async function cadModulo() {
 
         if (!data.success) {
           throw new Error(data.message);
+        }else{
+            Swal.fire({
+                icon: 'success',
+                title: 'Módulo Criado com sucesso',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            document.getElementById("NameModuloe").value = nomeModulo;
+            carregarCursosSidebar();
         }
 
         return data;

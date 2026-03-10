@@ -12,6 +12,7 @@ try {
     $desc = $_POST['desc'] ?? '';
     $video = $_FILES['video'] ?? null;
 
+    
 
     $sql = $pdo->prepare(" UPDATE aulas SET nome_aula = :nomeAula
         WHERE id = :idAula AND id_modulo = :idModulo
