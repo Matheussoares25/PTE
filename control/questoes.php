@@ -14,12 +14,19 @@ try {
 
 
 
-   $sql = $pdo->prepare("SELECT q.id AS id_questao,q.pergunta,a.id AS id_alternativa,a.texto FROM questoes q
-  LEFT JOIN alternativas a 
+   $sql = $pdo->prepare("
+SELECT 
+    q.id AS id_questao,
+    q.pergunta,
+    a.id AS id_alternativa,
+    a.texto
+FROM questoes q
+LEFT JOIN alternativas a 
     ON a.id_questao = q.id
-  WHERE q.id_prova = :idProva
-  ORDER BY q.id, a.id
+WHERE q.id_prova = :idProva
+ORDER BY q.id, a.id
 ");
+
 $sql->bindValue(":idProva", $idProva);
 $sql->execute();
 
@@ -42,15 +49,19 @@ foreach ($resultado as $linha) {
     if (!empty($linha["id_alternativa"])) {
         $questoes[$id]["alternativas"][] = [
             "id_alternativa" => $linha["id_alternativa"],
-            "texto" => $linha["texto"],
+            "texto" => $linha["texto"]
         ];
     }
 }
 
+$questoes = array_values($questoes);
 
 echo json_encode([
-  "Questoes" => array_values($questoes)
+    "sucesso" => true,
+    "Questoes" => $questoes,
+    "idProva" => $idProva
 ]);
+
 
 } catch (PDOException $e) {
     echo json_encode("Erro" . $e->getMessage());

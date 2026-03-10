@@ -30,7 +30,28 @@ try {
   $sql->execute();
   $modulos = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-  
+  $sql = $pdo->prepare("SELECT * FROM use_prova where id_user = :id");
+  $sql->bindParam(":id", $_SESSION["id"]);
+  $sql->execute();
+  $provas = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+  $qtdProvas = count($provas);
+
+
+  $bloqueado = false;
+
+  if (!empty($provas)) {
+    $bloqueado = true;
+  }
+
+
+
+
+
+
+
+
+
 
 
 } catch (Exception $e) {
@@ -46,186 +67,192 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
-      <style>
-        body {
-          margin: 0;
-          height: 100vh;
-          background: #f5f6f8;
-          overflow: hidden;
-        }
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #f5f6f8;
 
-        .layout {
-          display: grid;
-          grid-template-columns: 320px 1fr;
-          height: 100vh;
-        }
+    }
 
-
-        .sidebar {
-          background: #ffffff;
-          border-right: 1px solid #e0e0e0;
-          padding: 24px;
-          overflow-y: auto;
-        }
-
-        .sidebar h4 {
-          font-weight: 600;
-          margin-bottom: 24px;
-        }
-
-        .lista-aulas {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .lista-aulas li {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 8px;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: background .2s;
-        }
-
-        .lista-aulas li:hover {
-          background: #f0f2f5;
-        }
-
-        .lista-aulas li.active {
-          background: #e7f1ff;
-          font-weight: 500;
-        }
-
-        .lista-aulas i {
-          font-size: 18px;
-          color: #555;
-        }
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: 100vh;
+    }
 
 
-        .player {
-          display: flex;
-          flex-direction: column;
-          background: #f5f6f8;
-          justify-content: center;
-        }
+    .sidebar {
+      background: #ffffff;
+      border-right: 1px solid #e0e0e0;
+      padding: 24px;
+      overflow-y: auto;
+    }
 
-        .video-container {
-          position: relative;
-          height: 55vh;
-          width: 100%;
-          background: #000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 0;
-        }
+    .sidebar h4 {
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
 
-        .video-container video {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          background: #000;
-        }
+    .lista-aulas {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-        .video-placeholder {
-          color: #fff;
-          text-align: center;
-        }
+    .lista-aulas li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .2s;
+    }
 
-        .video-placeholder i {
-          font-size: 80px;
-          margin-bottom: 16px;
-        }
+    .lista-aulas li:hover {
+      background: #f0f2f5;
+    }
 
-        /* CONTROLES (visual) */
-        .controls {
-          background: #ffffff;
-          /* controles em fundo claro */
-          padding: 12px 20px;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          color: #333;
-          border-top: 1px solid #e0e0e0;
-        }
+    .lista-aulas li.active {
+      background: #e7f1ff;
+      font-weight: 500;
+    }
 
-        .progress-bar-custom {
-          flex: 1;
-          height: 4px;
-          background: #333;
-          border-radius: 2px;
-          position: relative;
-        }
+    .lista-aulas i {
+      font-size: 18px;
+      color: #555;
+    }
 
-        .progress-bar-custom span {
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 30%;
-          background: #e53935;
-          border-radius: 2px;
-        }
+    #ListQuestion {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-        .controls i {
-          cursor: pointer;
-          font-size: 18px;
-          color: #333;
-        }
+    .player {
+      display: flex;
+      flex-direction: column;
+      background: #f5f6f8;
+      justify-content: center;
+    }
 
-        @media (max-width: 768px) {
-          .layout {
-            grid-template-columns: 1fr;
-          }
+    .video-container {
+      position: relative;
+      height: 55vh;
+      width: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0;
+    }
 
-          .sidebar {
-            display: none;
-          }
-        }
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
 
-        .aula-descricao {
-          background: #ffffff;
-          color: #333;
-          padding: 16px 24px;
-          border-top: 1px solid #e0e0e0;
-        }
+    .video-placeholder {
+      color: #fff;
+      text-align: center;
+    }
 
-        .aula-descricao h5 {
-          margin-bottom: 8px;
-          font-weight: 600;
-        }
+    .video-placeholder i {
+      font-size: 80px;
+      margin-bottom: 16px;
+    }
 
-        .aula-descricao p {
-          margin: 0;
-          font-size: 14px;
-          line-height: 1.5;
-        }
-        #AulasMod {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+    /* CONTROLES (visual) */
+    .controls {
+      background: #ffffff;
+      /* controles em fundo claro */
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #333;
+      border-top: 1px solid #e0e0e0;
+    }
 
-#AulasMod li {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 8px;
-  cursor: pointer;
-  border-radius: 8px;
-}
+    .progress-bar-custom {
+      flex: 1;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      position: relative;
+    }
 
-#AulasMod li:hover {
-  background: #f0f2f5;
-}
-      </style>
+    .progress-bar-custom span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 30%;
+      background: #e53935;
+      border-radius: 2px;
+    }
+
+    .controls i {
+      cursor: pointer;
+      font-size: 18px;
+      color: #333;
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+    }
+
+    .aula-descricao {
+      background: #ffffff;
+      color: #333;
+      padding: 16px 24px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .aula-descricao h5 {
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .aula-descricao p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #AulasMod {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #AulasMod li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 8px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    #AulasMod li:hover {
+      background: #f0f2f5;
+    }
+  </style>
 </head>
 
 <body>
@@ -268,12 +295,25 @@ try {
 
       <ul class="lista-aulas">
         <?php if (!empty($modulos)): ?>
-          <?php foreach ($modulos as $modulo): ?>
-            <li onclick="abrirModulo(<?= $modulo['id'] ?>)">
-              <i class="fa-solid fa-folder"></i>
+          <?php foreach ($modulos as $index => $modulo):
+
+            $bloqueado = $index > $qtdProvas;
+            ?>
+
+            <li onclick="<?= $bloqueado ? '' : 'abrirModulo(' . $modulo['id'] . ')' ?>">
+
+              <?php if ($bloqueado): ?>
+                <i class="fa-solid fa-lock text-secondary"></i>
+              <?php else: ?>
+                <i class="fa-solid fa-folder"></i>
+              <?php endif; ?>
+
               <span><?= htmlspecialchars($modulo['nome_modolu']) ?></span>
+
             </li>
+
           <?php endforeach; ?>
+
         <?php else: ?>
           <li>Nenhum módulo cadastrado</li>
         <?php endif; ?>
@@ -360,6 +400,7 @@ try {
 
       resp.aulas.forEach(function (aula) {
         let func;
+        let icon;
 
         if (aula.tipo == 1) {
           func = "abrirAula";
@@ -369,9 +410,17 @@ try {
           func = "abrirAula";
         }
 
+        if (aula.tipo == 2) {
+
+          icon = "<i class='fa-solid fa-book-tanakh' style='color: rgb(99, 230, 190);'></i>"
+        } else {
+          icon = "<i class='fa-solid fa-play-circle text-danger'></i> "
+        }
+
+
         ul.innerHTML +=
           "<li style='padding-left:25px;' onclick=\"" + func + "('" + aula.id + "')\">" +
-          "<i class='fa-solid fa-play-circle text-danger'></i> " +
+          "" + icon + "" +
           "<span>" + aula.nome_aula + "</span>" +
           "</li>";
       });
@@ -413,8 +462,11 @@ try {
 
 
   async function abrirProva(id) {
+
+
     document.getElementById("prova").style.display = "block";
     document.getElementById("video").style.display = "none";
+    localStorage.setItem("idProva", id);
 
 
     console.log(id);
@@ -431,40 +483,114 @@ try {
     const resposta = await res.json();
 
     const lista = document.getElementById("ListQuestion");
+
     lista.innerHTML = "";
 
-    resposta.Questoes.forEach(function (questao) {
+    let htmlTotal = "";
+
+    resposta.Questoes.forEach(function (questao, index) {
 
       let html = `
-  <li class="list-group-item mb-3">
-    <h5 class="mb-3">${questao.pergunta}</h5>
-`;
+  <li class="mb-4 m-5">
+    <div class="card shadow-sm" style="max-width:1000px;border-radius:14px;">
 
-      questao.alternativas.forEach(function (alt) {
-        html += `
-  
-    <div class="form-check mb-2">
-      <input 
-        class="form-check-input"
-        type="radio"
-        name="q_${questao.id}"
-        value="${alt.id}"
-        id="alt_${alt.id}"
-      >
-      <label class="form-check-label" for="alt_${alt.id}">
-        ${alt.texto}
-      </label>
-    </div>
+      <div class="card-header text-white fw-semibold"
+           style="background:#006edc;border-radius:14px 14px 0 0;">
+        Questão ${index + 1}
+      </div>
+
+      <div class="card-body">
+
+        <p class="mb-3">${questao.pergunta}</p>
   `;
+
+      questao.alternativas.forEach(function (alt, num) {
+
+        html += `
+      <label class="d-block border rounded p-2 mb-2" style="cursor:pointer;">
+        
+        <input
+          type="radio"
+          name="q_${questao.id}"
+          value="${alt.id_alternativa}"
+          id="alt_${questao.id}_${alt.id}"
+          style="margin-right:6px;"
+        >
+
+        Alternativa ${num + 1} : ${alt.texto}
+
+      </label>
+    `;
+
       });
 
       html += `
+      </div>
+      
+    </div>
   </li>
-`;
+  `;
 
-      lista.innerHTML += html;
+      htmlTotal += html;
 
     });
+
+    htmlTotal += `<button class="btn btn-primary m-5" style="border-radius:14px;width:1000px;" onclick="enviarProva(${id})">Enviar Prova</button>`;
+
+
+    lista.innerHTML = htmlTotal;
+
+
+  }
+
+
+  async function enviarProva(id) {
+
+    let respostas = [];
+
+    document.querySelectorAll('input[type="radio"]:checked').forEach(function (radio) {
+
+      let questao_id = radio.name.replace("q_", "");
+
+      respostas.push({
+        questao_id: questao_id,
+        alternativa_id: radio.value
+      });
+
+    });
+
+    let form = new FormData();
+    form.append("idProva", id);
+    form.append("respostas", JSON.stringify(respostas));
+    form.append("idProva", localStorage.getItem("idProva"));
+
+    console.log(respostas);
+
+    const res = await fetch("corrigirProva.php", {
+      method: "POST",
+      body: form,
+      credentials: "include"
+    });
+
+    const dados = await res.json();
+
+    if (dados.reprova) {
+      Swal.fire({
+        icon: "error",
+        title: "Prova enviada",
+        text: " NOTA NÂO SUFICIENTE, ACERTOS" + " " + dados.acertos + " questões",
+        
+      })
+    }
+
+    if (dados.sucesso) {
+      Swal.fire({
+        icon: "success",
+        title: "Prova enviada",
+        text: "Você acertou " + dados.acertos + " questões"
+      });
+
+    }
   }
 
 

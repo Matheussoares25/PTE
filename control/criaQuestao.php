@@ -23,6 +23,8 @@ try{
     $alt4 = $_POST["alt4"] ?? "";
     $correta = $_POST["correta"] ?? "";
 
+    
+
    
 
     $sql = $pdo->prepare("INSERT INTO questoes (id_prova,pergunta) VALUES (:id_prova, :pergunta)");
@@ -32,7 +34,7 @@ try{
 
     $idQuestao = $pdo->lastInsertId();
 
-     $sqlAlt = $pdo->prepare("INSERT INTO alternativas (id_questao, texto, correta)VALUES (:id_questao, :texto, :correta)
+     $sqlAlt = $pdo->prepare("INSERT INTO alternativas (id_questao, texto, correta,id_prova)VALUES (:id_questao, :texto, :correta,:id_aula)
 ");
 
 $alternativas = [$alt1, $alt2, $alt3, $alt4];
@@ -44,7 +46,8 @@ foreach ($alternativas as $index => $alt) {
     $sqlAlt->execute([
         ":id_questao" => $idQuestao,
         ":texto" => $alt,
-        ":correta" => $altCorreta
+        ":correta" => $altCorreta,
+        ":id_aula" => $idAula
     ]);
 }
 
