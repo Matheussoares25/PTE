@@ -10,7 +10,7 @@ try {
     $iduser = $_POST["id_usuario"] ?? null;
     $idcurso = $_POST["id_curso"] ?? null;
 
-    $sql = $pdo->prepare("DELETE FROM use_treinamentos WHERE id_usuario = :u AND id_curso = :c");
+    $sql = $pdo->prepare("UPDATE use_treinamentos SET status_curso = 0 WHERE id_usuario = :u AND id_curso = :c");
     $sql->bindParam(":u", $iduser);
     $sql->bindParam(":c", $idcurso);
     $ok = $sql->execute();

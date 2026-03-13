@@ -30,7 +30,7 @@ try {
   $sql->execute();
   $modulos = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-  $sql = $pdo->prepare("SELECT * FROM use_prova where id_user = :id");
+  $sql = $pdo->prepare("SELECT * FROM use_prova where id_user = :id and id_prova ");
   $sql->bindParam(":id", $_SESSION["id"]);
   $sql->execute();
   $provas = $sql->fetchAll(PDO::FETCH_ASSOC);
@@ -38,11 +38,6 @@ try {
   $qtdProvas = count($provas);
 
 
-  $bloqueado = false;
-
-  if (!empty($provas)) {
-    $bloqueado = true;
-  }
 
 
 
@@ -434,37 +429,171 @@ try {
 
   async function abrirAula(id) {
 
+    document.getElementById("prova").style.display = "none";
+    document.getElementById("video").style.display = "block";
+
     let formdata = new FormData();
     formdata.append("idAula", id);
 
-    const res = await fetch("dadosAula.php",
-      {
-        method: "POST",
-        body: formdata,
-        credentials: "include"
-      });
+    const res = await fetch("dadosAula.php", {
+      method: "POST",
+      body: formdata,
+      credentials: "include"
+    });
+
     const dados = await res.json();
 
-    if (dados && dados.dados && dados.dados.desc_midia) {
-      document.getElementById("descAula").innerText = dados.dados.desc_midia;
+    if (dados.aulas >= 1) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Você ja assistiu uma Vez esta aula',
+        html: '<p>Deseja assistir novamente?</p>',
+        showDenyButton: true,
+        confirmButtonText: 'Sim',
+        denyButtonText: `Nao`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (dados && dados.dados && dados.dados.desc_midia) {
+            document.getElementById("descAula").innerText = dados.dados.desc_midia;
+          }
+
+          if (dados.sucesso && dados.dados && dados.dados.video) {
+
+            document.querySelector(".video-container").innerHTML = `
+      <video id="videoAula" controls autoplay style="width:100%; height:100%;">
+        <source src="${dados.dados.video}" type="video/mp4">
+      </video>
+    `;
+
+            controlarProgressoVideo(id);
+
+
+          }
+        }
+      })
+
+      return;
+    }else{
+       if (dados && dados.dados && dados.dados.desc_midia) {
+            document.getElementById("descAula").innerText = dados.dados.desc_midia;
+          }
+
+          if (dados.sucesso && dados.dados && dados.dados.video) {
+
+            document.querySelector(".video-container").innerHTML = `
+      <video id="videoAula" controls autoplay style="width:100%; height:100%;">
+        <source src="${dados.dados.video}" type="video/mp4">
+      </video>
+    `;
+
+            controlarProgressoVideo(id);
+
+
+          }
+
     }
 
-    if (dados.sucesso && dados.dados && dados.dados.video) {
-      document.querySelector(".video-container").innerHTML = `
-            <video controls autoplay style="width:100%; height:100%;">
-                <source src="${dados.dados.video}" type="video/mp4">
-                Seu navegador não suporta vídeo.
-            </video>
-        `;
-    }
-    console.log(dados);
   };
+
+  async function controlarProgressoVideo(idAula) {
+
+    console.log("TEste");
+
+    const video = document.getElementById("videoAula");
+
+    let salvo = false;
+
+    video.addEventListener("timeupdate", () => {
+
+      if (!video.duration) return;
+
+      let progresso = (video.currentTime / video.duration) * 100;
+
+      if (progresso >= 90 && !salvo) {
+        salvarVisualizacao(idAula);
+        salvo = true;
+      }
+
+    });
+
+  }
+
+  async function salvarVisualizacao(idAula) {
+
+    const dados = new FormData();
+    dados.append("idAula", idAula);
+    dados.append("idUser", localStorage.getItem("idUser"));
+
+    await fetch("salvarVisualizacao.php", {
+      method: "POST",
+      body: dados,
+      credentials: "include"
+    });
+
+  }
+
+
+
+
 
 
   async function abrirProva(id) {
 
+    const idUser = localStorage.getItem("idUser");
+
+    const dados = new FormData();
+    dados.append("idprova", id);
+    dados.append("iduser", idUser);
+
+
+    console.log(idUser);
+    Swal.fire({
+      icon: 'question',
+      title: 'Deseja iniciar a prova?',
+      html: 'Voce tem certeza que deseja iniciar a prova? <strong> A prova só pode ser enviado uma unica vez, Faça com atenção!</strong>',
+      showDenyButton: true,
+      confirmButtonText: 'Sim',
+      denyButtonText: `Nao`,
+    }).then(async (result) => {
+
+      if (result.isConfirmed) {
+
+
+        const res = await fetch("iniProva.php", {
+          method: "POST",
+          body: dados,
+          credentials: "include"
+        });
+
+        const resposta = await res.json();
+
+        if (resposta.Feita) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Prova Feita',
+            text: 'Voce ja realizou esta avaliação, por favor, aguarde o resultado!',
+          })
+        }
+
+        if (resposta.sucesso) {
+
+          iniciarProva(id);
+        }
+
+      } else {
+        return;
+      }
+
+    });
+
+  }
+
+  async function iniciarProva(id) {
+
+
 
     document.getElementById("prova").style.display = "block";
+
     document.getElementById("video").style.display = "none";
     localStorage.setItem("idProva", id);
 
@@ -546,6 +675,7 @@ try {
 
   async function enviarProva(id) {
 
+
     let respostas = [];
 
     document.querySelectorAll('input[type="radio"]:checked').forEach(function (radio) {
@@ -579,7 +709,7 @@ try {
         icon: "error",
         title: "Prova enviada",
         text: " NOTA NÂO SUFICIENTE, ACERTOS" + " " + dados.acertos + " questões",
-        
+
       })
     }
 
@@ -591,6 +721,8 @@ try {
       });
 
     }
+
+
   }
 
 

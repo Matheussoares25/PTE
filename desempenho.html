@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="styleNAVBAR.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+     <nav class="navbar navbar-expand-lg shadow-sm" style="background-color:#4682B4;">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold text-white" href="#" style="font-size:22px;">
+                <i class="bi bi-mortarboard-fill me-1"></i> PTE
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="navbar-nav align-items-lg-center gap-lg-3">
+
+                    <a class="nav-link text-white fw-semibold" href="treinamentos.html">Treinamentos</a>
+                    <a class="nav-link text-white fw-semibold" href="desempenho.html">Desempenho</a>
+                    <a class="nav-link text-white fw-semibold" href="#">Ranking</a>
+                    <a class="nav-link text-white fw-semibold" href="noticias.html">Notícias</a>
+                    <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
+
+                    <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
+                        style="border-radius: 8px;">
+                        <i class="bi bi-box-arrow-right me-1"></i> Sair
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+  <h3 class="mb-4">Dashboard de Desempenho</h3>
+
+  <div class="row g-3">
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Cursos Criados</h6>
+          <h2 class="fw-bold" id="qtdCursos"></h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Alunos em Curso</h6>
+          <h2 class="fw-bold" id="qtdAlunos">248</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Provas Realizadas</h6>
+          <h2 class="fw-bold" id="qtdProvas">96</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Numero de Matriculas Ativas</h6>
+          <h2 class="fw-bold" id="qtdMatriculas">1.432</h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row mt-4">
+
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Desempenho das Provas</h5>
+          <canvas id="graficoProvas" style="max-height:300px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Progresso Médio</h5>
+          
+          <div class="mb-3">
+            <span>Curso Redes</span>
+            <div class="progress">
+              <div class="progress-bar" style="width:70%">70%</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <span>Curso Linux</span>
+            <div class="progress">
+              <div class="progress-bar bg-success" style="width:55%">55%</div>
+            </div>
+          </div>
+
+          <div>
+            <span>Curso Segurança</span>
+            <div class="progress">
+              <div class="progress-bar bg-warning" style="width:40%">40%</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row mt-4">
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Ranking de Alunos</h5>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Pontos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>João</td>
+                <td>980</td>
+              </tr>
+              <tr>
+                <td>Maria</td>
+                <td>920</td>
+              </tr>
+              <tr>
+                <td>Carlos</td>
+                <td>890</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Cursos Mais Acessados</h5>
+
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between">
+              Redes
+              <span class="badge bg-primary">320 acessos</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              Linux
+              <span class="badge bg-primary">280 acessos</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              Segurança
+              <span class="badge bg-primary">190 acessos</span>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="jsDashbord/GetDados.js"></script>

@@ -14,8 +14,21 @@ try {
     $sql = $pdo->prepare("SELECT desc_midia, caminho_video FROM midias WHERE id_aula = :id");
     $sql->bindParam(":id", $id);
     $sql->execute();
-
     $midia = $sql->fetch(PDO::FETCH_ASSOC);
+
+    $sql2 = $pdo->prepare("SELECT * FROM progress WHERE id_user = :user AND id_aula = :id");
+    $sql2->bindParam(":user", $_SESSION["id"]);
+    $sql2->bindParam(":id", $id);
+    $sql2->execute();
+    $progress = $sql2->fetch(PDO::FETCH_ASSOC);
+
+    $aulas = "";
+
+     if($progress) {
+       $aulas = $progress["assistido"];
+    }
+   
+
 
     if ($midia && $midia["caminho_video"]) {
         echo json_encode([
@@ -23,7 +36,9 @@ try {
             "dados" => [
                 "desc_midia" => $midia['desc_midia'],
                 "video" => $midia["caminho_video"]
-            ]
+            ],
+            "aulas" => $aulas
+           
         ]);
     } else {
         echo json_encode(["sucesso" => false, "msg" => "Nenhuma mídia encontrada"]);

@@ -32,7 +32,15 @@ try {
         }
     }
 
-    
+    $sql = $pdo->prepare("SELECT * FROM use_prova where id_user = :id and id_prova = :idProva");
+    $sql->bindParam(":id", $_SESSION["id"]);
+    $sql->bindParam(":idProva", $idProva);
+    $sql->execute();
+    $provas = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+    $qtdProvas = count($provas);
+
+
     $sql = $pdo->prepare("
         SELECT COUNT(*) as total 
         FROM alternativas 
@@ -47,19 +55,24 @@ try {
     $porcentagem = ($acertos * 100) / $total;
     $data = date('Y-m-d H:i:s');
 
+   
+
     if ($porcentagem >= 75) {
 
-        $sql = $pdo->prepare(" INSERT INTO use_prova (id_prova, acertos,data_conclusao,id_user,aprovado)
-            VALUES (:id_prova, :acertos,:data_conclusao, :id_usuario, 1)
-        ");
-
+        $sql = $pdo->prepare(" UPDATE use_prova SET id_prova = :id_prova,acertos = :acertos,data_conclusao = NOW(),id_user = :id_usuario,aprovado = 1, porcentagem = :porcentagem, qtd_questoes = :qtdquestoes
+        WHERE id_user = :id_usuario and id_prova = :id_prova");
         $sql->bindParam(":id_prova", $idProva);
         $sql->bindParam(":acertos", $acertos);
+        $sql->bindParam(":porcentagem", $porcentagem);
+        $sql->bindParam(":qtdquestoes", $total);
         $sql->bindParam(":id_usuario", $_SESSION["id"]);
-        $sql->bindParam(":data_conclusao", $data);
         $sql->execute();
 
-        echo json_encode([ "sucesso" => true,"acertos" => $acertos,"porcentagem" => $porcentagem
+        echo json_encode([
+            "sucesso" => true,
+            "acertos" => $acertos,
+            "porcentagem" => $porcentagem,
+            "qtdProvas" => $qtdProvas
         ]);
 
     } else {
@@ -69,8 +82,15 @@ try {
             "reprova" => true,
             "acertos" => $acertos,
             "porcentagem" => $porcentagem
+            
         ]);
     }
+
+    //VERIFICAÇÂO SE JA FEZ A PROVA ANTES
+
+
+
+
 
 } catch (Exception $e) {
 
