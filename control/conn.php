@@ -2,8 +2,8 @@
 class Conexao{
     private $host = "localhost";
     private $usuario = "root";
-    private $senha = "123456";
-    Private $banco = "pte";
+    private $senha = "";
+    Private $banco = "teste";
     public $conn;
 
     public function __construct(){

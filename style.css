@@ -95,3 +95,21 @@
     font-family: 'Times New Roman', Times, serif;
 }
 
+
+.Dashcard{
+    padding: 12px 28px;
+    font-size: 17px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    transition: 1.2s;
+
+    
+}
+
+.Dashcard:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+    transition: 1.5s;
+    background-color: #97c1ff;
+}

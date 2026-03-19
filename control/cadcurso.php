@@ -27,7 +27,7 @@ try {
     }
 
  
-    $sqlInsert = "INSERT INTO treinamentos (nome) VALUES (:nome)";
+    $sqlInsert = "INSERT INTO treinamentos (nome,criado) VALUES (:nome, now())";
     $stmt = $pdo->prepare($sqlInsert);
     $stmt->bindParam(':nome', $nome);
     $stmt->execute();

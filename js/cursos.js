@@ -6,6 +6,7 @@ function fecharModulo() {
   document.getElementById("cadCursos").style.display = "block";
 }
 
+
 document.addEventListener("DOMContentLoaded", carregarCursosSidebar);
 function carregarCursosSidebar() {
   fetch("control/listarCursos.php")
