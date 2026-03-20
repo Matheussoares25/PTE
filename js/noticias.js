@@ -3,7 +3,7 @@ Noticias();
 
 
 async function Noticias() {
-    
+
     try {
         const res = await fetch("control/noticias.php", {
             method: "POST",
@@ -16,7 +16,7 @@ async function Noticias() {
 
         const dados = await res.json();
 
-        
+
 
         const html = dados.map(n => `
 <div class="card card-modern mb-4">
@@ -58,12 +58,12 @@ async function Noticias() {
             icon: "error",
             title: "Erro",
             text: "Acesso negado",
-            
+
         });
 
-        setTimeout(() =>{
-                window.location.href = "index.html"
-            }, 1000);
+        setTimeout(() => {
+            window.location.href = "index.html"
+        }, 1000);
 
     }
 }
@@ -104,6 +104,14 @@ async function addNoticia() {
                     <textarea id="conteudo" class="form-control" rows="5" placeholder="Escreva o conteúdo da notícia..." required></textarea>
                 </div>
 
+                <!--Campo marcar como vaga-->
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="marcaVaga" style="cursor: pointer; accent-color: blue;">
+                    <label class="form-check-label" for="marcaVaga" style="cursor: pointer; color: blue;">
+                         Marcar como Vaga
+                    </label>
+                </div>
+
              
 
             </form>
@@ -115,15 +123,28 @@ async function addNoticia() {
         confirmButtonText: 'Adicionar',
         showLoaderOnConfirm: true,
         width: '50%',
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            const titulo = document.getElementById("titulo").value;
-            const conteudo = document.getElementById("conteudo").value;
 
-            const formData = new FormData();
-            formData.append("titulo", titulo);
-            formData.append("conteudo", conteudo);
 
+    preConfirm: async () => {
+        const titulo = document.getElementById("titulo").value;
+        const conteudo = document.getElementById("conteudo").value;
+        const checkbox = document.getElementById('marcaVaga');
+
+        if (titulo === "" || titulo === null || titulo.length <= 3) {
+            Swal.showValidationMessage('O Titulo deve sem preenchido (Com mais de 3 caracteres)');
+            return false;
+        }
+
+        
+
+        let check = checkbox.checked ? 1 : 2;
+
+        const formData = new FormData();
+        formData.append("titulo", titulo);
+        formData.append("conteudo", conteudo);
+        formData.append("vaga", check);
+
+        try {
             const res = await fetch("control/addNoticia.php", {
                 method: "POST",
                 body: formData,
@@ -133,27 +154,31 @@ async function addNoticia() {
             const dados = await res.json();
 
             if (dados.erro) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Erro",
-                    text: dados.erro
-                });
-            } else {
-                Swal.fire({
-                    icon: "success",
-                    title: "Sucesso",
-                    text: "Noticia criada com sucesso!",
-                    timer: 3000
-                }).then(() => {
-                    window.location.reload();
-                });
-
-
+                Swal.showValidationMessage(dados.erro);
+                return false;
             }
-        }
-    })
 
-}
+            return dados;
+
+        } catch (error) {
+            Swal.showValidationMessage('Erro na requisição');
+            return false;
+        }
+    }
+
+    }).then((result) => {
+    if (result.isConfirmed) {
+        Swal.fire({
+            icon: "success",
+            title: "Sucesso",
+            text: "Notícia criada com sucesso!",
+            timer: 3000
+        }).then(() => {
+            window.location.reload();
+        });
+    }
+});
+};
 
 async function exNoticia(id) {
 
@@ -209,7 +234,7 @@ async function editarNoticia(id) {
     });
     const dados = await res.json();
     console.log(dados);
-      Swal.fire({
+    Swal.fire({
         html: `<div class="container mt-4">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
