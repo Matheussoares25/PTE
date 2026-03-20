@@ -13,7 +13,7 @@ try {
 
     $cursos = $pdo->query("SELECT COUNT(*) FROM treinamentos")->fetchColumn();
     $tCursos = $pdo->query("SELECT * FROM treinamentos")->fetchAll();
-    $alunos = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
+    $alunos = $pdo->query("SELECT COUNT(DISTINCT id_usuario) FROM use_treinamentos")->fetchColumn();
     $provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
     $matriculas = $pdo->query("SELECT COUNT(*) FROM use_treinamentos where status_curso = 1")->fetchColumn();
 
