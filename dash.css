@@ -1,0 +1,10 @@
+
+#btMiniDash{
+    background-color: #dae1eb;
+}
+#btMiniDash:hover{
+      transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+    transition: 0.2s;
+    background-color: #959eaa;
+}

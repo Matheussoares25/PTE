@@ -1,7 +1,9 @@
 
 Noticias();
 
+
 async function Noticias() {
+    
     try {
         const res = await fetch("control/noticias.php", {
             method: "POST",
@@ -13,6 +15,8 @@ async function Noticias() {
         });
 
         const dados = await res.json();
+
+        
 
         const html = dados.map(n => `
 <div class="card card-modern mb-4">
@@ -53,8 +57,14 @@ async function Noticias() {
         Swal.fire({
             icon: "error",
             title: "Erro",
-            text: "Falha ao carregar as notícias."
+            text: "Acesso negado",
+            
         });
+
+        setTimeout(() =>{
+                window.location.href = "index.html"
+            }, 1000);
+
     }
 }
 

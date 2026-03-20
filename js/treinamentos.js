@@ -20,11 +20,13 @@ async function buscarTreinamentos() {
 
         const resposta = await res.json();
 
-        if (resposta.erro) {
+
+
+        if (resposta.Negado) {
             Swal.fire({
                 icon: "error",
                 title: "Acesso negado",
-                text: dados.erro
+                text: resposta.Negado
             });
 
 

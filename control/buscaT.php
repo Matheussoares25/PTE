@@ -21,8 +21,8 @@ try {
 
 
     $sql1 = $pdo->prepare("SELECT a.id_usuario,a.id_curso,a.status_curso,c.nome, b.email,a.matricula,a.data_curso  FROM use_treinamentos AS a 
-INNER JOIN usuarios AS b ON a.id_usuario = b.id 
-LEFT JOIN treinamentos AS c ON c.id = a.id_curso WHERE a.id_curso = :id");
+    INNER JOIN usuarios AS b ON a.id_usuario = b.id 
+    LEFT JOIN treinamentos AS c ON c.id = a.id_curso WHERE a.id_curso = :id");
     $sql1->bindParam("id", $idTreinamento);
     $sql1->execute();
     $treinamentos2 = $sql1->fetchAll(PDO::FETCH_ASSOC);

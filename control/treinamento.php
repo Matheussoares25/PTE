@@ -55,7 +55,7 @@ try {
 ?>
 
 <html lang="pt-BR">
-
+<script src="/js/functions.js"></script>
 <head>
   <meta charset="UTF-8" />
   <title>Treinamento</title>
@@ -728,4 +728,3 @@ try {
 
 </script>
 
-<script src="/js/functions.js"></script>

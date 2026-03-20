@@ -1,6 +1,9 @@
 <?php
 header("Content-Type: application/json");
 include "../control/conn.php";
+include "../control/authADM.php";
+
+
 
 
 try {
@@ -28,6 +31,16 @@ try {
     //-------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------
 
+    //Dados provas-------------------------------------------------------------------------------------
+    $sql2 = $pdo->prepare("SELECT a.id,a.id_user,u.nome AS nome_usuario, b.nome_aula AS nome_prova,a.acertos, a.porcentagem,a.data_conclusao,a.data_inicio,a.qtd_questoes
+    FROM use_prova a
+    INNER JOIN aulas b ON a.id_prova = b.id
+    INNER JOIN usuarios u ON a.id_user = u.id
+    ORDER BY a.id DESC;");
+    $sql2->execute();
+
+    $dadosProvas = $sql2->fetchAll();
+
 
     $qtd_porcento = $pdo->query("SELECT sum(porcentagem) FROM use_prova")->fetchColumn();
     $qtd_provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
@@ -53,7 +66,8 @@ try {
         "matriculas" => $matriculas,
         "acertagem" => $acertagem,
         "tCursos" => $tCursos,
-        "tAlunos" => $tAlunos
+        "tAlunos" => $tAlunos,
+        "dProvas" => $dadosProvas
 
     ];
 

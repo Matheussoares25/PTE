@@ -15,6 +15,20 @@ function carregarCursosSidebar() {
       const lista = document.getElementById("listaCursos");
       lista.innerHTML = "";
 
+      
+      if(data.Negado){
+          Swal.fire({
+          icon: "warning",
+          title:"ACESSO NEGADO",
+          html: "REALIZE LOGIN",
+        });
+        setTimeout(() =>{
+          window.location.href = "index.html";
+
+        },1200)
+        return;
+      }
+
       if (!data.sucesso || data.cursos.length === 0) {
         lista.innerHTML = `
                     <li class="list-group-item text-center text-muted">
@@ -22,6 +36,7 @@ function carregarCursosSidebar() {
                     </li>`;
         return;
       }
+
 
       data.cursos.forEach((curso) => {
         lista.innerHTML += `
@@ -544,7 +559,21 @@ async function cadCurso() {
           scrollbarPadding: false,
         });
         return;
-      } else {
+      } else if (data.erro){
+        Swal.fire({
+          icon: "warning",
+          title:"ACESSO NEGADO",
+          html: "REALIZE LOGIN",
+        });
+        setTimeout(() =>{
+          window.location.href = "index.html";
+
+        },1200)
+
+      }
+      
+      
+      else {
         alert("Erro ao cadastrar curso");
         return;
       }

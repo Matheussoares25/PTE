@@ -13,7 +13,7 @@ try{
 
    
 
-    $sql = $pdo->prepare("INSERT INTO use_treinamentos (id_curso, id_usuario,status_curso) VALUES (:idCurso, :iduser, 1)");
+    $sql = $pdo->prepare("INSERT INTO use_treinamentos (id_curso, id_usuario,status_curso,data_curso) VALUES (:idCurso, :iduser, 1, now())");
     $sql->bindParam(":idCurso", $idCurso);
     $sql->bindParam(":iduser", $iduser);
     $sql->execute();

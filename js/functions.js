@@ -1,7 +1,11 @@
+
 window.onload = function () {
     if(this.localStorage.getItem("tipoUsuario") == 1){
        document.getElementById("UserComum").style.display = "block";
        document.getElementById("UserAdm").style.display = "none";
+       document.querySelectorAll(".btnadm").forEach(el => {
+        el.style.display = "none";
+    });
     }else{
         document.getElementById("UserComum").style.display = "none";
         document.getElementById("UserAdm").style.display = "block";
