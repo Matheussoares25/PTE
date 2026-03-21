@@ -12,10 +12,11 @@ try {
     $conexao = new Conexao();
     $pdo = $conexao->conn;
 
-    $querySelect = $pdo->prepare("SELECT id, titulo, conteudo,data_noticia FROM noticias ");
+    $querySelect = $pdo->prepare("SELECT id, titulo, conteudo,data_noticia,vaga FROM noticias ");
     $querySelect->execute();
 
     $noticias = $querySelect->fetchAll(PDO::FETCH_ASSOC);
+
     echo json_encode($noticias);
 } catch (PDOException $e) {
     echo "Erro na conexão: " . $e->getMessage();

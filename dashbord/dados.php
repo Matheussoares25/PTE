@@ -15,7 +15,7 @@ try {
     $tCursos = $pdo->query("SELECT * FROM treinamentos")->fetchAll();
     $alunos = $pdo->query("SELECT COUNT(DISTINCT id_usuario) FROM use_treinamentos")->fetchColumn();
     $provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
-    $matriculas = $pdo->query("SELECT COUNT(*) FROM use_treinamentos where status_curso = 1")->fetchColumn();
+    $usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
 
 
 
@@ -54,16 +54,13 @@ try {
     
 
 
-    if($matriculas == null){
-        $matriculas = 0;
-    }
-
+   
 
     $dados = [
         "cursos" => $cursos,
         "alunos" => $alunos,
         "provas" => $provas,
-        "matriculas" => $matriculas,
+        "usuarios" => $usuarios,
         "acertagem" => $acertagem,
         "tCursos" => $tCursos,
         "tAlunos" => $tAlunos,

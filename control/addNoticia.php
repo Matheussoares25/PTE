@@ -11,10 +11,20 @@ include ("authADM.php");
 $titulo = $_POST['titulo'] ?? '';
 $conteudo = $_POST['conteudo'] ?? '';
 $vaga = $_POST['vaga'] ?? '';
-//CRIAR NO BANCO DE DADOS A COLUNA VAGA COMO TINYT PARA INSERIR O VALOR DA SELEÇÂO;
-//CRIAR O BOTAO NA HORA DE LISTAR AS NOTICIAS E VERIFICAR SE ESTA COMO 1 A COLUNA VAGA, SE SIM BOTAO , SE NAO, SEM BOTAO;
-//BOTAO LEVA PARA UM FORMULARIO DE INTERESSE NA VAGA;
 $data_noticia = date('Y-m-d H:i:s');
+
+
+if($vaga == 1){
+    $conexao = new Conexao();
+    $pdo = $conexao->conn;
+    $sql = $pdo->prepare("INSERT INTO vagas (titulo, conteudo, data_vaga) VALUES (:titulo, :conteudo, now())");
+    $sql->bindParam(':titulo', $titulo);
+    $sql->bindParam(':conteudo', $conteudo);
+    $sql->execute();
+   
+
+}
+
 
 if($titulo == "" || $conteudo == null){
     echo json_encode(["vazio" => true]);
@@ -24,10 +34,11 @@ if($titulo == "" || $conteudo == null){
 try {
     $conexao = new Conexao();
     $pdo = $conexao->conn;
-    $sql = $pdo->prepare("INSERT INTO noticias (titulo, conteudo, data_noticia) VALUES (:titulo, :conteudo, :data_noticia)");
+    $sql = $pdo->prepare("INSERT INTO noticias (titulo, conteudo, data_noticia, vaga) VALUES (:titulo, :conteudo, :data_noticia,:vaga)");
     $sql->bindParam(':titulo', $titulo);
     $sql->bindParam(':conteudo', $conteudo);
     $sql->bindParam(':data_noticia', $data_noticia);
+    $sql->bindParam(':vaga', $vaga);
     $sql->execute();
 
 

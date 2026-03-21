@@ -67,19 +67,19 @@
 
     <div class="row g-3">
 
-      <div class="col-md-3 Dashcard">
-        <div class="card shadow-sm">
+      <div class="col-md-3 dashcard">
+        <div class="card shadow-sm ">
           <label onclick="openCriados()" style="cursor: pointer;">
             <div class="card-body text-center">
-              <h6 class="text-muted">Cursos Criados</h6>
+              <h6 class="text-muted ">Cursos Criados</h6>
               <h2 class="fw-bold" id="qtdCursos"></h2>
           </label>
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 Dashcard">
-      <div class="card shadow-sm">
+    <div class="col-md-3 dashcard">
+      <div class="card shadow-sm ">
         <label onclick="openAlunos()" style="cursor: pointer;">
           <div class="card-body text-center">
             <h6 class="text-muted">Alunos em Curso</h6>
@@ -89,8 +89,8 @@
     </div>
   </div>
 
-  <div class="col-md-3 Dashcard">
-    <div class="card shadow-sm">
+  <div class="col-md-3 dashcard">
+    <div class="card shadow-sm ">
       <label onclick="openProvas()" style="cursor: pointer;">
         <div class="card-body text-center">
           <h6 class="text-muted">Provas Realizadas</h6>
@@ -100,11 +100,12 @@
   </div>
   </div>
 
-  <div class="col-md-3 Dashcard">
+  <div class="col-md-3 ">
     <div class="card shadow-sm">
       <div class="card-body text-center">
-        <h6 class="text-muted">Numero de Matriculas Ativas</h6>
-        <h2 class="fw-bold" id="qtdMatriculas"></h2>
+        <h6 class="text-muted">Numero de usuarios</h6>
+        <h2 class="fw-bold" id="qtdUsuarios"></h2>
+        
       </div>
     </div>
   </div>
@@ -117,40 +118,20 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <h5>Desempenho das Provas</h5>
-          <canvas id="graficoProvas" style="max-height:300px;"></canvas>
+           <canvas id="graficoProvas" style="max-height:300px;"></canvas>
         </div>
       </div>
     </div>
 
     <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5>Progresso Médio</h5>
-
-          <div class="mb-3">
-            <span>Curso Redes</span>
-            <div class="progress">
-              <div class="progress-bar" style="width:70%">70%</div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <span>Curso Linux</span>
-            <div class="progress">
-              <div class="progress-bar bg-success" style="width:55%">55%</div>
-            </div>
-          </div>
-
-          <div>
-            <span>Curso Segurança</span>
-            <div class="progress">
-              <div class="progress-bar bg-warning" style="width:40%">40%</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5>Usuarios Na plataforma</h5>
+      <canvas id="graficoAlunos" style="max-height:300px;"></canvas>
     </div>
+  </div>
+</div>
+
 
   </div>
 
