@@ -186,7 +186,6 @@ async function openProvas() {
                     <th>Acertos</th>
                     <th>% de Acerto</th>
                     <th>Realizada em:</th>
-                    <th>Módulo</th>
                 </tr>
             </thead>
             <tbody id="TabelaProvas">
@@ -211,12 +210,12 @@ async function openProvas() {
           .map(
             (p) => `
             <tr>
-                    <td >${p.nome_prova}</td>
+                    <td >${p.nome_prova ?? ""}</td>
                     <td id="btMiniDash" onclick="provaUse(${p.id_user})" style="cursor: pointer"><i class="fa-solid fa-info" style="color: rgb(0, 143, 255);"></i> ${p.nome_usuario}</td>
-                    <td>${p.qtd_questoes}</td>
-                    <td>${p.acertos}</td>
-                    <td>${p.porcentagem}</td>
-                    <td>${p.data_conclusao.split(" ")[0].split("-").reverse().join("/")}<th>
+                    <td>${p.qtd_questoes ?? "Sem Respostas"}</td>
+                    <td>${p.acertos ?? "Sem Repostas"}</td>
+                    <td>${p.porcentagem ?? ""}</td>
+                    <td>${p.data_inicio? p.data_inicio.split(" ")[0].split("-").reverse().join("/"): ""}<th>
                     
                 `,
           )

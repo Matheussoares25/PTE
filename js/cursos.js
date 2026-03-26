@@ -4,6 +4,8 @@ function fecharModulo() {
   document.getElementById("FormModulo").style.display = "none";
   document.getElementById("EditProva").style.display = "none";
   document.getElementById("cadCursos").style.display = "block";
+
+
 }
 
 
@@ -95,7 +97,7 @@ function abrirCurso(id, nome) {
   document.getElementById("cursoName").innerText = nome;
 
   document.getElementById("EditAula").style.display = "none";
-  document.getElementById("cadastroCurso").style.display = "none";
+  document.getElementById("cadCursos").style.display = "none";
   document.getElementById("EditModulo").style.display = "none";
 
   document.getElementById("FormModulo").style.display = "";
@@ -105,6 +107,8 @@ async function abrirModulo(id, nome) {
   document.getElementById("cadCursos").style.display = "none";
   document.getElementById("EditAula").style.display = "none";
   document.getElementById("FormModulo").style.display = "none";
+  document.getElementById("EditProva").style.display = "none";
+  document.getElementById("EditModulo").style.display = "";
   localStorage.setItem("idModulo", id);
   localStorage.setItem("nomeModulo", nome);
 
@@ -113,7 +117,7 @@ async function abrirModulo(id, nome) {
 
   document.getElementById("NomeMod").innerHTML = "Editar Modulo" + "\n" + nome;
   document.getElementById("NameModuloe").value = nome;
-  document.getElementById("EditModulo").style.display = "";
+  
 
   const res = await fetch("control/listarAulas.php", {
     method: "POST",
@@ -186,10 +190,12 @@ async function abrirAula(id, nome, idModulo) {
 }
 
 async function abrirProva(id, nome, idModulo) {
-  document.getElementById("cadCursos").style.display = "none";
-  document.getElementById("EditModulo").style.display = "none";
 
-  document.getElementById("EditProva").style.display = "";
+  document.getElementById("EditModulo").style.display = "none";
+  document.getElementById("EditAula").style.display = "none";
+  document.getElementById("FormModulo").style.display = "none";
+  document.getElementById("EditProva").style.display = "block";
+  document.getElementById("cadCursos").style.display = "none";
 
   localStorage.setItem("idAula", id);
   localStorage.setItem("nomeAula", nome);

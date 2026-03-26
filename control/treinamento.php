@@ -55,7 +55,7 @@ try {
 ?>
 
 <html lang="pt-BR">
-<script src="/js/functions.js"></script>
+<script src="../js/functions.js"></script>
 <head>
   <meta charset="UTF-8" />
   <title>Treinamento</title>
@@ -265,10 +265,10 @@ try {
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <div class="navbar-nav align-items-lg-center gap-lg-3">
 
-          <a class="nav-link text-white fw-semibold" href="/treinamentos.html">Treinamentos</a>
-          <a class="nav-link text-white fw-semibold btnadm" href="#">Desempenho</a>
+          <a class="nav-link text-white fw-semibold" href="../treinamentos.html">Treinamentos</a>
+          
           <a class="nav-link text-white fw-semibold" href="/ranking.html">Ranking</a>
-          <a class="nav-link text-white fw-semibold" href="/noticias.html">Notícias</a>
+          <a class="nav-link text-white fw-semibold" href="../noticias.html">Notícias</a>
           <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
 
           <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
@@ -335,15 +335,7 @@ try {
         </p>
       </div>
 
-      <div class="controls">
-        <div class="progress-bar-custom">
-          <span></span>
-        </div>
-        <i class="fa-solid fa-backward-step"></i>
-        <i class="fa-solid fa-pause"></i>
-        <i class="fa-solid fa-forward-step"></i>
-        <i class="fa-solid fa-volume-high"></i>
-      </div>
+    
 
     </main>
 
