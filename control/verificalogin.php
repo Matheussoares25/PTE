@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $senha = $_POST['senha'] ?? '';
 
 
-        $stmt = $pdo->prepare("SELECT id, senha, tipo, acess 
+        $stmt = $pdo->prepare("SELECT id, senha, tipo, acess, email
             FROM usuarios 
             WHERE email = :email
         ");
@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $_SESSION['id'] = $res['id'];
         $_SESSION['tipo'] = (int) $res['tipo'];
+        $_SESSION['email'] = $res['email'];
 
         
         

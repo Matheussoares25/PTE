@@ -23,14 +23,16 @@ async function buscaProvas() {
                     ? '<i class="fa-solid fa-check" style="color: #008fff;"></i>'
                     : '<i class="fa-solid fa-x" style="color: #ff4d4d;"></i>'} 
             </td> 
-            <td>${p.porcentagem }%</td>
+            <td>${p.porcentagem}%</td>
             <td>${p.qtd_questoes ?? ""}</td> >
-            <td>${p.nota !== null 
-                ? `<div class="d-flex justify-content-center align-items-center p-2"><span class="fw-bold pe-2"> ${p.nota}</span><i class="fa-solid fa-check" style="color: #00ff04;"></i> </div><div class="d-flex justify-content-center align-items-center"><button class=" btn btn-sm btn-success" onclick="editNota(${p.id_prova})">Editar Nota</button></div>`
-                : '<div class="d-flex justify-content-center align-items-center p-2"><i class="fa-solid fa-x" style="color: #ff4d4d;"></i></div><div class="d-flex justify-content-center align-items-center"><button class=" btn btn-sm btn-primary" onclick="addNota(${p.id_prova})">Aplicar Nota</button></div> ' }</td>
+            <td>${p.nota !== null
+                    ? `<div class="d-flex justify-content-center align-items-center p-2"><span class="fw-bold pe-2"> ${p.nota}</span><i class="fa-solid fa-check" style="color: #00ff04;"></i> </div><div class="d-flex justify-content-center align-items-center"><button class=" btn btn-sm btn-success" onclick="Notas(${p.id} ,${p.nota}, ${p.id_user}, ${p.id_prova})">Editar Nota</button></div>`
+                    : `<div class="d-flex justify-content-center align-items-center p-2"><i class="fa-solid fa-x" style="color: #ff4d4d;"></i></div><div class="d-flex justify-content-center align-items-center"><button class=" btn btn-sm btn-primary" onclick="Notas(${p.id},${'null'}, ${p.id_user}, ${p.id_prova})">Aplicar Nota</button></div>`}</td>
             <td>
              
             <button class="btn btn-sm btn-info text-white">Mais informações</button>
+            <button class="btn btn-sm btn-danger" onclick="excluirProva(${p.id}, ${p.id_user}, ${p.id_prova}, ${p.nota}, '${p.nome_aula}', '${p.nome}',${p.acertos},'${p.data_inicio}',${p.porcentagem},${p.qtd_questoes})">Excluir</button>
+
             </td>
         </tr>
         `).join('');
@@ -45,13 +47,205 @@ async function buscaProvas() {
     }
 }
 
+async function excluirProva(id, idUser, idProvabanco, nota = null, nomeAula, nomeAluno, acertos, data, porcentagem, qtd_questoes) {
 
-async function addNota(id) {
     Swal.fire({
-        icon:  "question",
+        icon: "question",
+        width: 1200,
+        title: "Excluir Prova",
+        html: `<h5>Ao excluir um item do historico de provas, o usuario pode realizar novamente esta prova.</h5>
+                <li>
+                    <b>Nome da prova:</b> ${nomeAula}
+                </li>
+                <li>
+                    <b>Realizada por:</b> ${nomeAluno}
+                </li>
+                <li>
+                    <b>Acertos:</b> ${acertos}
+                </li>
+                <li>
+                    <b>Data:</b> ${data}
+                </li>
+                <li>
+                    <b>% acertos:</b> ${porcentagem}
+                </li>
+                <li>
+                    <b>Qtd de questoes:</b> ${qtd_questoes}
+                </li>
+                <li>
+                    <b>Nota:</b> ${nota}
+                </li>
+        
+        
+   `,
+        text: "Tem certeza que deseja excluir essa prova?",
+        showCancelButton: true,
+        confirmButtonText: "Sim, excluir",
+        cancelButtonText: "Cancelar",
+
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                icon: "error",
+                title: "Tem certeza que deseja excluir essa prova?",
+                html: "Tem certeza que deseja excluir essa prova?<br><strong>Esta ação é irreversível!</strong> <div> <label> confirme o login como usuario para excluir essa prova </label> <input id='emailLogin' type='text' class='swal2-input' placeholder='Email'> <input id='senhaLogin' type='text' class='swal2-input' placeholder='Senha'></div>",
+                showCancelButton: true,
+                confirmButtonText: "Sim, excluir",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+
+                    const emailLogin = document.getElementById("emailLogin").value.trim();
+                    const senhaLogin = document.getElementById("senhaLogin").value.trim();
+
+                    const formData = new FormData();
+                    formData.append("email", emailLogin);
+                    formData.append("senha", senhaLogin);
+
+                    try {
+                        const res = await fetch("control/chekinAdm.php", {
+                            method: "POST",
+                            body: formData,
+                            credentials: "include",
+                        });
+
+                        const data = await res.json();
+
+                        if (data.liberado) {
+                            const formData = new FormData();
+                            formData.append("idDohistoricoProva", id),
+                            formData.append("id_user", idUser)
+                            formData.append("idDaProvanoBanco", idProvabanco);
+
+                            try {
+                                const res = await fetch("dashbord/avaliacoes.php?action=excluir", {
+                                    method: "POST",
+                                    body: formData,
+                                    credentials: "include",
+                                });
+
+                                const result = await res.json();
+
+                                if (result.excluido) {
+                                    swal.fire({
+                                        icon: "success",
+                                        title: "Prova excluida com sucesso",
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    })
+                                    await buscaProvas();
+                                } else {
+                                    console.error("Erro no servidor:", result.error);
+                                }
+                            } catch (error) {
+                                console.error("Erro na requisição:", error);
+                            }
+
+                        }
+                        if(data.negado){
+                            Swal.fire({
+                                icon: "error",
+                                title: "Erro de login",
+                                html: "usuario não possui permissão para excluir provas",
+                                showConfirmButton: true
+                            })
+                        }
+
+                        if(data.serrada){
+                            Swal.fire({
+                                icon: "error",
+                                title: "Erro de login",
+                                html: "usuario ou senha incorretos",
+                                showConfirmButton: true
+                            })
+                        }
+
+                        if(data.naoexiste){
+                            Swal.fire({
+                                icon: "error",
+                                title: "Erro de login",
+                                html: "usuario nao cadastrado",
+                                showConfirmButton: true
+                            })
+                        }
+
+                    }
+                    catch (error) {
+                        console.error("Erro na requisição:", error);
+                    }
+                }
+            })
+
+        }
+    });
+
+
+
+
+}
+async function Notas(id, nota = null, idUser, idDaProvanoBanco) {
+
+
+    Swal.fire({
+        icon: "question",
         title: "Inserir Nota A avaliação",
         html: "<strong>As Notas sao de 100 a 1000, exemplo : Nota:800</strong> <div><label><h5>Preencha com A nota</h5></label></div><div><input class='form-control rounded-pill shadow-sm p-2 px-3'  id='notaP' placeholder='Nota entre 100 e 1000' style='border-color:black; border: 5px'></input></div>",
-        width: '1000px'
+        width: '1000px',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Enviar",
+        cancelButtonText: "Cancelar",
+
+        didOpen: () => {
+            if (nota !== null) {
+                document.getElementById("notaP").value = nota;
+            }
+        },
+
+        preConfirm: async () => {
+            const nota = document.getElementById("notaP").value;
+
+            if (nota > 1000 || nota < 100) {
+                alert("A nota deve ser entre 100 e 1000");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("idDohistoricoProva", id),
+                formData.append("nota", nota)
+            formData.append("id_user", idUser)
+            formData.append("idDaProvanoBanco", idDaProvanoBanco)
+
+            const dados = await fetch("dashbord/avaliacoes.php?action=avaliar", {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            })
+
+            const res = await dados.json();
+
+            if (res.sucesso) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Nota Cadastrada",
+                    timer: 2000,
+                    showConfirmButton: false
+                })
+
+                buscaProvas();
+            }
+
+            if (res.update) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Nota Atualizada",
+                    timer: 2000,
+                    showConfirmButton: false
+                })
+                buscaProvas();
+            }
+        }
     })
-    
+
+
 }

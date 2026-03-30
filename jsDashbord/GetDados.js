@@ -118,7 +118,7 @@ async function openCriados() {
 async function openAlunos() {
   Swal.fire({
     title: "Alunos em curso",
-    width: "800px",
+    width: "1000px",
     html: `
     <div class="table-responsive">
         <table class="table table-sm table-bordered text-center">
@@ -130,7 +130,7 @@ async function openAlunos() {
                     <th>Curso</th>
                     <th>status/Matricula</th>
                     <th>Início</th>
-                    <th>Módulo</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody id="TabelaMatriculas">
@@ -161,6 +161,8 @@ async function openAlunos() {
                     <th>${p.nome_curso}</th>
                     <th>${p.status_curso == 1 ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-danger">Inativo</span>'}</td>
                     <th>${p.data_curso.split(" ")[0].split("-").reverse().join("/")}</th>
+                    <th><button class="btn btn-danger" onclick="excluirpermanente(${p.matricula})" ><i class="fa-solid fa-trash fa-flip-horizontal fa-xs" style="color: rgb(0, 0, 0);"></i> Exluir</button>
+                    ${p.status_curso != 1 ? '<button class="btn btn-success"><i class="fa-solid fa-arrow-rotate-left fa-sm" style="color: rgb(0, 0, 0);"></i> Reativar</button>' : ''}
                 `,
           )
           .join("");
@@ -169,6 +171,32 @@ async function openAlunos() {
       }
     },
   });
+}
+
+async function excluirpermanente(matricula) {
+  const formData = new FormData();
+  formData.append("matricula", matricula);
+
+  const dados = await fetch("dashbord/dados.php?action=exclusao", {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  })
+
+  const res = await dados.json();
+
+  if (res.status === "sucesso") {
+    await Swal.fire({
+      title: "Matrícula Excluída",
+      icon: "success",
+      timer: 1000,
+      showConfirmButton: false
+    });
+    
+
+    location.reload();
+  }
+
 }
 
 async function openProvas() {
@@ -215,12 +243,12 @@ async function openProvas() {
                     <td>${p.qtd_questoes ?? "Sem Respostas"}</td>
                     <td>${p.acertos ?? "Sem Repostas"}</td>
                     <td>${p.porcentagem ?? ""}</td>
-                    <td>${p.data_inicio? p.data_inicio.split(" ")[0].split("-").reverse().join("/"): ""}<th>
+                    <td>${p.data_inicio ? p.data_inicio.split(" ")[0].split("-").reverse().join("/") : ""}<th>
                     
                 `,
           )
           .join("");
-      } catch {}
+      } catch { }
     },
   });
 }

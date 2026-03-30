@@ -22,3 +22,15 @@ INNER JOIN aulas a ON a.id_modulo = m.id
 WHERE m.id_curso = 1
 AND a.tipo = 2;
 
+
+
+ cursos mais acessados
+SELECT 
+    t.id AS id_curso,
+    t.nome AS nome_curso,
+    COUNT(ut.id_usuario) AS total_inscritos
+FROM use_treinamentos ut
+JOIN treinamentos t ON t.id = ut.id_curso
+GROUP BY t.id, t.nome
+ORDER BY total_inscritos DESC
+LIMIT 3;
