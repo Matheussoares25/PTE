@@ -5,15 +5,8 @@ treinamentosConcluidos();
 async function buscarTreinamentos() {
     try {
 
-        const idUser = localStorage.getItem("idUser");
-
-        const data = new FormData();
-        data.append("id", idUser);
-
-
-        const res = await fetch("control/buscarTreinamentos.php", {
+        const res = await fetch("routes/api.php?acao=buscarCursosDoALuno", {
             method: "POST",
-            body: data,
             credentials: "include",
 
         });
@@ -73,16 +66,9 @@ async function buscarTreinamentos() {
 async function treinamentosConcluidos() {
     try {
 
-        const idUser = localStorage.getItem("idUser");
-
-        const data = new FormData();
-        data.append("id", idUser);
-
-
-        const res = await fetch("control/treinamentosConcluidos.php", {
+        const res = await fetch("routes/api.php?acao=buscarCursosConcluidosDoALuno", {
             method: "POST",
             dataType: "json",
-            body: data,
             credentials: "include"
         });
         const dados = await res.json();
@@ -123,7 +109,7 @@ async function treinamentosADM() {
         const data = new FormData();
         data.append("id", idUser);
 
-        const res = await fetch("control/treinamentoADM.php");
+        const res = await fetch("routes/api.php?acao=buscarCursosADM");
 
         const dados = await res.json();
 
@@ -175,7 +161,7 @@ async function editTreinamento(id) {
     const formdata = new FormData();
     formdata.append("id", id);
 
-    const res = await fetch("control/buscaT.php", {
+    const res = await fetch("routes/api.php?acao=buscarPorIdCurso", {
         method: "POST",
         credentials: "include",
         body: formdata
@@ -222,7 +208,7 @@ async function editTreinamento(id) {
 
             console.log(data);
 
-            const resposta = await fetch("control/buscaT.php", {
+            const resposta = await fetch("routes/api.php?acao=buscarPorIdCurso", {
                 method: "POST",
                 credentials: "include",
                 body: data
@@ -309,7 +295,7 @@ async function editTreinamento(id) {
                     busca = new FormData();
                     busca.append("id", id);
 
-                    const res = await fetch("control/buscaT.php", {
+                    const res = await fetch("routes/api.php?acao=buscarPorIdCurso", {
                         method: "POST",
                         body: busca,
                         credentials: "include"
@@ -393,7 +379,7 @@ async function editTreinamento(id) {
                         cadcurso.append("usuario", usuario);
                         cadcurso.append("idcurso", idcurso);
 
-                        const res = await fetch("control/cadAocurso.php", {
+                        const res = await fetch("routes/api.php?acao=cadAoCurso", {
                             method: "POST",
                             credentials: "include",
                             body: cadcurso,
@@ -401,7 +387,7 @@ async function editTreinamento(id) {
 
                         const dados = await res.json();
 
-                        if (dados.sucesso) {
+                        if (dados.success) {
                             Swal.fire({
                                 icon: "success", 
                                 title: "Usuário Cadastrado",
@@ -464,13 +450,14 @@ function delmat(idUsuario, idCurso, emailUsuario) {
             dados.append("id_usuario", idUsuario);
             dados.append("id_curso", idCurso);
 
-            fetch("control/delmat.php", {
+            fetch("routes/api.php?acao=deletarMatricula", {
                 method: "POST",
-                body: dados
+                body: dados,
+                credentials: "include"
             })
             .then(res => res.json())
             .then(resp => {
-                if(resp.sucesso){
+                if(resp.success){
                 Swal.fire({
                     icon: "success",
                     title: "Matrícula excluída!",

@@ -18,8 +18,8 @@ try{
     $sql->bindParam(":iduser", $iduser);
     $sql->execute();
 
-    echo json_encode(["sucesso" => true]);
+    echo json_encode(["success" => true]);
 
 } catch (Exception $e) {
-    echo json_encode(["sucesso" => false, "erro" => $e->getMessage()]);
+    echo json_encode(["success" => false, "erro" => $e->getMessage()]);
 }

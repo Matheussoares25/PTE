@@ -24,4 +24,5 @@ try {
 } catch (Exception $e) {
     echo json_encode(["sucesso" => false, "erro" => $e->getMessage()]);
 }
+
 ?>

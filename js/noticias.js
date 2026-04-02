@@ -2,7 +2,7 @@ Noticias();
 
 async function Noticias() {
   try {
-    const res = await fetch("control/noticias.php", {
+    const res = await fetch("routes/api.php?acao=buscarNoticias", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -26,7 +26,7 @@ async function Noticias() {
         </p>
 
         <div class="btn-group-modern">
-            <button class="btn btn-card btn-edit btneditar" onclick="editarNoticia(${n.id})">
+            <button class="btn btn-card btn-edit btneditar" onclick="editarNoticia(${n.id}, '${n.titulo}', '${n.conteudo}')">
                 <i class="bi bi-pencil-square me-1"></i> Editar
             </button>
 
@@ -144,7 +144,7 @@ async function addNoticia() {
       formData.append("vaga", check);
 
       try {
-        const res = await fetch("control/addNoticia.php", {
+        const res = await fetch("routes/api.php?acao=salvarNoticia", {
           method: "POST",
           body: formData,
           credentials: "include",
@@ -192,7 +192,7 @@ async function exNoticia(id) {
     scrollbarPadding: false,
   }).then(async (result) => {
     if (result.isConfirmed) {
-      const res = await fetch("control/exNoticia.php", {
+      const res = await fetch("routes/api.php?acao=excluirNoticia", {
         method: "POST",
         credentials: "include",
         body: formdata,
@@ -218,22 +218,15 @@ async function exNoticia(id) {
   });
 }
 
-async function editarNoticia(id) {
-  formdata = new FormData();
-  formdata.append("id", id);
+async function editarNoticia(id, titulo, conteudo) {
 
-  const res = await fetch("control/editarNoticia.php", {
-    method: "POST",
-    credentials: "include",
-    body: formdata,
-  });
-  const dados = await res.json();
-  console.log(dados);
+ 
+
   Swal.fire({
     html: `<div class="container mt-4">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Editar Noticia ${dados.Noticia.titulo}</h4>
+            <h4 class="mb-0">Editar Noticia ${titulo}</h4>
         </div>
 
         <div class="card-body">
@@ -265,6 +258,14 @@ async function editarNoticia(id) {
       const titulo = document.getElementById("titulo").value;
       const conteudo = document.getElementById("conteudo").value;
 
+      if (titulo === "" || titulo === null || titulo.length <= 3) {
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "O Titulo deve sem preenchido (Com mais de 3 caracteres)",
+        });
+        return false;
+      }
       const formData = new FormData();
       formData.append("titulo", titulo);
       formData.append("conteudo", conteudo);
@@ -299,7 +300,7 @@ async function editarNoticia(id) {
 }
 
 async function Candidatar(id) {
-  const vagas = await fetch("control/vagas.php", {
+  const vagas = await fetch("routes/api.php?acao=buscarVagas", {
     method: "POST",
     credentials: "include",
     headers: {
@@ -339,7 +340,7 @@ async function Candidatar(id) {
     formdata.append("idvaga", idVaga);
     formdata.append("iduser", idUser);
 
-    const res = await fetch("control/candidatar.php", {
+    const res = await fetch("routes/api.php?acao=candidatar", {
       method: "POST",
       body: formdata,
       credentials: "include",
@@ -347,7 +348,7 @@ async function Candidatar(id) {
 
     const status = await res.json();
 
-    if(status.sucesso){
+    if(status.success){
       Swal.fire({
         icon: "success",
         title: "Candidatura enviada!",

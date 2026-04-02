@@ -27,7 +27,7 @@ if (document.getElementById("login") != null) {
         formData.append("senha", senha);
 
         try {
-            const response = await fetch('control/verificalogin.php', {
+            const response = await fetch('routes/api.php?acao=login', {
                 method: 'POST',
                 body: formData,
                 credentials: "include"
@@ -189,7 +189,7 @@ if (document.getElementById("cadastro") != null) {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch('control/cadastro.php', {
+                    const response = await fetch('/routes/api.php?acao=cadastrarUsuario', {
                         method: 'POST',
                         body: formData,
                         credentials: "include"

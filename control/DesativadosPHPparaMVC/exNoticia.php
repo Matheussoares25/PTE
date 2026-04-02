@@ -15,7 +15,7 @@ try {
     
     
     if($sql){
-        echo json_encode(["sucesso" => true]);
+        echo json_encode(["success" => true]);
     }
 } catch (PDOException $e) {
     echo "Erro ao inserir dados: " . $e->getMessage();
