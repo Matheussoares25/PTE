@@ -11,7 +11,7 @@ function fecharModulo() {
 
 document.addEventListener("DOMContentLoaded", carregarCursosSidebar);
 function carregarCursosSidebar() {
-  fetch("control/listarCursos.php")
+  fetch("routes/api.php?acao=listarCursosAdm")
     .then((res) => res.json())
     .then((data) => {
       const lista = document.getElementById("listaCursos");
@@ -31,7 +31,7 @@ function carregarCursosSidebar() {
         return;
       }
 
-      if (!data.sucesso || data.cursos.length === 0) {
+      if (!data.success || data.cursos.length === 0) {
         lista.innerHTML = `
                     <li class="list-group-item text-center text-muted">
                         Nenhum curso encontrado
@@ -184,7 +184,7 @@ async function abrirAula(id, nome, idModulo) {
 
   console.log(dados);
 
-  if (dados.sucesso && dados.dados?.video) {
+  if (dados.success && dados.dados?.video) {
     document.getElementById("ResVideo").src = dados.dados.video;
   }
 }
@@ -680,14 +680,14 @@ async function criaModulo() {
   formdata.append("nome", nome);
   formdata.append("qtd", quantiade);
 
-  const res = await fetch("control/criaModulo.php", {
+  const res = await fetch("routes/api.php?acao=criaModulo", {
     method: "POST",
     body: formdata,
     credentials: "include",
   });
   const dados = await res.json();
 
-  if (dados.sucesso) {
+  if (dados.success) {
     Swal.fire({
       title: "Modulo cadastrado com Sucesso",
       html: "<strong>O modulo Foi cadastrado com sucesso, junto das aulas, agora basta editar as informações das aulas</strong>",

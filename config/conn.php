@@ -1,10 +1,9 @@
 <?php
-
 class Conexao{
     private $host = "localhost";
-    private $usuario = "nauta";
-    private $senha = "123";
-    Private $banco = "PTE";
+    private $usuario = "root";
+    private $senha = "";
+    Private $banco = "pte";
     public $conn;
 
     public function __construct(){
@@ -12,6 +11,7 @@ class Conexao{
             $this->conn = new PDO("mysql:host=".$this->host.";dbname=".$this->banco, $this->usuario, $this->senha);
             
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          
         }catch(PDOException $e){
             echo "Erro na conexão: " . $e->getMessage();
         }

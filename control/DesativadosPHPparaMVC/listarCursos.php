@@ -72,13 +72,14 @@ try {
     }
 
     echo json_encode([
-        'sucesso' => true,
+        'success' => true,
         'cursos' => array_values($resultado)
     ]);
 
 } catch (Exception $e) {
     echo json_encode([
-        'sucesso' => false,
+        'success' => false,
         'erro' => $e->getMessage()
     ]);
 }
+?>
