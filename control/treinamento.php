@@ -427,7 +427,7 @@ try {
     let formdata = new FormData();
     formdata.append("idAula", id);
 
-    const res = await fetch("dadosAula.php", {
+    const res = await fetch("../routes/api.php?acao=abrirAula", {
       method: "POST",
       body: formdata,
       credentials: "include"
@@ -449,7 +449,7 @@ try {
             document.getElementById("descAula").innerText = dados.dados.desc_midia;
           }
 
-          if (dados.sucesso && dados.dados && dados.dados.video) {
+          if (dados.success && dados.dados && dados.dados.video) {
 
             document.querySelector(".video-container").innerHTML = `
       <video id="videoAula" controls autoplay style="width:100%; height:100%;">
@@ -470,7 +470,7 @@ try {
             document.getElementById("descAula").innerText = dados.dados.desc_midia;
           }
 
-          if (dados.sucesso && dados.dados && dados.dados.video) {
+          if (dados.success && dados.dados && dados.dados.video) {
 
             document.querySelector(".video-container").innerHTML = `
       <video id="videoAula" controls autoplay style="width:100%; height:100%;">

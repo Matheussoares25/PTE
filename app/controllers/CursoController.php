@@ -23,10 +23,7 @@ class CursoController
 
         $dados = $this->curso->buscarTreinamentosDoUsuario($idUser);
 
-        echo json_encode([
-            "success" => true,
-            "dados" => $dados
-        ]);
+        echo json_encode($dados);
     }
 
     public function buscarCursosConcluidosDoAluno()
@@ -147,4 +144,53 @@ class CursoController
             echo json_encode(["success" => false]);
         }
     }
+
+    public function listarAulasADM()
+    {
+        require_once __DIR__ . "/../../control/authADM.php";
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        $idModulo = $_POST['idModulo'] ?? NULL;
+
+        $dados = $this->admcurso->listaAulasDoModulo($idModulo);
+
+        echo json_encode(["success" => true, "aulas" => $dados]);
+
+    }
+
+    public function dadosAulaAberta()
+    {
+        require_once __DIR__ . "/../../control/auth.php";
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        $idAula = $_POST['idAula'] ?? 0;
+
+        $progress = $this->curso->progressoAssistido($idAula);
+        
+
+        // Pega os dados da aula (mídia)
+        $dados = $this->curso->dadosAula($idAula);
+
+        if (!$dados) {
+            echo json_encode([
+                "success" => false,
+                "msg" => "Erro ao buscar dados da aula"
+            ]);
+            return;
+        }
+
+
+        $resposta = [
+            "success" => $dados["success"],
+            "dados" => $dados["dados"] ?? [],
+            "aulas" => $progress,
+            "msg" => $dados["msg"] ?? null
+        ];
+
+        echo json_encode($resposta);
+    }
+
+
 }

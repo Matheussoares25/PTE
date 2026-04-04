@@ -126,16 +126,22 @@ class CursoADM
         }
     }
 
-    public function listaAulasDoModulo($id_modulo){
+    public function listaAulasDoModulo($id_modulo)
+    {
 
-          try{
+        try {
             $sql = $this->pdo->prepare("SELECT * FROM aulas WHERE id_modulo = :id_modulo
-    and excluido = 0");
-           $sql->bindParam(":id_modulo", $id_modulo);
-           $sql->execute();
-           return $sql->fetchAll(PDO::FETCH_ASSOC);
-          }
+            and excluido = 0");
+            $sql->bindParam(":id_modulo", $id_modulo);
+            $sql->execute();
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+
+            return false;
+        }
     }
+
+
 }
 ?>
-Parei fazendo aulas do modulo;

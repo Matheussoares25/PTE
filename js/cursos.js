@@ -119,7 +119,7 @@ async function abrirModulo(id, nome) {
   document.getElementById("NameModuloe").value = nome;
   
 
-  const res = await fetch("control/listarAulas.php", {
+  const res = await fetch("routes/api.php?acao=listarAulas", {
     method: "POST",
     body: formdata,
     credentials: "include",
@@ -168,7 +168,7 @@ async function abrirAula(id, nome, idModulo) {
   formdata = new FormData();
   formdata.append("idAula", id);
 
-  const res = await fetch("control/dadosAula.php", {
+      const res = await fetch("routes/api.php?acao=abrirAula", {
     method: "POST",
     body: formdata,
     credentials: "include",

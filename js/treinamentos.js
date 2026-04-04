@@ -11,7 +11,7 @@ async function buscarTreinamentos() {
 
         });
 
-        const resposta = await res.json();
+        const resposta = await res.json();  
 
 
 

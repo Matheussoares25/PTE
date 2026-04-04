@@ -29,12 +29,12 @@ try {
     }
    
 
-
+        
     if ($midia && $midia["caminho_video"]) {
         echo json_encode([
-            "sucesso" => true,
+            "success" => true,
             "dados" => [
-                "desc_midia" => $midia['desc_midia'],
+                "desc_midia" => $midia['desc_midia'] ?? '',
                 "video" => $midia["caminho_video"]
             ],
             "aulas" => $aulas

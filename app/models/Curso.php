@@ -100,7 +100,65 @@ class Curso
         return array_values($resultado);
     }
 
+    public function progressoAssistido($idAula)
+    {
+
+        try {
+            $sql = $this->pdo->prepare('SELECT * FROM progress WHERE id_user = :user AND id_aula = :id');
+            $sql->bindParam(":user", $_SESSION["id"]);
+            $sql->bindParam(":id", $idAula);
+            $sql->execute();
+            $progress = $sql->fetch(PDO::FETCH_ASSOC);
+
+
+            $aulas = "";
+
+            if ($progress) {
+                $aulas = $progress["assistido"];
+            }
+
+            return $aulas;
+
+        } catch (Exception $e) {
+
+        }
+    }
+
+    public function dadosAula($id)
+    {
+
+        try {
+            $sql = $this->pdo->prepare("SELECT desc_midia, caminho_video FROM midias WHERE id_aula = :id");
+            $sql->bindParam(":id", $id);
+            $sql->execute();
+            $midia = $sql->fetch(PDO::FETCH_ASSOC);
+
+            if ($midia && $midia["caminho_video"]) {
+                return ([
+                    "success" => true,
+                    "dados" => [
+                        "desc_midia" => $midia['desc_midia'] ?? '',
+                        "video" => $midia["caminho_video"]
+                    ],
+
+
+                ]);
+            } else {
+                return (["success" => false, "msg" => "Nenhuma mídia encontrada"]);
+            }
+
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+
+            return false;
+        }
+    }
+
     
+
+
+
+
 
 
 

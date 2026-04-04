@@ -71,7 +71,14 @@ if ($acao == "listarCursosAdm"){
 if ($acao == "criaModulo") {
     $controller = new CursoController();
     $controller->inserirModulo();
-
 }
 
+if( $acao == "listarAulas"){
+    $controller = new CursoController();
+    $controller->listarAulasADM();
+}
+if ($acao == "abrirAula"){
+    $controller = new CursoController();
+    $controller->dadosAulaAberta();
+}
 ?>
