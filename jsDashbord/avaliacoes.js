@@ -1,3 +1,8 @@
+document.addEventListener('click', () => {
+
+    checkLogin();
+});
+
 buscaProvas();
 
 async function buscaProvas() {

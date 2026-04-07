@@ -1,3 +1,7 @@
+document.addEventListener('click', () => {
+    checkLogin();
+});
+
 ranking();
 
 async function ranking() {

@@ -1,4 +1,7 @@
 
+document.addEventListener('click', () => {
+    checkLogin();
+});
 
 buscarTreinamentos();
 treinamentosConcluidos();

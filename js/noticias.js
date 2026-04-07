@@ -1,6 +1,11 @@
 Noticias();
+document.addEventListener('click', () => {
+    checkLogin();
+});
 
 async function Noticias() {
+  
+  
   try {
     const res = await fetch("routes/api.php?acao=buscarNoticias", {
       method: "POST",

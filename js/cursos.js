@@ -1,3 +1,7 @@
+document.addEventListener('click', () => {
+    checkLogin();
+});
+
 function fecharModulo() {
   document.getElementById("EditModulo").style.display = "none";
   document.getElementById("EditAula").style.display = "none";

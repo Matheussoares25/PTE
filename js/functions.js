@@ -1,16 +1,16 @@
 
 window.onload = function () {
-    if(this.localStorage.getItem("tipoUsuario") == 1){
-       document.getElementById("UserComum").style.display = "block";
-       document.getElementById("UserAdm").style.display = "none";
-       document.querySelectorAll(".btnadm").forEach(el => {
-        el.style.display = "none";
-    });
-    }else{
+    if (this.localStorage.getItem("tipoUsuario") == 1) {
+        document.getElementById("UserComum").style.display = "block";
+        document.getElementById("UserAdm").style.display = "none";
+        document.querySelectorAll(".btnadm").forEach(el => {
+            el.style.display = "none";
+        });
+    } else {
         document.getElementById("UserComum").style.display = "none";
         document.getElementById("UserAdm").style.display = "block";
     }
-   
+
 }
 
 if (document.getElementById("login") != null) {
@@ -20,92 +20,191 @@ if (document.getElementById("login") != null) {
 
         const nome = $('#Email').val();
         const senha = $('#senha').val();
-        
+
 
         const formData = new FormData();
         formData.append("email", nome);
         formData.append("senha", senha);
 
-        try {
-            const response = await fetch('routes/api.php?acao=login', {
-                method: 'POST',
-                body: formData,
-                credentials: "include"
-            });
+        const res = await fetch("routes/api.php?acao=aceitarTermos", {
+            method: "POST",
+            body: formData,
+            credentials: "include"
+        });
+        const date = await res.json();
 
-            const data = await response.json();
+        if (date.PACESS) {
+            Swal.fire({
+                icon: 'error',
+                title: 'TERMOS E CONDICOES',
+                html: `Teste`,
+                showConfirmButton: true,
+                showCancelButton: true,
+                cancelButtonText: 'Não Aceito',
+                confirmButtonText: 'Aceito',
 
-            if(data.PACESS){
-                alert("teste");
-            }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const response = await fetch('routes/api.php?acao=login', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: "include"
+                    });
 
-           
+                    const data = await response.json();
+                    if (data.success) {
+                        $('#Resposta').html('<p>Login bem-sucedido</p>');
+                        localStorage.setItem("token", data.token);
+                        localStorage.setItem("idUser", data.id);
+                        localStorage.setItem("tipoUsuario", data.tipo);
+                        setTimeout(() => {
+                            verificar();
+                        }, 3000);
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            },
+                            didClose: () => {
+                                window.location.href = "noticias.html";
+
+                            }
 
 
-            if (data.success) {
-                $('#Resposta').html('<p>Login bem-sucedido</p>');
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("idUser", data.id);
-                localStorage.setItem("tipoUsuario", data.tipo);
 
+                        });
 
+                        Toast.fire({
+                            icon: "success",
+                            title: "Signed in successfully"
+                        });
 
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 1000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    },
-                    didClose: () => {
-                        window.location.href = "noticias.html";
-                    }
-                });
+                    } else if (data.NAOEXISTE) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Usuário Não Encontrado',
+                            html: 'Deseja cadastrar esse usuário?',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Sim',
+                            showDenyButton: true,
+                            denyButtonText: 'Nao',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "cadastrar.html";
+                            } else {
+                                location.reload();
+                            }
+                        });
 
-                Toast.fire({
-                    icon: "success",
-                    title: "Signed in successfully"
-                });
+                    } else if (data.serrada) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro de login',
+                            html: 'usuario ou senha incorretos',
+                            showConfirmButton: true,
+                        });
 
-            } else if (data.NAOEXISTE) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Usuário Não Encontrado',
-                    html: 'Deseja cadastrar esse usuário?',
-                    showConfirmButton: true,
-                    confirmButtonText: 'Sim',
-                    showDenyButton: true,
-                    denyButtonText: 'Nao',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "cadastrar.html";
                     } else {
-                        location.reload();
+                        $('#Resposta').html('<p>Erro ao fazer login</p>');
                     }
+
+
+
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'TERMOS E CONDICOES',
+                        html: 'Voce precisa aceitar os termos e condicoes para continuar',
+                        showConfirmButton: true,
+                    })
+                }
+            })
+
+        } else {
+
+
+            try {
+                const response = await fetch('routes/api.php?acao=login', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: "include"
                 });
 
-            } else if (data.serrada) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro de login',
-                    html: 'usuario ou senha incorretos',
-                    showConfirmButton: true,
-                });
+                const data = await response.json();
 
-            }else {
-                $('#Resposta').html('<p>Erro ao fazer login</p>');
+                if (data.success) {
+                    $('#Resposta').html('<p>Login bem-sucedido</p>');
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("idUser", data.id);
+                    localStorage.setItem("tipoUsuario", data.tipo);
+                    setTimeout(() => {
+                        verificar();
+                    }, 3000);
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        },
+                        didClose: () => {
+                            window.location.href = "noticias.html";
+
+                        }
+
+                    });
+
+                    Toast.fire({
+                        icon: "success",
+                        title: "Signed in successfully"
+                    });
+
+                } else if (data.NAOEXISTE) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Usuário Não Encontrado',
+                        html: 'Deseja cadastrar esse usuário?',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Sim',
+                        showDenyButton: true,
+                        denyButtonText: 'Nao',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "cadastrar.html";
+                        } else {
+                            location.reload();
+                        }
+                    });
+
+                } else if (data.serrada) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro de login',
+                        html: 'usuario ou senha incorretos',
+                        showConfirmButton: true,
+                    });
+
+                } else {
+                    $('#Resposta').html('<p>Erro ao fazer login</p>');
+                }
+
+            } catch (error) {
+                $('#Resposta').html('<p>Ocorreu um erro na requisição.</p>');
+                console.error(error);
             }
-
-        } catch (error) {
-            $('#Resposta').html('<p>Ocorreu um erro na requisição.</p>');
-            console.error(error);
         }
     });
 }
-
 
 if (document.getElementById("cadastro") != null) {
 
@@ -256,6 +355,43 @@ if (document.getElementById("cadastro") != null) {
 
 
 
+
+
+async function checkLogin() {
+    const res = await fetch("routes/api.php?acao=ControleLogin", {
+        method: "POST",
+        credentials: "include"
+    });
+    const dados = await res.json();
+    if (dados.EXPIRADO) {
+
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Sua sessão expirou',
+            text: 'Redirecionando...',
+            showConfirmButton: true,
+            confirmButtonText: 'Fechar',
+            timer: 8000,
+            timerProgressBar: true,
+            allowOutsideClick: false
+        });
+
+
+        await fetch("control/logout.php", {
+            method: "POST",
+            credentials: "include"
+        });
+
+
+        localStorage.clear();
+        window.location.href = "index.html";
+    }
+
+
+}
+
+
+
 async function oflog() {
     Swal.fire({
         icon: 'warning',
@@ -280,7 +416,7 @@ async function oflog() {
         }
     })
 
-  
+
 }
 
 

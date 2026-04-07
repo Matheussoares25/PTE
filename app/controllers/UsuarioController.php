@@ -68,7 +68,7 @@ class UsuarioController
         session_regenerate_id(true);
 
         header('Content-Type: application/json; charset=utf-8');
-        
+
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(["success" => false, "mensagem" => "Método inválido"]);
@@ -95,9 +95,11 @@ class UsuarioController
             $_SESSION['tipo'] = (int) $res['tipo'];
             $_SESSION['email'] = $res['email'];
 
-           
+
 
             $token = bin2hex(random_bytes(32));
+
+            $_SESSION['token'] = $token;
 
             $this->usuario->atualizarToken($res['id'], $token);
 
@@ -111,7 +113,6 @@ class UsuarioController
             ];
 
             if ($res['acess'] == 0) {
-                $dados['PACESS'] = true;
                 $this->usuario->atualizarAcesso($res['id']);
             }
 
@@ -125,6 +126,43 @@ class UsuarioController
 
 
         }
+    }
+
+    public function verificarAcesso(){
+
+     $email = $_POST["email"];
+
+        $res = $this->usuario-> buscaEmail($email);
+        
+         if (!$res) {
+                echo json_encode(["NAOEXISTE" => true, "message" => "Usuario nao cadastrado"]);
+                return;
+            }
+
+        $dados = $this->usuario->buscaPorAcesso($email);
+
+        if($dados["acess"] == 0){
+            echo json_encode(["PACESS" => true]);
+            return;
+        }else{
+            echo json_encode(["PACESS"=> false]);
+
+        }
+    }
+
+    public function chekarSessao()
+    {
+        session_start();
+        header('Content-Type: application/json; charset=utf-8');
+
+        $idUser = $_SESSION['id'] ?? null;
+        $token = $_SESSION['token'] ?? null;
+
+        $res = $this->usuario->controleDeSessao($idUser, $token);
+        if($res['EXPIRADO'] == true){
+            
+        }
+        echo json_encode($res);
     }
 
 

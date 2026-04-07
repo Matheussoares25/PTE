@@ -1,3 +1,7 @@
+document.addEventListener('click', () => {
+    checkLogin();
+});
+
 getDados();
 
 async function getDados() {

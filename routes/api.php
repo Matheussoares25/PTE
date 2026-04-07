@@ -11,6 +11,14 @@ require_once __DIR__ . "/../app/controllers/DashController.php";
 
 $acao = $_GET['acao'] ?? '';
 
+if( $acao == 'ControleLogin'){
+    $controller = new UsuarioController();
+    $controller->chekarSessao();
+}
+
+
+
+
 if ($acao == "cadastrarUsuario") {
     $controller = new UsuarioController();
     $controller->cadastrar();
@@ -19,6 +27,10 @@ if ($acao == "cadastrarUsuario") {
 if ($acao == "login") {
     $controller = new UsuarioController();
     $controller->login();
+}
+if ($acao == "aceitarTermos") {
+    $controller = new UsuarioController();
+    $controller->verificarAcesso();
 }
 
 if ($acao == "salvarNoticia") {

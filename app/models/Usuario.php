@@ -42,6 +42,13 @@ class Usuario
         return $stm->fetch();
     }
 
+    public function buscaPorAcesso($email){
+        $sql = $this->pdo->prepare('SELECT acess from usuarios where email = :email');
+        $sql->bindParam(":email", $email);
+        $sql->execute();
+        return $sql->fetch();
+    }
+
     public function atualizarToken($id, $token)
     {
         $stmt = $this->pdo->prepare("UPDATE usuarios SET token = :token WHERE id = :id");
@@ -55,6 +62,20 @@ class Usuario
         $stmt = $this->pdo->prepare("UPDATE usuarios SET acess = 1 WHERE id = :id AND acess = 0");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
+    }
+
+    public function controleDeSessao($idUsuario, $tokenAtual)
+    {
+        $stmt = $this->pdo->prepare('SELECT token FROM usuarios WHERE id = :idUser');
+        $stmt->bindParam(':idUser', $idUsuario);
+        $stmt->execute();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC); 
+
+        if (!$res || $res['token'] !== $tokenAtual) {
+            return ['EXPIRADO' => true];
+        }
+
+        return ['EXPIRADO' => false];
     }
 
 }
