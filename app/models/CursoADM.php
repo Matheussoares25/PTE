@@ -126,22 +126,111 @@ class CursoADM
         }
     }
 
-    public function listaAulasDoModulo($id_modulo)
+    public function infoModulo($idCurso)
     {
+        $sql = $this->pdo->prepare("
+        SELECT 
+            m.id,
+            m.nome_modolu,
+            m.id_curso
+        FROM modulos m
+        WHERE m.id_curso = :idCurso
+    ");
 
-        try {
-            $sql = $this->pdo->prepare("SELECT * FROM aulas WHERE id_modulo = :id_modulo
-            and excluido = 0");
-            $sql->bindParam(":id_modulo", $id_modulo);
-            $sql->execute();
-            return $sql->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            $this->pdo->rollBack();
+        $sql->bindParam(":idCurso", $idCurso);
+        $sql->execute();
 
-            return false;
-        }
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+    public function dellModulo($idModulo)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $idModulo = $_POST['idModulo'];
+
+           
+            $sql = $this->pdo->prepare("
+        DELETE alt
+        FROM alternativas alt
+        INNER JOIN questoes q ON alt.id_questao = q.id
+        INNER JOIN aulas a ON q.id_prova = a.id
+        WHERE a.id_modulo = :idModulo
+    ");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+         
+            $sql = $this->pdo->prepare("
+        DELETE q
+        FROM questoes q
+        INNER JOIN aulas a ON q.id_prova = a.id
+        WHERE a.id_modulo = :idModulo
+    ");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+           
+            $sql = $this->pdo->prepare("
+        DELETE n
+        FROM notas n
+        INNER JOIN aulas a ON n.id_prova = a.id
+        WHERE a.id_modulo = :idModulo
+    ");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+          
+            $sql = $this->pdo->prepare("
+        DELETE p
+        FROM progress p
+        INNER JOIN aulas a ON p.id_aula = a.id
+        WHERE a.id_modulo = :idModulo
+    ");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+          
+            $sql = $this->pdo->prepare("
+        DELETE m
+        FROM midias m
+        INNER JOIN aulas a ON m.id_aula = a.id
+        WHERE a.id_modulo = :idModulo
+    ");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+           
+            $sql = $this->pdo->prepare("
+        DELETE up
+        FROM use_prova up
+        INNER JOIN aulas a ON up.id_prova = a.id
+        WHERE a.id_modulo = :idModulo
+    ");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+           
+            $sql = $this->pdo->prepare("DELETE FROM aulas WHERE id_modulo = :idModulo");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+           
+            $sql = $this->pdo->prepare("DELETE FROM modulos WHERE id = :idModulo");
+            $sql->bindParam(":idModulo", $idModulo);
+            $sql->execute();
+
+            $this->pdo->commit();
+
+            echo json_encode(["success" => true]);
+
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            echo json_encode(["erro" => $e->getMessage()]);
+        }
+    }
 
 }
 ?>

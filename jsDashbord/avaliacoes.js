@@ -25,12 +25,13 @@ async function buscaProvas() {
             </td> 
             <td>${p.porcentagem}%</td>
             <td>${p.qtd_questoes ?? ""}</td> >
+            <td>${p.ordem_prova}º Do curso</td>
             <td>${p.nota !== null
                     ? `<div class="d-flex justify-content-center align-items-center p-2"><span class="fw-bold pe-2"> ${p.nota}</span><i class="fa-solid fa-check" style="color: #00ff04;"></i> </div><div class="d-flex justify-content-center align-items-center"><button class=" btn btn-sm btn-success" onclick="Notas(${p.id} ,${p.nota}, ${p.id_user}, ${p.id_prova})">Editar Nota</button></div>`
                     : `<div class="d-flex justify-content-center align-items-center p-2"><i class="fa-solid fa-x" style="color: #ff4d4d;"></i></div><div class="d-flex justify-content-center align-items-center"><button class=" btn btn-sm btn-primary" onclick="Notas(${p.id},${'null'}, ${p.id_user}, ${p.id_prova})">Aplicar Nota</button></div>`}</td>
             <td>
              
-            <button class="btn btn-sm btn-info text-white">Mais informações</button>
+            <button class="btn btn-sm btn-info text-white" onclick="infoProva(${p.id_curso}, ${p.id_user}, '${p.nome}', '${p.nome_aula}')">Certificado/resumo</button>
             <button class="btn btn-sm btn-danger" onclick="excluirProva(${p.id}, ${p.id_user}, ${p.id_prova}, ${p.nota}, '${p.nome_aula}', '${p.nome}',${p.acertos},'${p.data_inicio}',${p.porcentagem},${p.qtd_questoes})">Excluir</button>
 
             </td>
@@ -114,7 +115,7 @@ async function excluirProva(id, idUser, idProvabanco, nota = null, nomeAula, nom
                         if (data.liberado) {
                             const formData = new FormData();
                             formData.append("idDohistoricoProva", id),
-                            formData.append("id_user", idUser)
+                                formData.append("id_user", idUser)
                             formData.append("idDaProvanoBanco", idProvabanco);
 
                             try {
@@ -142,7 +143,7 @@ async function excluirProva(id, idUser, idProvabanco, nota = null, nomeAula, nom
                             }
 
                         }
-                        if(data.negado){
+                        if (data.negado) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Erro de login",
@@ -151,7 +152,7 @@ async function excluirProva(id, idUser, idProvabanco, nota = null, nomeAula, nom
                             })
                         }
 
-                        if(data.serrada){
+                        if (data.serrada) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Erro de login",
@@ -160,7 +161,7 @@ async function excluirProva(id, idUser, idProvabanco, nota = null, nomeAula, nom
                             })
                         }
 
-                        if(data.naoexiste){
+                        if (data.naoexiste) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Erro de login",
@@ -247,5 +248,105 @@ async function Notas(id, nota = null, idUser, idDaProvanoBanco) {
         }
     })
 
+
+}
+
+async function infoProva(id_curso, user, nome,nome_aula) {
+    const iduser = user;
+    const idCurso = id_curso;
+   
+
+    const formData = new FormData();
+    formData.append("iduser", iduser);
+    formData.append("idCurso", idCurso);
+
+    const dados = await fetch("control/provasFeitas.php", {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+    });
+
+    const res = await dados.json();
+
+    Swal.fire({
+        icon: "info",
+        title: "Informações e Emissão de certificado",
+        html: `
+<div>
+    <table border="1" style="width: 100%; text-align: center; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody id="TabelaProvasSwal">
+        <tr>
+                <td>Nome Do Curso</td>
+                <td id="curso">${res.nome_curso}</td>
+            </tr>
+            <tr>
+                <td>Provas feitas</td>
+                <td id="provas_feitas">0</td>
+            </tr>
+            <tr>
+            <td>Provas totais</td>
+            <td id="provas_totais">0</td>
+            </tr>
+            <tr>
+                <td>Feito Por</td>
+                <td id="feito_por">${nome}</td>
+            </tr>
+            <tr>
+                <td>Média</td>
+                <td id="media">0%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+`,
+
+    showConfirmButton: true,
+    showCancelButton: true,
+    confirmButtonText: "Gerar Certificado",
+    cancelButtonText: "Cancelar",
+
+
+        didOpen: () => {
+            const feitas = res.total_provas_feitas;
+            const total = res.total_provas_curso;
+            const media = res.media_porcentagem;
+            const lista = res.porcentagens;
+
+            document.getElementById("provas_feitas").textContent = feitas;
+            document.getElementById("provas_totais").textContent = total;
+            document.getElementById("media").textContent = media + "%";
+
+            const TabelaProvas = document.getElementById("TabelaProvasSwal");
+
+            // 🔥 adiciona abaixo das linhas existentes
+            TabelaProvas.innerHTML += lista.map((p, index) => `
+        <tr>
+            <td>${index + 1}ª Prova</td>
+            <td style="font-weight:bold;">${p}%</td>
+        </tr>
+    `).join('');
+
+        
+            if (feitas === total && total > 0) {
+                document.getElementById("provas_feitas").style.color = "green";
+                document.getElementById("provas_totais").style.color = "green";
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+           const dados = fetch("control/certificado.php",{
+               method: "POST",
+               credentials: "include"
+           })
+        }
+    })
+
+    
 
 }

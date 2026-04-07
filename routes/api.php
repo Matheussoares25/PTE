@@ -4,6 +4,9 @@ require_once __DIR__ . "/../app/controllers/UsuarioController.php";
 require_once __DIR__ . "/../app/controllers/NoticiaController.php";
 require_once __DIR__ . "/../app/controllers/VagaController.php";
 require_once __DIR__ . "/../app/controllers/CursoController.php";
+require_once __DIR__ . "/../app/controllers/AdmController.php";
+require_once __DIR__ . "/../app/controllers/DashController.php";
+
 
 
 $acao = $_GET['acao'] ?? '';
@@ -67,6 +70,10 @@ if ($acao == "listarCursosAdm"){
     $controller = new CursoController();
     $controller->listarCursosComEstrutura();
 }
+if($acao == "listarModulos"){
+    $controller = new CursoController();
+    $controller->listarModulos();
+}
 
 if ($acao == "criaModulo") {
     $controller = new CursoController();
@@ -75,10 +82,24 @@ if ($acao == "criaModulo") {
 
 if( $acao == "listarAulas"){
     $controller = new CursoController();
-    $controller->listarAulasADM();
+    $controller->listarAulas();
 }
 if ($acao == "abrirAula"){
     $controller = new CursoController();
     $controller->dadosAulaAberta();
+}
+
+if($acao == "checkinAdm"){
+    $controller = new AdmController();
+    $controller->get_adm();
+}
+
+if( $acao == "dashDeleteMatricula"){
+    $controller = new DashController();
+    $controller->DELETARMATRICULADECURSO();
+}
+if( $acao == "deleteModulo"){
+    $controller = new CursoController();
+    $controller->deletarModuloADM();
 }
 ?>

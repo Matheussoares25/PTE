@@ -371,7 +371,7 @@ try {
     dados.append("idModulo", id);
 
     try {
-      const resposta = await fetch("listarAulas.php", {
+      const resposta = await fetch("/PTE/routes/api.php?acao=listarAulas", {
         method: "POST",
         body: dados
       });

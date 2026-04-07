@@ -121,6 +121,21 @@ class CursoController
         }
     }
 
+    public function listarModulos()
+    {
+        require_once __DIR__ . "/../../control/authADM.php";
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        $idCurso = $_POST['idCurso'];
+
+        $dados = $this->admcurso->infoModulo($idCurso);
+
+        echo json_encode([
+            "modulos" => $dados
+        ]);
+    }
+
     public function inserirModulo()
     {
         require_once __DIR__ . "/../../control/authADM.php";
@@ -145,15 +160,15 @@ class CursoController
         }
     }
 
-    public function listarAulasADM()
+    public function listarAulas()
     {
-        require_once __DIR__ . "/../../control/authADM.php";
+        require_once __DIR__ . "/../../control/auth.php";
 
         header('Content-Type: application/json; charset=utf-8');
 
         $idModulo = $_POST['idModulo'] ?? NULL;
 
-        $dados = $this->admcurso->listaAulasDoModulo($idModulo);
+        $dados = $this->curso->listaAulasDoModulo($idModulo);
 
         echo json_encode(["success" => true, "aulas" => $dados]);
 
@@ -168,7 +183,7 @@ class CursoController
         $idAula = $_POST['idAula'] ?? 0;
 
         $progress = $this->curso->progressoAssistido($idAula);
-        
+
 
         // Pega os dados da aula (mídia)
         $dados = $this->curso->dadosAula($idAula);
@@ -190,6 +205,21 @@ class CursoController
         ];
 
         echo json_encode($resposta);
+    }
+
+    public function deletarModuloADM(){
+        require_once __DIR__ . "/../../control/authADM.php";
+        header('Content-Type: application/json; charset=utf-8');
+
+        $idModulo = $_POST['idModulo'];
+
+        $ok = $this->admcurso->dellModulo($idModulo);
+
+      
+        if ($ok){
+            echo json_encode(['success'=> true,'msg'=> 'Modulo Deletado']);
+        }
+
     }
 
 

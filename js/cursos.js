@@ -17,17 +17,17 @@ function carregarCursosSidebar() {
       const lista = document.getElementById("listaCursos");
       lista.innerHTML = "";
 
-      
-      if(data.Negado){
-          Swal.fire({
+
+      if (data.Negado) {
+        Swal.fire({
           icon: "warning",
-          title:"ACESSO NEGADO",
+          title: "ACESSO NEGADO",
           html: "REALIZE LOGIN",
         });
-        setTimeout(() =>{
+        setTimeout(() => {
           window.location.href = "index.html";
 
-        },1200)
+        }, 1200)
         return;
       }
 
@@ -54,10 +54,11 @@ function carregarCursosSidebar() {
         curso.modulos.forEach((mod) => {
           lista.innerHTML += `
         <li class="list-group-item" 
-            style="padding-left:25px; cursor:pointer;"
+            style="padding-left:25px; cursor:pointer;" 
             onclick="abrirModulo(${mod.id_modulo}, '${mod.nome_modulo}')">
           
             ${mod.nome_modulo}
+           
         </li>
     `;
 
@@ -92,15 +93,120 @@ function carregarCursosSidebar() {
     });
 }
 
-function abrirCurso(id, nome) {
+async function abrirCurso(id, nome) {
   localStorage.setItem("idCurso", id);
   document.getElementById("cursoName").innerText = nome;
+
 
   document.getElementById("EditAula").style.display = "none";
   document.getElementById("cadCursos").style.display = "none";
   document.getElementById("EditModulo").style.display = "none";
 
   document.getElementById("FormModulo").style.display = "";
+
+  const tabelModulos = document.getElementById("lista-modulos");
+
+  const formdata = new FormData();
+  formdata.append("idCurso", id);
+
+  const dados = await fetch("routes/api.php?acao=listarModulos", {
+    method: "POST",
+    body: formdata,
+    credentials: "include",
+  })
+
+  const res = await dados.json();
+
+  const html = res.modulos.map((m) => `
+    <tr>
+        <td>${m.id}</td>
+        <td>${m.nome_modolu}</td>
+        <td>
+            <button class="btn btn-primary" onclick="abrirModulo(${m.id}, '${m.nome_modolu}')">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="btn btn-danger" onclick="deleteModulo(${m.id}, '${m.nome_modolu}')">
+                <i class="fa-solid fa-trash" style="color: rgb(255, 255, 255);"></i>
+            </button>
+        </td>
+    </tr>
+`).join("");
+
+  tabelModulos.innerHTML = html;
+
+}
+async function deleteModulo(idModulo) {
+  Swal.fire({
+    icon: "error",
+    title: "Verificação de Permissão",
+    html: "Tem certeza que deseja que deseja executar essa tarefa?<br><strong>Esta ação é irreversível!</strong> <div> <label> confirme o login como usuario para excluir essa prova </label> <input id='senhaLogin' type='text' class='swal2-input' placeholder='Senha'></div>",
+    showCancelButton: true,
+    confirmButtonText: "Sim, excluir",
+    cancelButtonText: "Cancelar",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+
+      const senhaLogin = document.getElementById("senhaLogin").value.trim();
+
+      const formData = new FormData();
+      formData.append("senha", senhaLogin);
+
+      try {
+        const res = await fetch("routes/api.php?acao=checkinAdm", {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
+
+        const dados = await res.json();
+
+        if (dados.success == false) {
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: "Preenca com a senha do seu usario",
+          });
+        }
+
+        if (dados.SENHAERRADA) {
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: "Senha Incorreta",
+          });
+        }
+        if (dados.LIBERADO) {
+          const formdata = new FormData();
+          formdata.append("idModulo", idModulo);
+
+          const res = await fetch("routes/api.php?acao=deleteModulo", {
+            method: "POST",
+            body: formdata,
+            credentials: "include",
+          });
+
+          const dados = await res.json();
+
+          if (dados.success) {
+            Swal.fire({
+              icon: "success",
+              title: "Modulo Excluido com sucesso",
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            window.location.reload();
+          }
+
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+
+
+
+
 }
 
 async function abrirModulo(id, nome) {
@@ -117,7 +223,7 @@ async function abrirModulo(id, nome) {
 
   document.getElementById("NomeMod").innerHTML = "Editar Modulo" + "\n" + nome;
   document.getElementById("NameModuloe").value = nome;
-  
+
 
   const res = await fetch("routes/api.php?acao=listarAulas", {
     method: "POST",
@@ -168,7 +274,7 @@ async function abrirAula(id, nome, idModulo) {
   formdata = new FormData();
   formdata.append("idAula", id);
 
-      const res = await fetch("routes/api.php?acao=abrirAula", {
+  const res = await fetch("routes/api.php?acao=abrirAula", {
     method: "POST",
     body: formdata,
     credentials: "include",
@@ -284,7 +390,7 @@ async function salvarProva() {
       });
       carregarCursosSidebar();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 //Função para criar as questoções de avaliação
@@ -565,20 +671,20 @@ async function cadCurso() {
           scrollbarPadding: false,
         });
         return;
-      } else if (data.erro){
+      } else if (data.erro) {
         Swal.fire({
           icon: "warning",
-          title:"ACESSO NEGADO",
+          title: "ACESSO NEGADO",
           html: "REALIZE LOGIN",
         });
-        setTimeout(() =>{
+        setTimeout(() => {
           window.location.href = "index.html";
 
-        },1200)
+        }, 1200)
 
       }
-      
-      
+
+
       else {
         alert("Erro ao cadastrar curso");
         return;
@@ -641,15 +747,15 @@ async function NameModulo() {
 
         if (!data.success) {
           throw new Error(data.message);
-        }else{
-            Swal.fire({
-                icon: 'success',
-                title: 'Módulo Criado com sucesso',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            document.getElementById("NameModuloe").value = nomeModulo;
-            carregarCursosSidebar();
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Módulo Criado com sucesso',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          document.getElementById("NameModuloe").value = nomeModulo;
+          carregarCursosSidebar();
         }
 
         return data;
@@ -694,6 +800,8 @@ async function criaModulo() {
       icon: "success",
     });
     carregarCursosSidebar();
+    document.getElementById("NameModulo").value = "";
+
 
     document.getElementById("FormModulo").style.display = "";
     return;

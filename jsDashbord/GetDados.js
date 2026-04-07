@@ -174,30 +174,81 @@ async function openAlunos() {
 }
 
 async function excluirpermanente(matricula) {
-  const formData = new FormData();
-  formData.append("matricula", matricula);
+  Swal.fire({
+    icon: "error",
+    title: "Verificação de Permissão",
+    html: "Tem certeza que deseja que deseja executar essa tarefa?<br><strong>Esta ação é irreversível!</strong> <div> <label> confirme o login como usuario para excluir essa prova </label> <input id='senhaLogin' type='text' class='swal2-input' placeholder='Senha'></div>",
+    showCancelButton: true,
+    confirmButtonText: "Sim, excluir",
+    cancelButtonText: "Cancelar",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
 
-  const dados = await fetch("dashbord/dados.php?action=exclusao", {
-    method: "POST",
-    credentials: "include",
-    body: formData,
-  })
+      const senhaLogin = document.getElementById("senhaLogin").value.trim();
 
-  const res = await dados.json();
+      const formData = new FormData();
+      formData.append("senha", senhaLogin);
 
-  if (res.status === "sucesso") {
-    await Swal.fire({
-      title: "Matrícula Excluída",
-      icon: "success",
-      timer: 1000,
-      showConfirmButton: false
-    });
-    
+      try {
+        const res = await fetch("routes/api.php?acao=checkinAdm", {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
 
-    location.reload();
-  }
+        const dados = await res.json();
 
+        if(dados.success == false){
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: "Preenca com a senha do seu usario",
+          });
+        }
+
+        if(dados.SENHAERRADA){
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: "Senha Incorreta",
+          });
+        }
+        if(dados.LIBERADO){
+
+          const formData = new FormData();
+          formData.append("matricula", matricula);
+          
+          const dados = await fetch("routes/api.php?acao=dashDeleteMatricula", {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+          });
+          const res = await dados.json();
+
+          if(res.VAZIO){
+            Swal.fire({
+              icon: "error",
+              title: "Erro",
+              text: "Matricula nao encontrada",
+            });
+          }
+          if(res.success){
+            Swal.fire({
+              icon: "success",
+              title: "Matricula excluida",
+              text: "Matricula excluida com sucesso",
+            });
+            getDados();
+          }
+        }
+
+      } catch {
+
+      }
+    };
+  });
 }
+
 
 async function openProvas() {
   Swal.fire({

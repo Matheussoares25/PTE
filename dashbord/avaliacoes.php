@@ -43,7 +43,7 @@ try {
             $sqlInsert->bindParam(":nota", $nota);
             $sqlInsert->execute();
 
-            
+
 
             $sql = $pdo->prepare("UPDATE use_prova SET nota = :nota WHERE id = :idProva ");
             $sql->bindParam(":nota", $nota);
@@ -57,29 +57,58 @@ try {
 
     }
 
-    if(isset($_GET["action"]) && $_GET['action'] === "excluir"){
+    if (isset($_GET["action"]) && $_GET['action'] === "excluir") {
         $idProva = $_POST["idDohistoricoProva"];
         $idUser = $_POST["id_user"];
         $idProvaBanco = $_POST["idDaProvanoBanco"];
 
         $sql = $pdo->prepare("DELETE FROM use_prova WHERE id = :idProva AND id_user = :idAluno");
-        $sql->bindParam(":idProva", $idProva );
+        $sql->bindParam(":idProva", $idProva);
         $sql->bindParam(":idAluno", $idUser);
         $sql->execute();
 
-        echo json_encode(["excluido"=> true]);
+        echo json_encode(["excluido" => true]);
         return;
-        }
+    }
 
-    $sql = $pdo->query("SELECT a.id,a.nota,a.id_user,a.id_prova,a.acertos,a.data_inicio,a.aprovado,a.porcentagem,a.qtd_questoes,b.nome_aula,c.nome 
-    FROM use_prova a 
+    $sql = $pdo->query("SELECT 
+    a.id,
+    a.nota,
+    a.id_user,
+    a.id_prova,
+    a.acertos,
+    a.data_inicio,
+    a.aprovado,
+    a.porcentagem,
+    a.qtd_questoes,
+    b.nome_aula,
+    c.nome,
+    t.id AS id_curso,
+
+    (
+        SELECT COUNT(a2.id)
+        FROM modulos m2 
+        INNER JOIN aulas a2 ON a2.id_modulo = m2.id 
+        WHERE m2.id_curso = t.id
+          AND a2.tipo = 2
+    ) AS total_provas,
+
+    ROW_NUMBER() OVER (
+        PARTITION BY t.id   
+        ORDER BY b.id
+    ) AS ordem_prova
+
+    FROM use_prova a
     LEFT JOIN aulas b ON b.id = a.id_prova
-    LEFT JOIN usuarios c ON c.id = a.id_user;
+    LEFT JOIN usuarios c ON c.id = a.id_user
+    LEFT JOIN modulos m ON m.id = b.id_modulo
+    LEFT JOIN treinamentos t ON t.id = m.id_curso;
     ");
-
-
     $avaliacoes = $sql->fetchAll(PDO::FETCH_ASSOC);
 
+    
+
+   
 
     $total = count($avaliacoes);
 
@@ -87,6 +116,8 @@ try {
         "success" => true,
         "avaliacoes" => $avaliacoes,
         "tAvaliacoes" => $total,
+  
+
     ];
 
     echo json_encode($dados);

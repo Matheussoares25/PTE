@@ -95,6 +95,8 @@ class UsuarioController
             $_SESSION['tipo'] = (int) $res['tipo'];
             $_SESSION['email'] = $res['email'];
 
+           
+
             $token = bin2hex(random_bytes(32));
 
             $this->usuario->atualizarToken($res['id'], $token);
@@ -104,6 +106,7 @@ class UsuarioController
                 "token" => $token,
                 "id" => $res["id"],
                 "tipo" => $res["tipo"],
+                "email" => $res["email"],
 
             ];
 

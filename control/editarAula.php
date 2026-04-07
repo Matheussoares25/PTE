@@ -33,7 +33,7 @@ try {
     $midiaExiste = $sqlSelect->fetch(PDO::FETCH_ASSOC);
 
     // Caminho do diretório de vídeos
-    $diretorio = __DIR__ . "/PTE/uploads/videos/";
+    $diretorio = __DIR__ . "/../uploads/videos/";
     if (!is_dir($diretorio)) {
         mkdir($diretorio, 0755, true);
     }
@@ -45,6 +45,8 @@ try {
         $nomeArquivo = "aula_" . $idAula . "." . $ext;
         $caminhoFinal = $diretorio . $nomeArquivo;
         $caminhoBanco = "/PTE/uploads/videos/" . $nomeArquivo;
+
+        
 
         if (!move_uploaded_file($video["tmp_name"], $caminhoFinal)) {
             throw new Exception("Erro ao salvar o vídeo no servidor");

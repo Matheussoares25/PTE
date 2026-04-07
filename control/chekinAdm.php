@@ -15,12 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $con = new Conexao();
         $pdo = $con->conn;
 
-        $email = $_POST['email'] ?? '';
+        $email = $_SESSION['email'];
         $senha = $_POST['senha'] ?? '';
 
-        if($email == null){
-            $email = $_SESSION['email'];
-        }
+
 
         $stmt = $pdo->prepare("SELECT id, senha, tipo, acess 
             FROM usuarios 

@@ -15,12 +15,7 @@ GROUP BY up.id_user, t.id;
 
 total de provas do curso
 
-SELECT 
-    COUNT(a.id) AS total_aulas_tipo_2
-FROM modulos m
-INNER JOIN aulas a ON a.id_modulo = m.id
-WHERE m.id_curso = 1
-AND a.tipo = 2;
+SELECT COUNT(a.id) AS total_provas_curso FROM modulos m INNER JOIN aulas a ON a.id_modulo = m.id WHERE m.id_curso = :idcurso AND a.tipo = 2;
 
 
 
