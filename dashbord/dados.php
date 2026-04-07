@@ -34,6 +34,9 @@ try {
     $alunos = $pdo->query("SELECT COUNT(DISTINCT id_usuario) FROM use_treinamentos")->fetchColumn();
     $provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
     $usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
+    $qtdNoticias = $pdo->query("SELECT COUNT(*) FROM noticias")->fetchColumn();
+    $qtdVagas = $pdo->query("SELECT COUNT(*) FROM vagas")->fetchColumn();
+    $qtdCertificados = $pdo->query("SELECT COUNT(*) FROM certificado")->fetchColumn();
 
     $sql = $pdo->prepare("
         SELECT a.matricula,a.id_usuario,c.nome AS nome_usuario,
@@ -74,7 +77,10 @@ try {
         "acertagem" => $acertagem,
         "tCursos" => $tCursos,
         "tAlunos" => $tAlunos,
-        "dProvas" => $dadosProvas
+        "dProvas" => $dadosProvas,
+        "qtdNoticias" => $qtdNoticias,
+        "qtdVagas" => $qtdVagas,
+        "qtdCertificados" => $qtdCertificados
     ];
 
     echo json_encode($dados);

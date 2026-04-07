@@ -19,7 +19,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg " >
+  <nav class="navbar navbar-expand-lg ">
     <div class="container">
 
       <a class="navbar-brand fw-bold text-white" href="#" style="font-size:22px;">
@@ -68,10 +68,10 @@
     <div class="row g-3">
 
       <div class="col-md-3 dashcard">
-        <div class="card shadow-sm ">
+        <div class="card shadow-sm " style="background-color: rgba(101, 204, 33, 0.544);">
           <label onclick="openCriados()" style="cursor: pointer;">
             <div class="card-body text-center">
-              <h6 class="text-muted ">Cursos Criados</h6>
+              <h6 class="text-dark ">Cursos Criados</h6>
               <h2 class="fw-bold" id="qtdCursos"></h2>
           </label>
         </div>
@@ -79,10 +79,10 @@
     </div>
 
     <div class="col-md-3 dashcard">
-      <div class="card shadow-sm ">
+      <div class="card shadow-sm " style="background-color: rgba(33, 176, 204, 0.544);">
         <label onclick="openAlunos()" style="cursor: pointer;">
           <div class="card-body text-center">
-            <h6 class="text-muted">Alunos em Curso</h6>
+            <h6 class="text-dark">Alunos em Curso</h6>
             <h2 class="fw-bold" id="qtdAlunos"></h2>
         </label>
       </div>
@@ -90,10 +90,10 @@
   </div>
 
   <div class="col-md-3 dashcard">
-    <div class="card shadow-sm ">
-      <label onclick="openProvas()" style="cursor: pointer;">
+    <div class="card shadow-sm " style="background-color: rgb(204, 33, 193, 0.544);">
+      <label onclick="openProvas()" style="cursor: pointer;" >
         <div class="card-body text-center">
-          <h6 class="text-muted">Provas Realizadas</h6>
+          <h6 class="text-dark">Provas Realizadas</h6>
           <h2 class="fw-bold" id="qtdProvas"></h2>
       </label>
     </div>
@@ -102,10 +102,36 @@
 
   <div class="col-md-3 ">
     <div class="card shadow-sm">
-      <div class="card-body text-center">
-        <h6 class="text-muted">Numero de usuarios</h6>
+      <div class="card-body text-center" style="background-color: rgb(53, 33, 204, 0.544);">
+        <h6 class="text-dark">Numero de usuarios</h6>
         <h2 class="fw-bold" id="qtdUsuarios"></h2>
-        
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card shadow-sm text-dark" style="background-color: rgb(204, 33, 33, 0.544);">
+      <div class="card-body text-center">
+        <h6 class="text-dark"> Noticias</h6>
+        <h2 class="fw-bold" id="qtdNoticias">0</h2>
+      </div>
+    </div>
+  </div>
+
+    <div class="col-md-3 ">
+    <div class="card shadow-sm text-dark" style="background-color: rgba(33, 204, 42, 0.544);">
+      <div class="card-body text-center">
+        <h6 class="text-dark"> Certificados Emitidos</h6>
+        <h2 class="fw-bold" id="qtdCertificados">0</h2>
+      </div>
+    </div>
+  </div>
+     <div class="col-md-3 ">
+    <div class="card shadow-sm text-dark" style="background-color: rgba(19, 28, 207, 0.637);">
+      <div class="card-body text-center">
+        <h6 class="text-dark"> Vagas Criadas</h6>
+        <h2 class="fw-bold" id="qtdVagas">0</h2>
       </div>
     </div>
   </div>
@@ -118,19 +144,20 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <h5>Desempenho das Provas</h5>
-           <canvas id="graficoProvas" style="max-height:300px;"></canvas>
+          <canvas id="graficoProvas" style="max-height:300px;"></canvas>
         </div>
       </div>
     </div>
 
     <div class="col-md-4">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h5>Usuarios Na plataforma</h5>
-      <canvas id="graficoAlunos" style="max-height:300px;"></canvas>
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Usuarios Na plataforma</h5>
+          <canvas id="graficoAlunos" style="max-height:300px;"></canvas>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+
 
 
   </div>

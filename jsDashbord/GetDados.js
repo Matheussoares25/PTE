@@ -29,6 +29,10 @@ async function getDados() {
   document.getElementById("qtdCursos").innerHTML = dados.cursos;
   document.getElementById("qtdUsuarios").innerHTML = dados.usuarios;
   document.getElementById("qtdProvas").innerHTML = dados.provas;
+  document.getElementById("qtdNoticias").innerHTML = dados.qtdNoticias;
+  document.getElementById("qtdVagas").innerHTML = dados.qtdVagas;
+  document.getElementById("qtdCertificados").innerHTML = dados.qtdCertificados;
+
 
   const ctx = document.getElementById("graficoProvas");
   const ctx2 = document.getElementById("graficoAlunos");
