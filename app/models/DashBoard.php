@@ -10,6 +10,13 @@ class DashBoard
         $this->pdo = $conexao->conn;
     }
 
+    /**
+     * Deleta uma matrícula do cadastro de cursos
+     *
+     * @param int $matricula Matrícula a ser deletada
+     *
+     * @return array array com chave "success" e valor true
+     */
     public function deletarMatricula($matricula){
         $sql = $this->pdo->prepare("DELETE FROM use_treinamentos where matricula = :matricula");
         $sql->bindParam(":matricula", $matricula);

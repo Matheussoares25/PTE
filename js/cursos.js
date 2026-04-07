@@ -561,14 +561,14 @@ async function criaUmaAula() {
   const formdata = new FormData();
   formdata.append("idModulo", idModulo);
 
-  const res = await fetch("control/criaUmaAula.php", {
+  const res = await fetch("routes/api.php?acao=criaUmaAula", {
     method: "POST",
     body: formdata,
     credentials: "include",
   });
   const dados = await res.json();
 
-  if (dados.sucesso) {
+  if (dados.success) {
     carregarCursosSidebar();
     Swal.fire({
       icon: "success",

@@ -209,6 +209,7 @@ class CursoController
 
     public function deletarModuloADM(){
         require_once __DIR__ . "/../../control/authADM.php";
+
         header('Content-Type: application/json; charset=utf-8');
 
         $idModulo = $_POST['idModulo'];
@@ -220,6 +221,23 @@ class CursoController
             echo json_encode(['success'=> true,'msg'=> 'Modulo Deletado']);
         }
 
+    }
+
+    public function criarUmaAula(){
+        require_once __DIR__ . "/../../control/authADM.php";
+
+        header('Content-Type: application/json; charset=utf-8');
+        $idModulo = $_POST['idModulo'];
+
+        $res = $this->admcurso->criarAula($idModulo);
+
+        if ($res) {
+            echo json_encode(['success' => true]);
+        }else{
+            echo json_encode(['success' => false]);
+        }
+
+        
     }
 
 

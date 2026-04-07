@@ -142,8 +142,6 @@ class CursoADM
 
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
     public function dellModulo($idModulo)
     {
         try {
@@ -229,6 +227,17 @@ class CursoADM
         } catch (PDOException $e) {
             $this->pdo->rollBack();
             echo json_encode(["erro" => $e->getMessage()]);
+        }
+    }
+    public function criarAula($idModulo)
+    {
+        try {
+            $sql = $this->pdo->prepare("INSERT INTO aulas (id_modulo, excluido,tipo ) VALUES (:id_modulo, 0, 1)");
+            $sql->bindParam(":id_modulo", $idModulo);
+            $sql->execute();
+            return true;
+        } catch (PDOException $e) {
+            return false;
         }
     }
 

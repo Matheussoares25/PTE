@@ -33,15 +33,14 @@ async function Noticias() {
             <button class="btn btn-card btn-del btneditar" onclick="exNoticia(${n.id})">
                 <i class="bi bi-trash me-1"></i> Excluir
             </button>
-             ${
-               n.vaga == 1
-                 ? `
+             ${n.vaga == 1
+            ? `
                 <button class="btn btn-info btn-card" onclick="Candidatar(${n.id})">
                  <i class="fa-solid fa-arrow-trend-up" style="color: rgb(0, 0, 0);"></i> Candidatar-se
                 </button>
 `
-                 : ``
-             }
+            : ``
+          }
             </div>
 
          </div>
@@ -107,7 +106,8 @@ async function addNoticia() {
                 <!--Campo marcar como vaga-->
                 <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="marcaVaga" style="cursor: pointer; accent-color: blue;">
-                    <label class="form-check-label" for="marcaVaga" style="cursor: pointer; color: blue;">
+                    <label class="form-check-label" type="checkbox" for="marcaVaga" style="cursor: pointer; color: blue;">
+                    
                          Marcar como Vaga
                     </label>
                 </div>
@@ -220,7 +220,7 @@ async function exNoticia(id) {
 
 async function editarNoticia(id, titulo, conteudo) {
 
- 
+
 
   Swal.fire({
     html: `<div class="container mt-4">
@@ -348,7 +348,7 @@ async function Candidatar(id) {
 
     const status = await res.json();
 
-    if(status.success){
+    if (status.success) {
       Swal.fire({
         icon: "success",
         title: "Candidatura enviada!",
@@ -357,7 +357,7 @@ async function Candidatar(id) {
       });
     }
 
-    if(status.Existe){
+    if (status.Existe) {
       Swal.fire({
         icon: "warning",
         title: "Candidatura já enviada!",

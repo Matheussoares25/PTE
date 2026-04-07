@@ -102,4 +102,8 @@ if( $acao == "deleteModulo"){
     $controller = new CursoController();
     $controller->deletarModuloADM();
 }
+if( $acao == "criaUmaAula"){
+    $controller = new CursoController();
+    $controller->criarUmaAula();
+}
 ?>
