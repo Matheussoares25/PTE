@@ -79,7 +79,8 @@ try {
     $qtd_provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
 
 
-    $aulas = $pdo->query("SELECT COUNT(*) FROM aulas where tipo = 1")->fetchColumn();
+    $aulas = $pdo->query("SELECT COUNT(*) FROM aulas where tipo = 1 AND excluido = 0")->fetchColumn();
+    $aulasExcluidas = $pdo->query("SELECT COUNT(*) FROM aulas where tipo =1 AND excluido = 1")->fetchColumn();
     $aulasAssistidas = $pdo->query("SELECT COUNT(*) FROM progress")->fetchColumn();
 
     $acertagem = ($qtd_porcento && $qtd_provas) 
@@ -100,7 +101,8 @@ try {
         "qtdCertificados" => $qtdCertificados,
         "qtdAulas" => $aulas,
         "qtdAulasAssistidas" => $aulasAssistidas,
-        "ranking" => $resRanking
+        "ranking" => $resRanking,
+        "qtdAulasExcluidas" => $aulasExcluidas,
     ];
 
     echo json_encode($dados);

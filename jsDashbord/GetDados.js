@@ -82,14 +82,16 @@ async function getDados() {
   new Chart(ctx3, {
     type: "doughnut",
     data: {
-      labels: ["Aulas Criadas", "Aulas Assistidas"],
+      labels: ["Aulas Criadas", "Aulas Assistidas", "Aulas excluidas"],
       datasets: [
         {
-          data: [ dados.qtdAulas, "1" - dados.qtdAulasAssistidas],
+          data: [ dados.qtdAulas,  - dados.qtdAulasAssistidas, - dados.qtdAulasExcluidas],
           borderWidth: 1,
           backgroundColor: [
             "rgba(255, 0, 0, 0.75)",
-            "rgba(0, 255, 81, 0.7)"
+            "rgba(0, 255, 81, 0.7)",
+            "rgba(4, 4, 64, 0.7)",
+            
           ],
         },
       ],

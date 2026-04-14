@@ -45,6 +45,7 @@ try {
         INNER JOIN aulas a ON a.id_modulo = m.id
         WHERE m.id_curso = :idcurso
           AND a.tipo = 2
+          AND a.excluido = 0
     ");
     $sql1->bindParam(":idcurso", $curso);
     $sql1->execute();

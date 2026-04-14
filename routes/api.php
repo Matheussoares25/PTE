@@ -9,9 +9,7 @@ require_once __DIR__ . "/../app/controllers/DashController.php";
 require_once __DIR__ . "/../app/controllers/RankingController.php";
 require_once __DIR__ . "/../app/controllers/DadosCursoContoller.php";
 
-
 $acao = $_GET['acao'] ?? '';
-
 
 
 if( $acao == "buscarQuestoes"){
@@ -19,15 +17,10 @@ if( $acao == "buscarQuestoes"){
     $controller->buscadorQuestoes();
 }
 
-
-
-
 if( $acao == 'ControleLogin'){
     $controller = new UsuarioController();
     $controller->chekarSessao();
 }
-
-
 
 
 if ($acao == "cadastrarUsuario") {

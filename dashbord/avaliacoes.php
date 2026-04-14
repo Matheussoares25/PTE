@@ -90,7 +90,7 @@ try {
         FROM modulos m2 
         INNER JOIN aulas a2 ON a2.id_modulo = m2.id 
         WHERE m2.id_curso = t.id
-          AND a2.tipo = 2
+          AND a2.tipo = 2 AND a2.excluido = 0
     ) AS total_provas,
 
     ROW_NUMBER() OVER (
