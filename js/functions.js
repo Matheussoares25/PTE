@@ -13,6 +13,7 @@ window.onload = function () {
 
 }
 
+
 if (document.getElementById("login") != null) {
 
     document.getElementById("login").addEventListener("submit", async function (event) {
@@ -223,7 +224,7 @@ E-mail geral: contato@pte.dev.br
 
 
 
-                }else{
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'TERMOS E CONDICOES',
@@ -245,6 +246,7 @@ E-mail geral: contato@pte.dev.br
 
                 const data = await response.json();
 
+
                 if (data.success) {
                     $('#Resposta').html('<p>Login bem-sucedido</p>');
                     localStorage.setItem("token", data.token);
@@ -253,6 +255,12 @@ E-mail geral: contato@pte.dev.br
                     setTimeout(() => {
                         verificar();
                     }, 3000);
+
+                    
+                  
+                   if (data.foto) {
+                        localStorage.setItem("fotoUser", data.foto);
+                    }
 
                     const Toast = Swal.mixin({
                         toast: true,
@@ -275,6 +283,8 @@ E-mail geral: contato@pte.dev.br
                         icon: "success",
                         title: "Signed in successfully"
                     });
+             
+
 
                 } else if (data.NAOEXISTE) {
                     Swal.fire({
@@ -395,7 +405,7 @@ if (document.getElementById("cadastro") != null) {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch('/routes/api.php?acao=cadastrarUsuario', {
+                    const response = await fetch('routes/api.php?acao=cadastrarUsuario', {
                         method: 'POST',
                         body: formData,
                         credentials: "include"
@@ -465,10 +475,13 @@ if (document.getElementById("cadastro") != null) {
 
 
 async function checkLogin() {
+
+
     const res = await fetch("routes/api.php?acao=ControleLogin", {
         method: "POST",
         credentials: "include"
     });
+
     const dados = await res.json();
     if (dados.EXPIRADO) {
 

@@ -55,10 +55,28 @@ try {
     $porcentagem = ($acertos * 100) / $total;
     $data = date('Y-m-d H:i:s');
 
+
    
 
-    if ($porcentagem >= 75) {
+    if ($porcentagem >= 0) {
 
+        $sql = $pdo->prepare(" UPDATE use_prova SET id_prova = :id_prova,acertos = :acertos,data_conclusao = NOW(),id_user = :id_usuario,aprovado = 0, porcentagem = :porcentagem, qtd_questoes = :qtdquestoes
+        WHERE id_user = :id_usuario and id_prova = :id_prova");
+        $sql->bindParam(":id_prova", $idProva);
+        $sql->bindParam(":acertos", $acertos);
+        $sql->bindParam(":porcentagem", $porcentagem);
+        $sql->bindParam(":qtdquestoes", $total);
+        $sql->bindParam(":id_usuario", $_SESSION["id"]);
+        $sql->execute();
+
+        echo json_encode([
+            "sucesso" => true,
+            "acertos" => $acertos,
+            "porcentagem" => $porcentagem,
+            "qtdProvas" => $qtdProvas
+        ]);
+
+    } else if ($porcentagem >= 75) {
         $sql = $pdo->prepare(" UPDATE use_prova SET id_prova = :id_prova,acertos = :acertos,data_conclusao = NOW(),id_user = :id_usuario,aprovado = 1, porcentagem = :porcentagem, qtd_questoes = :qtdquestoes
         WHERE id_user = :id_usuario and id_prova = :id_prova");
         $sql->bindParam(":id_prova", $idProva);
@@ -75,7 +93,9 @@ try {
             "qtdProvas" => $qtdProvas
         ]);
 
-    } else {
+
+    }
+    else {
 
         echo json_encode([
             "sucesso" => false,

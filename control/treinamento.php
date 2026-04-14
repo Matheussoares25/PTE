@@ -595,7 +595,7 @@ try {
     let form = new FormData();
     form.append("idProva", id);
 
-    const res = await fetch("questoes.php", {
+    const res = await fetch("../routes/api.php?acao=buscarQuestoes", {
       method: "POST",
       body: form,
       credentials: "include"

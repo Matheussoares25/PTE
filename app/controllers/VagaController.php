@@ -23,6 +23,21 @@ class VagaController
             ]);
         }
     }
+    public function buscarCandidaturaPorVaga(){
+
+     require_once __DIR__ . "/../../control/auth.php";
+
+     header('Content-Type: application/json; charset=utf-8');
+
+     $idVaga = $_POST['id'] ?? null;
+
+     
+
+     $res = $this->vaga->buscarCandidaturas($idVaga);
+
+     echo json_encode($res);
+
+    }
 
     public function candidatura()
     {
@@ -58,6 +73,23 @@ class VagaController
                 "success" => false,
                 "erro" => $e->getMessage()
             ]);
+        }
+    }
+
+    public function deletaVaga(){
+        require_once __DIR__ . "/../../control/authADM.php";
+
+        header("Content-Type: application/json; charset=utf-8");
+
+        $idVaga = $_POST["idVaga"] ??"";
+
+ 
+        $res = $this->vaga->deletarVaga($idVaga);
+        
+        if($res){
+            echo json_encode(["success"=> true]);
+        }else{
+            echo json_encode(["success"=> false]);
         }
     }
 }

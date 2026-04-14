@@ -1,10 +1,18 @@
+
+
+window.onload = function (){
+  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+}
+
 document.addEventListener('click', () => {
-    checkLogin();
+  checkLogin();
 });
 
 getDados();
 
 async function getDados() {
+
+
   const res = await fetch("dashbord/dados.php", {
     method: "GET",
     credentials: "include",
@@ -36,6 +44,7 @@ async function getDados() {
 
   const ctx = document.getElementById("graficoProvas");
   const ctx2 = document.getElementById("graficoAlunos");
+  const ctx3 = document.getElementById("graficoAulas");
 
   new Chart(ctx2, {
     type: "line",
@@ -69,6 +78,40 @@ async function getDados() {
       responsive: true,
     },
   });
+
+  new Chart(ctx3, {
+    type: "doughnut",
+    data: {
+      labels: ["Aulas Criadas", "Aulas Assistidas"],
+      datasets: [
+        {
+          data: [ dados.qtdAulas, "1" - dados.qtdAulasAssistidas],
+          borderWidth: 1,
+          backgroundColor: [
+            "rgba(255, 0, 0, 0.75)",
+            "rgba(0, 255, 81, 0.7)"
+          ],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+    },
+  });
+
+  const tabelaRanking = document.getElementById("TebelaRankingAlunos");
+
+  tabelaRanking.innerHTML = dados.ranking
+    .map(
+      (p) => `
+            <tr>
+                
+                <td>${p.nome}</td>
+                <td>${p.total_notas}</td>
+            </tr>
+        `
+    )
+    .join("");
 }
 
 async function openCriados() {
@@ -206,7 +249,7 @@ async function excluirpermanente(matricula) {
 
         const dados = await res.json();
 
-        if(dados.success == false){
+        if (dados.success == false) {
           Swal.fire({
             icon: "error",
             title: "Erro",
@@ -214,18 +257,18 @@ async function excluirpermanente(matricula) {
           });
         }
 
-        if(dados.SENHAERRADA){
+        if (dados.SENHAERRADA) {
           Swal.fire({
             icon: "error",
             title: "Erro",
             text: "Senha Incorreta",
           });
         }
-        if(dados.LIBERADO){
+        if (dados.LIBERADO) {
 
           const formData = new FormData();
           formData.append("matricula", matricula);
-          
+
           const dados = await fetch("routes/api.php?acao=dashDeleteMatricula", {
             method: "POST",
             body: formData,
@@ -233,14 +276,14 @@ async function excluirpermanente(matricula) {
           });
           const res = await dados.json();
 
-          if(res.VAZIO){
+          if (res.VAZIO) {
             Swal.fire({
               icon: "error",
               title: "Erro",
               text: "Matricula nao encontrada",
             });
           }
-          if(res.success){
+          if (res.success) {
             Swal.fire({
               icon: "success",
               title: "Matricula excluida",

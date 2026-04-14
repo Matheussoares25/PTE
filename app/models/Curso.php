@@ -10,6 +10,12 @@ class Curso
         $this->pdo = $conexao->conn;
     }
 
+    /**
+     * Busca os treinamentos do usuario
+     * 
+     * @param int $idUser ID do usuário
+     * @return array Contendo os treinamentos do usuário
+     */
     public function buscarTreinamentosDoUsuario($idUser)
     {
         $sql = $this->pdo->prepare("SELECT a.id_usuario,a.id_curso,a.status_curso,c.nome,b.email  FROM use_treinamentos AS a 
@@ -21,6 +27,12 @@ class Curso
 
     }
 
+    /**
+     * Busca os treinamentos concluídos do usuário
+     * 
+     * @param int $idUser ID do usuário
+     * @return array Contendo os treinamentos concluídos do usuário
+     */
     public function buscarTreinamentosConcluidosDoUsuario($idUser)
     {
         $sql = $this->pdo->prepare("SELECT a.id_usuario,a.id_curso,a.status_curso,c.nome  FROM use_treinamentos AS a 
@@ -31,6 +43,11 @@ class Curso
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Busca os treinamentos com módulos e aulas
+     * 
+     * @return array Contendo os treinamentos com módulos e aulas
+     */
     public function listarCursosComModulosEAulas()
     {
         $stmt = $this->pdo->query("
@@ -100,6 +117,9 @@ class Curso
         return array_values($resultado);
     }
 
+
+
+
     public function progressoAssistido($idAula)
     {
 
@@ -124,6 +144,13 @@ class Curso
         }
     }
 
+/**
+ * Retorna os dados de uma mídia, dado o id da aula.
+ * 
+ * @param int $id Id da aula
+ * @return array|bool Dados da mídia ou falso se não encontrar
+ * @throws PDOException
+ */
     public function dadosAula($id)
     {
 
@@ -153,6 +180,13 @@ class Curso
             return false;
         }
     }
+/**
+ * Retorna as áulas de um módulo, dado o id do módulo
+ * 
+ * @param int $id_modulo Id do módulo
+ * @return array|bool Áulas do módulo ou falso se não encontrar
+ * @throws PDOException
+ */
     public function listaAulasDoModulo($id_modulo)
     {
 

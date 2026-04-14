@@ -12,6 +12,15 @@ class adm
         $this->pdo = $conexao->conn;
     }
 
+    /**
+     * Checa se a senha e o email esta ao cadastrado no banco de dados
+     * e se o tipo do usuario 2 (administrador)
+     * 
+     * @param string $senha Senha do usuario
+     * @param string $email Email do usuario
+     * 
+     * @return array Retorna um array com a chave "NAOEXISTE", "SENHAERRADA", "NEGADO" ou "LIBERADO"
+     */
     public function chekin($senha, $email)
     {
         $sql = $this->pdo->prepare("

@@ -1,3 +1,7 @@
+window.onload = function (){
+  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+}
+
 document.addEventListener('click', () => {
 
     checkLogin();

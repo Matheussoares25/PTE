@@ -42,19 +42,29 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item " href="desempenho.html">Dashboard</a></li>
               <li><a class="dropdown-item" href="avaliações.html">Avaliações / Correção</a></li>
+              <li><a class="dropdown-item" href="vagas.html">Vagas</a></li>
             </ul>
           </div>
           <a class="nav-link text-white fw-semibold" href="ranking.html">Ranking</a>
           <a class="nav-link text-white fw-semibold" href="noticias.html">Notícias</a>
           <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
 
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <img id="FotoUser" style="width: 60px; height: 60px;" class="rounded-5">
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">
+                  <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
+                    style="border-radius: 8px;">
+                    <i class="bi bi-box-arrow-right me-1"></i> Sair
+                  </button></a>
+              </li>
 
-
-          <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
-            style="border-radius: 8px;">
-            <i class="bi bi-box-arrow-right me-1"></i> Sair
-          </button>
-
+            </ul>
+          </li>
         </div>
       </div>
 
@@ -91,7 +101,7 @@
 
   <div class="col-md-3 dashcard">
     <div class="card shadow-sm " style="background-color: rgb(204, 33, 193, 0.544);">
-      <label onclick="openProvas()" style="cursor: pointer;" >
+      <label onclick="openProvas()" style="cursor: pointer;">
         <div class="card-body text-center">
           <h6 class="text-dark">Provas Realizadas</h6>
           <h2 class="fw-bold" id="qtdProvas"></h2>
@@ -110,16 +120,18 @@
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-3 dashcard">
     <div class="card shadow-sm text-dark" style="background-color: rgb(204, 33, 33, 0.544);">
-      <div class="card-body text-center">
-        <h6 class="text-dark"> Noticias</h6>
-        <h2 class="fw-bold" id="qtdNoticias">0</h2>
-      </div>
+      <a href="noticias.html" style="text-decoration: none;">
+        <div class="card-body text-center">
+          <h6 class="text-dark"> Noticias</h6>
+          <h2 class="fw-bold text-dark" id="qtdNoticias">0</h2>
+      </a>
     </div>
   </div>
+  </div>
 
-    <div class="col-md-3 ">
+  <div class="col-md-3 dashcard">
     <div class="card shadow-sm text-dark" style="background-color: rgba(33, 204, 42, 0.544);">
       <div class="card-body text-center">
         <h6 class="text-dark"> Certificados Emitidos</h6>
@@ -127,20 +139,22 @@
       </div>
     </div>
   </div>
-     <div class="col-md-3 ">
+  <div class="col-md-3 dashcard">
     <div class="card shadow-sm text-dark" style="background-color: rgba(19, 28, 207, 0.637);">
-      <div class="card-body text-center">
-        <h6 class="text-dark"> Vagas Criadas</h6>
-        <h2 class="fw-bold" id="qtdVagas">0</h2>
-      </div>
+      <a href="vagas.html" style="text-decoration: none;">
+        <div class="card-body text-center">
+          <h6 class="text-dark"> Vagas Criadas</h6>
+          <h2 class="fw-bold text-dark" id="qtdVagas">0</h2>
+      </a>
     </div>
+  </div>
   </div>
 
   </div>
 
   <div class="row mt-4">
 
-    <div class="col-md-8">
+    <div class="col-md-4">
       <div class="card shadow-sm">
         <div class="card-body">
           <h5>Desempenho das Provas</h5>
@@ -152,7 +166,16 @@
     <div class="col-md-4">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h5>Usuarios Na plataforma</h5>
+          <h5>Aulas assistidas</h5>
+          <canvas id="graficoAulas" style="max-height:300px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>Usuarios Na plataforma</h5><a class="btn btn-primary btn-sm" href="cadastrar.html">Adicionar Usuarios</a>
           <canvas id="graficoAlunos" style="max-height:300px;"></canvas>
         </div>
       </div>
@@ -176,19 +199,8 @@
                 <th>Pontos</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>João</td>
-                <td>980</td>
-              </tr>
-              <tr>
-                <td>Maria</td>
-                <td>920</td>
-              </tr>
-              <tr>
-                <td>Carlos</td>
-                <td>890</td>
-              </tr>
+            <tbody id="TebelaRankingAlunos">
+
             </tbody>
           </table>
 

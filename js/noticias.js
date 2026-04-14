@@ -1,11 +1,15 @@
+window.onload = function (){
+  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+}
+
 Noticias();
 document.addEventListener('click', () => {
     checkLogin();
 });
-
 async function Noticias() {
-  
-  
+      const fotoPerfil = document.getElementById("FotoUser");
+      fotoPerfil.src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+
   try {
     const res = await fetch("routes/api.php?acao=buscarNoticias", {
       method: "POST",
@@ -246,7 +250,7 @@ async function editarNoticia(id, titulo, conteudo) {
                 <!-- Campo Conteúdo -->
                 <div class="mb-3">
                     <label for="conteudo" class="form-label">Conteúdo:</label>
-                    <textarea id="conteudo" class="form-control" rows="5" placeholder="Escreva o conteúdo da notícia..." required></textarea>
+                    <textarea id="conteudo" class="form-control" rows="5" placeholder="Escreva o conteúdo da notícia..." required>${conteudo}</textarea>
                 </div>
 
              

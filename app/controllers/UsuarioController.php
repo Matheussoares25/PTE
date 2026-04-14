@@ -95,6 +95,10 @@ class UsuarioController
             $_SESSION['tipo'] = (int) $res['tipo'];
             $_SESSION['email'] = $res['email'];
 
+            if (!empty($res['Foto'])) {
+                $_SESSION['foto'] = "data:image/jpeg;base64," . base64_encode($res['Foto']);
+            }
+
 
 
             $token = bin2hex(random_bytes(32));
@@ -109,9 +113,11 @@ class UsuarioController
                 "id" => $res["id"],
                 "tipo" => $res["tipo"],
                 "email" => $res["email"],
+                "foto" => $res["Foto"] ?? null
 
             ];
-
+ 
+         
             if ($res['acess'] == 0) {
                 $this->usuario->atualizarAcesso($res['id']);
             }
@@ -128,24 +134,25 @@ class UsuarioController
         }
     }
 
-    public function verificarAcesso(){
+    public function verificarAcesso()
+    {
 
-     $email = $_POST["email"];
+        $email = $_POST["email"];
 
-        $res = $this->usuario-> buscaEmail($email);
-        
-         if (!$res) {
-                echo json_encode(["NAOEXISTE" => true, "message" => "Usuario nao cadastrado"]);
-                return;
-            }
+        $res = $this->usuario->buscaEmail($email);
+
+        if (!$res) {
+            echo json_encode(["NAOEXISTE" => true, "message" => "Usuario nao cadastrado"]);
+            return;
+        }
 
         $dados = $this->usuario->buscaPorAcesso($email);
 
-        if($dados["acess"] == 0){
+        if ($dados["acess"] == 0) {
             echo json_encode(["PACESS" => true]);
             return;
-        }else{
-            echo json_encode(["PACESS"=> false]);
+        } else {
+            echo json_encode(["PACESS" => false]);
 
         }
     }
@@ -159,8 +166,8 @@ class UsuarioController
         $token = $_SESSION['token'] ?? null;
 
         $res = $this->usuario->controleDeSessao($idUser, $token);
-        if($res['EXPIRADO'] == true){
-            
+        if ($res['EXPIRADO'] == true) {
+
         }
         echo json_encode($res);
     }

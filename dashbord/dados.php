@@ -38,6 +38,19 @@ try {
     $qtdVagas = $pdo->query("SELECT COUNT(*) FROM vagas")->fetchColumn();
     $qtdCertificados = $pdo->query("SELECT COUNT(*) FROM certificado")->fetchColumn();
 
+
+    $raking = $pdo->prepare("SELECT 
+	    u.nome,
+	   
+	    SUM(up.nota) AS total_notas
+	FROM use_prova up
+	INNER JOIN usuarios u ON u.id = up.id_user
+	GROUP BY u.id, u.nome
+	ORDER BY total_notas DESC;");
+    $raking->execute();
+    $resRanking = $raking->fetchAll(PDO::FETCH_ASSOC);
+
+
     $sql = $pdo->prepare("
         SELECT a.matricula,a.id_usuario,c.nome AS nome_usuario,
                a.id_curso,t.nome AS nome_curso,
@@ -65,6 +78,10 @@ try {
     $qtd_porcento = $pdo->query("SELECT SUM(porcentagem) FROM use_prova")->fetchColumn();
     $qtd_provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
 
+
+    $aulas = $pdo->query("SELECT COUNT(*) FROM aulas where tipo = 1")->fetchColumn();
+    $aulasAssistidas = $pdo->query("SELECT COUNT(*) FROM progress")->fetchColumn();
+
     $acertagem = ($qtd_porcento && $qtd_provas) 
         ? $qtd_porcento / $qtd_provas 
         : 0;
@@ -80,7 +97,10 @@ try {
         "dProvas" => $dadosProvas,
         "qtdNoticias" => $qtdNoticias,
         "qtdVagas" => $qtdVagas,
-        "qtdCertificados" => $qtdCertificados
+        "qtdCertificados" => $qtdCertificados,
+        "qtdAulas" => $aulas,
+        "qtdAulasAssistidas" => $aulasAssistidas,
+        "ranking" => $resRanking
     ];
 
     echo json_encode($dados);

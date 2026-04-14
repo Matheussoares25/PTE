@@ -9,14 +9,14 @@ try {
     $conexao = new Conexao();
     $pdo = $conexao->conn;
 
-    $sql = $pdo->prepare("SELECT u.id AS id_usuario,u.nome AS nome_usuario,u.email,u.Foto,
-        COUNT(t.id_curso) AS total_cursos
-        FROM usuarios u INNER JOIN use_treinamentos t 
-        ON u.id = t.id_usuario
-        AND t.status_curso = 2
-        GROUP BY u.id, u.nome, u.email,u.Foto
-        ORDER BY total_cursos DESC
-    ");
+    $sql = $pdo->prepare("SELECT 
+	    u.nome,
+	    u.Foto,
+	    SUM(up.nota) AS total_notas
+	FROM use_prova up
+	INNER JOIN usuarios u ON u.id = up.id_user
+	GROUP BY u.id, u.nome
+	ORDER BY total_notas DESC;");
 
     $sql->execute();
     $qntAll = $sql->fetchAll(PDO::FETCH_ASSOC);

@@ -6,10 +6,21 @@ require_once __DIR__ . "/../app/controllers/VagaController.php";
 require_once __DIR__ . "/../app/controllers/CursoController.php";
 require_once __DIR__ . "/../app/controllers/AdmController.php";
 require_once __DIR__ . "/../app/controllers/DashController.php";
-
+require_once __DIR__ . "/../app/controllers/RankingController.php";
+require_once __DIR__ . "/../app/controllers/DadosCursoContoller.php";
 
 
 $acao = $_GET['acao'] ?? '';
+
+
+
+if( $acao == "buscarQuestoes"){
+    $controller = new DadosCursoContoller();
+    $controller->buscadorQuestoes();
+}
+
+
+
 
 if( $acao == 'ControleLogin'){
     $controller = new UsuarioController();
@@ -48,6 +59,14 @@ if ($acao == "excluirNoticia") {
 if ($acao == "buscarVagas") {
     $controller = new VagaController();
     $controller->buscar();
+}
+if ($acao == "buscarCandidaturas") {
+    $controller = new VagaController();
+    $controller->buscarCandidaturaPorVaga();
+}
+if ($acao == "excluirVaga"){
+    $controller = new VagaController();
+    $controller->deletaVaga();
 }
 if ($acao == "candidatar") {
     $controller = new VagaController();
@@ -118,4 +137,10 @@ if( $acao == "criaUmaAula"){
     $controller = new CursoController();
     $controller->criarUmaAula();
 }
+if( $acao == "buscarRanking"){
+    $controller = new RankingController();
+    $controller->buscar();
+}
+
+
 ?>

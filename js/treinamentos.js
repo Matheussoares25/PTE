@@ -1,4 +1,3 @@
-
 document.addEventListener('click', () => {
     checkLogin();
 });
@@ -6,6 +5,7 @@ document.addEventListener('click', () => {
 buscarTreinamentos();
 treinamentosConcluidos();
 async function buscarTreinamentos() {
+    document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
     try {
 
         const res = await fetch("routes/api.php?acao=buscarCursosDoALuno", {
@@ -91,12 +91,7 @@ async function treinamentosConcluidos() {
             return;
         }
 
-        document.getElementById("Concluidos").innerHTML = dados.map(item => `
-            <tr>
-                <td>${item.nome}</td>
-                <td>${item.data ?? '-'}</td>
-            </tr>
-        `).join("");
+
 
     } catch (error) {
         console.error("Erro:", error);

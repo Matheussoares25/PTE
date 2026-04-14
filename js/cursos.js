@@ -1,5 +1,9 @@
+window.onload = function () {
+  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+}
+
 document.addEventListener('click', () => {
-    checkLogin();
+  checkLogin();
 });
 
 function fecharModulo() {
@@ -317,7 +321,7 @@ async function abrirProva(id, nome, idModulo) {
   dados.append("idProva", id);
 
   try {
-    const res = await fetch("control/questoes.php", {
+    const res = await fetch("routes/api.php?acao=buscarQuestoes", {
       method: "POST",
       body: dados,
     });
@@ -337,11 +341,7 @@ async function abrirProva(id, nome, idModulo) {
 
       questao.alternativas.forEach((alternativa, num) => {
         htmlAlternativas += `
-                    <h6>Alternativa ${num + 1} :  ${alternativa.texto}</h6>
-                    
-                    
-                    
-                `;
+                    <h6>Alternativa ${num + 1} :  ${alternativa.texto} ${alternativa.correta ? `<i class="fa-solid fa-check" style="color: #008fff;"></i>` : ""}</h6>`;
       });
 
       container.innerHTML += `
@@ -351,13 +351,122 @@ async function abrirProva(id, nome, idModulo) {
                     <h5>
                         ${htmlAlternativas}
                     </h5>
-                    <button class="btn btn-success px-4">Editar</button>
+                    <button class="btn btn-success px-4" onclick="editarQuestao(${questao.id}, '${questao.pergunta}', '${questao.alternativas[0].texto}', '${questao.alternativas[1].texto}', '${questao.alternativas[2].texto}', '${questao.alternativas[3].texto}')">Editar</button>
                 </div>
             `;
     });
   } catch (erro) {
     console.error("Erro ao carregar questões:", erro);
   }
+}
+
+async function editarQuestao(id, pergunta, alt1, alt2, alt3, alt4) {
+  Swal.fire({
+    title: "Editar Questão",
+    html: `
+                <div class="mb-3">
+                    <label class="form-label fw-bold" >Pergunta</label>
+                    <input type="text" class="form-control" id="pergunta" placeholder=${pergunta ?? "Digite a pergunta"} >
+                </div>
+                <div><div class="alert alert-info mt-2">
+                   <strong>Como funciona:</strong><br>
+                    - Digite a pergunta.<br>
+                    - Preencha as 4 alternativas.<br>
+                    - Marque apenas <strong>uma</strong> alternativa como correta.<br>
+                    - A alternativa marcada será considerada a resposta certa da questão.
+                     </div>
+                </div>
+                <h4>Selecione a Alternativa Correta</h4>
+                <div class="input-group mb-2">
+                
+                    <div class="input-group-text">
+                           <input type="radio" name="correta" value="1">
+                    </div>
+                       <input type="text" class="form-control" id="alternativa1"
+                              placeholder=${alt1 ?? "Digite a primeira alternativa"}>
+                    </div>
+
+                   <div class="input-group mb-2">
+                       <div class="input-group-text">
+                        <input type="radio" name="correta" value="2">
+                   </div>
+                   <input type="text" class="form-control" id="alternativa2"
+                      placeholder=${alt2 ?? "Digite a segunda alternativa"}>
+                </div>
+
+                 <div class="input-group mb-2">
+               <div class="input-group-text">
+                <input type="radio" name="correta" value="3">
+                </div>
+        <input type="text" class="form-control" id="alternativa3"
+               placeholder=${alt3 ?? "Digite a terceira alternativa"}>
+    </div>
+
+    <div class="input-group mb-2">
+        <div class="input-group-text">
+            <input type="radio" name="correta" value="4">
+        </div>
+        <input type="text" class="form-control" id="alternativa4"
+               placeholder=${alt4 ?? "Digite a quarta alternativa"}>
+    </div>
+            `,
+    width: 1500,
+    showCancelButton: true,
+    confirmButtonText: "Salvar",
+    showLoaderOnConfirm: true,
+    preConfirm: async () => {
+      const idAula = localStorage.getItem("idAula");
+      const idModulo = localStorage.getItem("idModulo");
+      const idQuestao = id;
+
+      const pergunta = document.getElementById("pergunta").value;
+      const alternativa1 = document.getElementById("alternativa1").value;
+      const alternativa2 = document.getElementById("alternativa2").value;
+      const alternativa3 = document.getElementById("alternativa3").value;
+      const alternativa4 = document.getElementById("alternativa4").value;
+      const radioSelecionado = document.querySelector('input[name="correta"]:checked');
+
+      if (!radioSelecionado) {
+        alert("Selecione uma alternativa correta");
+        return;
+      }
+
+      const correta = radioSelecionado.value;
+
+      let dados = new FormData();
+      dados.append("pergunta", pergunta);
+      dados.append("alt1", alternativa1);
+      dados.append("alt2", alternativa2);
+      dados.append("alt3", alternativa3);
+      dados.append("alt4", alternativa4);
+      dados.append("idAula", idAula);
+      dados.append("idModulo", idModulo);
+      dados.append("correta", correta);
+      dados.append("idQuestao", idQuestao);
+
+      const res = await fetch("control/editarQuestao.php", {
+        method: "POST",
+        body: dados,
+      });
+
+      const content = await res.json();
+
+      if (content.sucesso) {
+        Swal.fire({
+          icon: "success",
+          title: "Questão Alterada com sucesso",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        abrirProva(
+          localStorage.getItem("idAula"),
+          localStorage.getItem("nomeAula"),
+          localStorage.getItem("idModulo"),
+        );
+      }
+    },
+  });
 }
 
 //Função para salvar nome da prova
@@ -461,9 +570,14 @@ async function criarQuestao() {
       const alternativa2 = document.getElementById("alternativa2").value;
       const alternativa3 = document.getElementById("alternativa3").value;
       const alternativa4 = document.getElementById("alternativa4").value;
-      const correta = document.querySelector(
-        'input[name="correta"]:checked',
-      ).value;
+      const radioSelecionado = document.querySelector('input[name="correta"]:checked');
+
+      if (!radioSelecionado) {
+        Swal.showValidationMessage("Selecione uma alternativa correta");
+        return;
+      }
+
+      const correta = radioSelecionado.value;
 
       let dados = new FormData();
       dados.append("pergunta", pergunta);

@@ -11,6 +11,11 @@ class CursoADM
         $this->pdo = $conexao->conn;
     }
 
+    /**
+     * Busca todos os cursos
+     *
+     * @return array
+     */
     public function buscarCursosGeral()
     {
         $sql = $this->pdo->prepare("SELECT * FROM treinamentos");
@@ -18,6 +23,13 @@ class CursoADM
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Busca um curso pela sua ID
+     * 
+     * @param int $id ID do curso
+     * 
+     * @return array Contendo o curso, relacionados e usuários
+     */
     public function buscarPorId($id)
     {
         // Curso (agora direto como ARRAY)
@@ -54,6 +66,7 @@ class CursoADM
         ];
     }
 
+
     public function cadastrarAoCurso($idCurso, $idUser)
     {
 
@@ -69,6 +82,7 @@ class CursoADM
         }
     }
 
+
     public function deletarMatircula($idUser, $idCurso)
     {
 
@@ -82,6 +96,15 @@ class CursoADM
             echo json_encode(["success" => false, "erro" => $e->getMessage()]);
         }
     }
+    /**
+     * Insere um módulo com suas respectivas áulas
+     *
+     * @param string $nomeCurso Nome do módulo
+     * @param int $idCurso ID do curso
+     * @param int $qtd Quantidade de áulas a ser criada
+     *
+     * @return bool True se a operação for bem sucedida, false caso contrário
+     */
     public function inserirModuloComAulas($nomeCurso, $idCurso, $qtd)
     {
         try {
@@ -126,6 +149,13 @@ class CursoADM
         }
     }
 
+    /**
+     * Retorna as informações de um módulo a partir do seu ID do curso
+     *
+     * @param int $idCurso ID do curso
+     *
+     * @return array Associative array com as informações do módulo
+     */
     public function infoModulo($idCurso)
     {
         $sql = $this->pdo->prepare("
@@ -149,7 +179,7 @@ class CursoADM
 
             $idModulo = $_POST['idModulo'];
 
-           
+
             $sql = $this->pdo->prepare("
         DELETE alt
         FROM alternativas alt
@@ -160,7 +190,7 @@ class CursoADM
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
 
-         
+
             $sql = $this->pdo->prepare("
         DELETE q
         FROM questoes q
@@ -170,7 +200,7 @@ class CursoADM
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
 
-           
+
             $sql = $this->pdo->prepare("
         DELETE n
         FROM notas n
@@ -180,7 +210,7 @@ class CursoADM
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
 
-          
+
             $sql = $this->pdo->prepare("
         DELETE p
         FROM progress p
@@ -190,7 +220,7 @@ class CursoADM
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
 
-          
+
             $sql = $this->pdo->prepare("
         DELETE m
         FROM midias m
@@ -200,7 +230,7 @@ class CursoADM
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
 
-           
+
             $sql = $this->pdo->prepare("
         DELETE up
         FROM use_prova up
@@ -210,12 +240,12 @@ class CursoADM
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
 
-           
+
             $sql = $this->pdo->prepare("DELETE FROM aulas WHERE id_modulo = :idModulo");
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
 
-           
+
             $sql = $this->pdo->prepare("DELETE FROM modulos WHERE id = :idModulo");
             $sql->bindParam(":idModulo", $idModulo);
             $sql->execute();
@@ -229,6 +259,13 @@ class CursoADM
             echo json_encode(["erro" => $e->getMessage()]);
         }
     }
+    /**
+     * Cria uma aula para o módulo informado
+     *
+     * @param int $idModulo ID do módulo
+     *
+     * @return bool True se a operação for bem sucedida, false caso contrário
+     */
     public function criarAula($idModulo)
     {
         try {

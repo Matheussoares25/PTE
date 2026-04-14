@@ -20,7 +20,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg" >
+  <nav class="navbar navbar-expand-lg">
     <div class="container">
 
       <a class="navbar-brand fw-bold text-white" href="#" style="font-size:22px;">
@@ -42,19 +42,29 @@
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item " href="desempenho.html">Dashboard</a></li>
-              <li><a class="dropdown-item" href="#">Avaliações / Correção</a></li>
+              <li><a class="dropdown-item" href="avaliações.html">Avaliações / Correção</a></li>
+              <li><a class="dropdown-item" href="vagas.html">Vagas</a></li>
             </ul>
           </div>
           <a class="nav-link text-white fw-semibold" href="ranking.html">Ranking</a>
           <a class="nav-link text-white fw-semibold" href="noticias.html">Notícias</a>
           <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
 
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <img id="FotoUser" style="width: 60px; height: 60px;" class="rounded-5">
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">
+                  <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
+                    style="border-radius: 8px;">
+                    <i class="bi bi-box-arrow-right me-1"></i> Sair
+                  </button></a>
+              </li>
 
-
-          <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
-            style="border-radius: 8px;">
-            <i class="bi bi-box-arrow-right me-1"></i> Sair
-          </button>
+            </ul>
+          </li>
 
         </div>
       </div>
@@ -70,7 +80,7 @@
     <div class="card-body p-4">
       <h5 class="mb-3"><i class="bi bi-journal-plus"></i> Realize a avaliação das provas dos usuarios</h5>
 
-      <!-- A tag table é obrigatória aqui -->
+
       <table class="table table-hover">
         <thead class="table-dark">
           <tr>
@@ -88,13 +98,13 @@
           </tr>
         </thead>
         <tbody id="TabelaProvas">
-          
+
         </tbody>
       </table>
 
       <hr>
     </div>
-  </div>  
+  </div>
 
 
 </body>
