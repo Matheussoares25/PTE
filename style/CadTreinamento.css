@@ -1,0 +1,79 @@
+ :root {
+     --sidebar-width: 260px;
+ }
+
+ body {
+     background: #f3f6fc;
+ }
+
+ .card-custom {
+     border-radius: 14px;
+     box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.12);
+     width: 100%;
+ }
+
+ .header-blue {
+     background: #006edc;
+     color: white;
+     padding: 14px;
+     border-radius: 14px 14px 0 0;
+     font-size: 20px;
+     font-weight: 600;
+ }
+
+ .sidebar {
+     width: var(--sidebar-width);
+     position: fixed;
+     top: 0;
+     left: 0;
+     height: 100vh;
+     background: #fff;
+     padding-top: 15px;
+     overflow-y: auto;
+     border-right: 1px solid #ddd;
+ }
+
+ .main-content {
+     margin-left: var(--sidebar-width);
+     padding: 20px;
+     width: calc(100% - var(--sidebar-width));
+ }
+
+ .loud {
+     background: rgba(29, 96, 134, 0.5);
+     height: 100vh;
+     width: 100vw;
+     position: fixed;
+     top: 0;
+     left: 0;
+     display: flex;
+     padding-top: auto;
+ }
+
+ #spiner {
+     margin: auto;
+ }
+
+ .list-group-item {
+     cursor: pointer;
+ }
+
+ .list-group-item:hover {
+     background-color: #eef5ff;
+ }
+
+ video {
+     width: 100%;
+     max-width: 450px;
+     border-radius: 10px;
+ }
+
+ .table-responsive {
+     overflow-x: auto;
+ }
+
+ @media (min-width: 1400px) {
+     .container {
+         max-width: 1100px;
+     }
+ }

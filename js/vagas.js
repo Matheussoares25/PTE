@@ -1,6 +1,4 @@
-window.onload = function (){
-  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
-}
+
 
 dadosvagas();
 async function dadosvagas() {

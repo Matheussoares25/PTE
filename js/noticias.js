@@ -1,14 +1,10 @@
-window.onload = function (){
-  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
-}
+
 
 Noticias();
 document.addEventListener('click', () => {
     checkLogin();
 });
 async function Noticias() {
-      const fotoPerfil = document.getElementById("FotoUser");
-      fotoPerfil.src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
 
   try {
     const res = await fetch("routes/api.php?acao=buscarNoticias", {
@@ -33,6 +29,8 @@ async function Noticias() {
         <p class="card-text">
             <small class="text-muted">${n.data_noticia}</small>
         </p>
+
+
 
         <div class="btn-group-modern">
             <button class="btn btn-card btn-edit btneditar" onclick="editarNoticia(${n.id}, '${n.titulo}', '${n.conteudo}')">
@@ -68,15 +66,7 @@ async function Noticias() {
   } catch (error) {
     console.log("Erro no fetch:", error);
 
-    Swal.fire({
-      icon: "error",
-      title: "Erro",
-      text: "Acesso negado",
-    });
 
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1000);
   }
 }
 

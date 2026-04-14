@@ -6,7 +6,7 @@ include "authADM.php";
 try {
     $pdo = (new Conexao())->conn;
 
-    // Recebe dados do POST
+
     $idAula = intval($_POST["idAula"] ?? 0);
     $idModulo = intval($_POST["idModulo"] ?? 0);
     $nomeAula = trim($_POST["nomeAula"] ?? '');
@@ -14,11 +14,7 @@ try {
     $video = $_FILES['video'] ?? null;
 
    
-    $sql = $pdo->prepare("
-        UPDATE aulas 
-        SET nome_aula = :nomeAula 
-        WHERE id = :idAula AND id_modulo = :idModulo
-    ");
+    $sql = $pdo->prepare("UPDATE aulas SET nome_aula = :nomeAula  WHERE id = :idAula AND id_modulo = :idModulo");
     $sql->execute([
         ":nomeAula" => $nomeAula,
         ":idAula" => $idAula,
@@ -26,13 +22,11 @@ try {
     ]);
 
 
-    $sqlSelect = $pdo->prepare("
-        SELECT id FROM midias WHERE id_aula = :idAula LIMIT 1
-    ");
+    $sqlSelect = $pdo->prepare("SELECT id FROM midias WHERE id_aula = :idAula LIMIT 1");
     $sqlSelect->execute([":idAula" => $idAula]);
     $midiaExiste = $sqlSelect->fetch(PDO::FETCH_ASSOC);
 
-    // Caminho do diretório de vídeos
+
     $diretorio = __DIR__ . "/../uploads/videos/";
     if (!is_dir($diretorio)) {
         mkdir($diretorio, 0755, true);
@@ -75,11 +69,11 @@ try {
         ":idAula" => $idAula
     ]);
 
-    echo json_encode(["sucesso" => true]);
+    echo json_encode(["success" => true]);
 
 } catch (Exception $e) {
     echo json_encode([
-        "sucesso" => false,
+        "success" => false,
         "erro" => $e->getMessage()
     ]);
 }

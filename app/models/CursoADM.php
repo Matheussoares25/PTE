@@ -180,8 +180,7 @@ class CursoADM
             $idModulo = $_POST['idModulo'];
 
 
-            $sql = $this->pdo->prepare("
-        DELETE alt
+            $sql = $this->pdo->prepare("DELETE alt
         FROM alternativas alt
         INNER JOIN questoes q ON alt.id_questao = q.id
         INNER JOIN aulas a ON q.id_prova = a.id
@@ -191,8 +190,7 @@ class CursoADM
             $sql->execute();
 
 
-            $sql = $this->pdo->prepare("
-        DELETE q
+            $sql = $this->pdo->prepare("DELETE q
         FROM questoes q
         INNER JOIN aulas a ON q.id_prova = a.id
         WHERE a.id_modulo = :idModulo

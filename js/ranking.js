@@ -6,7 +6,7 @@ document.addEventListener('click', () => {
 ranking();
 
 async function ranking() {
-     document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+
     const res = await fetch("routes/api.php?acao=buscarRanking",{
         method: "POST",
         credentials: "include"

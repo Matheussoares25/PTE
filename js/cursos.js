@@ -1,6 +1,4 @@
-window.onload = function () {
-  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
-}
+
 
 document.addEventListener('click', () => {
   checkLogin();
@@ -641,7 +639,7 @@ async function salvarAula() {
     formdata.append("video", fileVideo);
   }
   try {
-    const res = await fetch("control/editarAula.php", {
+    const res = await fetch("routes/api.php?acao=salvarAula", {
       method: "POST",
       body: formdata,
       credentials: "include",
@@ -649,7 +647,7 @@ async function salvarAula() {
 
     const dados = await res.json();
 
-    if (dados.sucesso) {
+    if (dados.success) {
       Swal.fire({
         title: "Dados Salvos",
         html: "Os dados desta aula foram salvos",
@@ -760,21 +758,20 @@ async function cadCurso() {
   formdata = new FormData();
   formdata.append("nome", nome);
 
-  fetch("control/cadCurso.php", {
+  fetch("routes/api.php?acao=cadCurso", {
     method: "POST",
     body: formdata,
     credentials: "include",
   })
     .then((res) => res.json())
     .then((data) => {
-      if (data.sucesso) {
+      if (data.success) {
         Swal.fire({
           title: "Curso Adicionado com Sucesso",
           html: "Os proximos passos é adicionar modulos e aulas",
           icon: "success",
         });
-        const id = data.dados.id;
-        localStorage.setItem("idCurso", id);
+
         carregarCursosSidebar();
 
         document.getElementById("cursoName").innerHTML = data.dados.nome;

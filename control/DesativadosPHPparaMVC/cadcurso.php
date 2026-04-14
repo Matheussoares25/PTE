@@ -43,7 +43,7 @@ try {
     $novoTreinamento = $stmt->fetch(PDO::FETCH_ASSOC);
 
     echo json_encode([
-        'sucesso' => true,
+        'success' => true,
         'dados' => $novoTreinamento
     ]);
 

@@ -11,7 +11,10 @@ require_once __DIR__ . "/../app/controllers/DadosCursoContoller.php";
 
 $acao = $_GET['acao'] ?? '';
 
-
+if ($acao == 'salvarAula') {
+    $controller = new DadosCursoContoller();
+    $controller->cadastrarumaAula();
+}
 if( $acao == "buscarQuestoes"){
     $controller = new DadosCursoContoller();
     $controller->buscadorQuestoes();
@@ -21,7 +24,10 @@ if( $acao == 'ControleLogin'){
     $controller = new UsuarioController();
     $controller->chekarSessao();
 }
-
+if( $acao == 'cadCurso'){
+    $controller = new DadosCursoContoller();
+    $controller->cadastrarCurso();
+}
 
 if ($acao == "cadastrarUsuario") {
     $controller = new UsuarioController();

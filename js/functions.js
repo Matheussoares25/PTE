@@ -12,6 +12,47 @@ window.onload = function () {
     }
 
 }
+geral();
+
+function geral() {
+const fotoPerfil = document.getElementById("FotoUser");
+
+if (fotoPerfil) {
+    fotoPerfil.src = localStorage.getItem("fotoUser") || "semFoto.jpg";
+}
+
+const li = document.getElementById("listOpcoes");
+
+if (li) {
+    li.innerHTML = `
+        <a class="dropdown-item" href="#" onclick="perfil()">Perfil</a>
+        <a class="dropdown-item" href="#" onclick="report()">Problemas</a>
+        <a class="dropdown-item" href="#" onclick="oflog()">Sair</a>
+    `;
+}
+
+}
+
+async function report() {
+    Swal.fire({
+        icon: 'warning',
+        width: "1500px",
+        input: "text",
+        title: 'Relatar um problema',
+        showConfirmButton: true,
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar',
+
+        didOpen: () => {
+            const resposta = Swal.getPopup().querySelector('input');
+            
+            
+        }
+
+    })
+    
+}
 
 
 if (document.getElementById("login") != null) {
@@ -256,9 +297,9 @@ E-mail geral: contato@pte.dev.br
                         verificar();
                     }, 3000);
 
-                    
-                  
-                   if (data.foto) {
+
+
+                    if (data.foto) {
                         localStorage.setItem("fotoUser", data.foto);
                     }
 
@@ -283,7 +324,7 @@ E-mail geral: contato@pte.dev.br
                         icon: "success",
                         title: "Signed in successfully"
                     });
-             
+
 
 
                 } else if (data.NAOEXISTE) {

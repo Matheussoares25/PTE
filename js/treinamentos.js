@@ -5,7 +5,7 @@ document.addEventListener('click', () => {
 buscarTreinamentos();
 treinamentosConcluidos();
 async function buscarTreinamentos() {
-    document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+  
     try {
 
         const res = await fetch("routes/api.php?acao=buscarCursosDoALuno", {
