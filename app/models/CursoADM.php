@@ -111,7 +111,6 @@ class CursoADM
 
             $this->pdo->beginTransaction();
 
-
             $sql = $this->pdo->prepare("
             INSERT INTO modulos (nome_modolu, id_curso) 
             VALUES (:nomeCurso, :idCurso)
@@ -122,7 +121,6 @@ class CursoADM
             ]);
 
             $id_modulo = $this->pdo->lastInsertId();
-
 
             if ($qtd > 0) {
 
@@ -250,11 +248,11 @@ class CursoADM
 
             $this->pdo->commit();
 
-            echo json_encode(["success" => true]);
+            return true;
 
         } catch (PDOException $e) {
             $this->pdo->rollBack();
-            echo json_encode(["erro" => $e->getMessage()]);
+            return false;
         }
     }
     /**

@@ -1,6 +1,6 @@
 
 .card-modern {
-    border-radius: 14px;
+    border-radius: 8px;
     border: none;
     padding: 22px;
     box-shadow: 0 4px 18px rgba(0,0,0,0.08);
@@ -9,7 +9,7 @@
 }
 
 .card-modern:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: 0 8px 26px rgba(0,0,0,0.12);
 }
 

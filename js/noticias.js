@@ -1,8 +1,6 @@
-
-
 Noticias();
 document.addEventListener('click', () => {
-    checkLogin();
+  checkLogin();
 });
 async function Noticias() {
 
@@ -21,8 +19,8 @@ async function Noticias() {
     const html = dados
       .map(
         (n) => `
-<div class="card card-modern mb-4">
-    <div class="card-body">
+    <div class="col-md-6 mb-3 card-modern">
+      <div class="card-body p-2">
 
         <h5 class="card-title">${n.titulo}</h5>
         <p class="card-text">${n.conteudo}</p>
@@ -191,6 +189,12 @@ async function exNoticia(id) {
     scrollbarPadding: false,
   }).then(async (result) => {
     if (result.isConfirmed) {
+      const verifica = await checkinAdm();
+
+      if(!verifica){
+        return false;
+      }
+      
       const res = await fetch("routes/api.php?acao=excluirNoticia", {
         method: "POST",
         credentials: "include",

@@ -23,4 +23,14 @@ class DashController
 
         echo json_encode($res);
     }
+
+    public function deletarReclamacoes(){
+
+    $idReport = $_POST["id"] ?? null;
+ 
+
+    $res = $this->dash->deletaReport($idReport);
+
+    echo json_encode($res);
+    }
 }

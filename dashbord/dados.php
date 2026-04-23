@@ -33,7 +33,7 @@ try {
     $tCursos = $pdo->query("SELECT * FROM treinamentos")->fetchAll();
     $alunos = $pdo->query("SELECT COUNT(DISTINCT id_usuario) FROM use_treinamentos")->fetchColumn();
     $provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
-    $usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
+
     $qtdNoticias = $pdo->query("SELECT COUNT(*) FROM noticias")->fetchColumn();
     $qtdVagas = $pdo->query("SELECT COUNT(*) FROM vagas")->fetchColumn();
     $qtdCertificados = $pdo->query("SELECT COUNT(*) FROM certificado")->fetchColumn();
@@ -83,6 +83,16 @@ try {
     $aulasExcluidas = $pdo->query("SELECT COUNT(*) FROM aulas where tipo =1 AND excluido = 1")->fetchColumn();
     $aulasAssistidas = $pdo->query("SELECT COUNT(*) FROM progress")->fetchColumn();
 
+    $qtd_reports = $pdo->query("SELECT COUNT(*) FROM reports")->fetchColumn();
+    $dReports = $pdo->query("SELECT a.id, a.reclamacao,  b.nome
+FROM reports AS a 
+INNER JOIN usuarios AS b 
+ON a.id_usuario = b.id")->fetchAll();
+
+
+    $usuarios = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
+    $dUsuarios = $pdo->query("SELECT id,email,nome,tipo,acess FROM usuarios")->fetchAll();
+
     $acertagem = ($qtd_porcento && $qtd_provas) 
         ? $qtd_porcento / $qtd_provas 
         : 0;
@@ -103,6 +113,9 @@ try {
         "qtdAulasAssistidas" => $aulasAssistidas,
         "ranking" => $resRanking,
         "qtdAulasExcluidas" => $aulasExcluidas,
+        "qtdReports" => $qtd_reports,
+        "dReports" => $dReports,
+        "dUsuarios" => $dUsuarios
     ];
 
     echo json_encode($dados);

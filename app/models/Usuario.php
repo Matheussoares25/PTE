@@ -74,6 +74,23 @@ class Usuario
         return $res;
     }
 
+    public function buscaporId($id)
+    {
+        $stm = $this->pdo->prepare('SELECT id, senha, tipo, acess, email,nome, Foto FROM usuarios WHERE id = :id');
+
+        $stm->bindParam(':id', $id);
+        $stm->execute();
+
+        $res = $stm->fetch(PDO::FETCH_ASSOC);
+
+        if ($res && !empty($res['Foto'])) {
+            $res['Foto'] = "data:image/jpeg;base64," . base64_encode($res['Foto']);
+        }
+
+        return $res;
+
+    }
+
     /**
      * Busca o acesso do usuario com o email especificado.
      *
@@ -139,6 +156,83 @@ class Usuario
         }
 
         return ['EXPIRADO' => false];
+    }
+
+    public function reportar($reclamacao, $usuario)
+    {
+
+        $sql = $this->pdo->prepare('INSERT INTO reports (reclamacao, id_usuario,data) VALUES (:reclamacao, :idUsuario, NOW())');
+        $sql->bindParam(":reclamacao", $reclamacao);
+        $sql->bindParam(":idUsuario", $usuario);
+        return $sql->execute();
+    }
+
+    public function editrPerfil($nome, $senha, $id)
+    {
+        $campos = [];
+        $params = [":id" => $id];
+
+        if (!empty($nome)) {
+            $campos[] = "nome = :nome";
+            $params[":nome"] = $nome;
+        }
+
+        if (!empty($senha)) {
+            $campos[] = "senha = :senha";
+            $params[":senha"] = $senha;
+        }
+
+
+        if (empty($campos)) {
+            return false;
+        }
+
+        $sql = "UPDATE usuarios SET " . implode(", ", $campos) . " WHERE id = :id";
+
+        $stm = $this->pdo->prepare($sql);
+        return $stm->execute($params);
+    }
+
+    public function alterarTipo($id)
+    {
+
+        $sql = $this->pdo->prepare("UPDATE usuarios SET tipo = CASE WHEN tipo = 2 THEN 1 ELSE 2 END
+        WHERE id = :id ");
+        $sql->bindParam(":id", $id);
+        return $sql->execute();
+    }
+
+    public function BloquearOUDesbloquearAcesso($id)
+    {
+        $sql = $this->pdo->prepare("UPDATE usuarios SET acess = CASE WHEN acess = 1 THEN 2 ELSE 1 END WHERE id = :id");
+        $sql->bindParam(":id", $id);
+        return $sql->execute();
+    }
+
+    public function deletarUsuario($id)
+    {
+        try {
+            $this->pdo->beginTransaction();
+
+            $this->pdo->prepare("DELETE FROM candidaturas WHERE id_user = ?")->execute([$id]);
+            $this->pdo->prepare("DELETE FROM certificado WHERE id_user = ?")->execute([$id]);
+            $this->pdo->prepare("DELETE FROM notas WHERE id_aluno = ?")->execute([$id]);
+            $this->pdo->prepare("DELETE FROM progress WHERE id_user = ?")->execute([$id]);
+            $this->pdo->prepare("DELETE FROM use_prova WHERE id_user = ?")->execute([$id]);
+            $this->pdo->prepare("DELETE FROM use_treinamentos WHERE id_usuario = ?")->execute([$id]);
+            $this->pdo->prepare("DELETE FROM reports WHERE id_usuario = ?")->execute([$id]);
+
+            $stmt = $this->pdo->prepare("DELETE FROM usuarios WHERE id = ? AND tipo = 1");
+            $stmt->execute([$id]);
+
+            $this->pdo->commit();
+
+            return $stmt->rowCount() > 0;
+
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 
 
-window.onload = function (){
+window.onload = function () {
   document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
 }
 
@@ -9,6 +9,10 @@ document.addEventListener('click', () => {
 });
 
 getDados();
+
+setInterval(() => {
+  getDados();
+}, 5000);
 
 async function getDados() {
 
@@ -40,6 +44,7 @@ async function getDados() {
   document.getElementById("qtdNoticias").innerHTML = dados.qtdNoticias;
   document.getElementById("qtdVagas").innerHTML = dados.qtdVagas;
   document.getElementById("qtdCertificados").innerHTML = dados.qtdCertificados;
+  document.getElementById("qtdProblemas").innerHTML = dados.qtdReports;
 
 
   const ctx = document.getElementById("graficoProvas");
@@ -85,13 +90,13 @@ async function getDados() {
       labels: ["Aulas Criadas", "Aulas Assistidas", "Aulas excluidas"],
       datasets: [
         {
-          data: [ dados.qtdAulas,  - dados.qtdAulasAssistidas, - dados.qtdAulasExcluidas],
+          data: [dados.qtdAulas, - dados.qtdAulasAssistidas, - dados.qtdAulasExcluidas],
           borderWidth: 1,
           backgroundColor: [
             "rgba(255, 0, 0, 0.75)",
             "rgba(0, 255, 81, 0.7)",
             "rgba(4, 4, 64, 0.7)",
-            
+
           ],
         },
       ],
@@ -227,79 +232,37 @@ async function openAlunos() {
 }
 
 async function excluirpermanente(matricula) {
-  Swal.fire({
-    icon: "error",
-    title: "Verificação de Permissão",
-    html: "Tem certeza que deseja que deseja executar essa tarefa?<br><strong>Esta ação é irreversível!</strong> <div> <label> confirme o login como usuario para excluir essa prova </label> <input id='senhaLogin' type='text' class='swal2-input' placeholder='Senha'></div>",
-    showCancelButton: true,
-    confirmButtonText: "Sim, excluir",
-    cancelButtonText: "Cancelar",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
 
-      const senhaLogin = document.getElementById("senhaLogin").value.trim();
+  const verificar = await checkinAdm();
 
-      const formData = new FormData();
-      formData.append("senha", senhaLogin);
+  if (!verificar) return false;
 
-      try {
-        const res = await fetch("routes/api.php?acao=checkinAdm", {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        });
 
-        const dados = await res.json();
+  const formData = new FormData();
+  formData.append("matricula", matricula);
 
-        if (dados.success == false) {
-          Swal.fire({
-            icon: "error",
-            title: "Erro",
-            text: "Preenca com a senha do seu usario",
-          });
-        }
-
-        if (dados.SENHAERRADA) {
-          Swal.fire({
-            icon: "error",
-            title: "Erro",
-            text: "Senha Incorreta",
-          });
-        }
-        if (dados.LIBERADO) {
-
-          const formData = new FormData();
-          formData.append("matricula", matricula);
-
-          const dados = await fetch("routes/api.php?acao=dashDeleteMatricula", {
-            method: "POST",
-            body: formData,
-            credentials: "include",
-          });
-          const res = await dados.json();
-
-          if (res.VAZIO) {
-            Swal.fire({
-              icon: "error",
-              title: "Erro",
-              text: "Matricula nao encontrada",
-            });
-          }
-          if (res.success) {
-            Swal.fire({
-              icon: "success",
-              title: "Matricula excluida",
-              text: "Matricula excluida com sucesso",
-            });
-            getDados();
-          }
-        }
-
-      } catch {
-
-      }
-    };
+  const dados = await fetch("routes/api.php?acao=dashDeleteMatricula", {
+    method: "POST",
+    body: formData,
+    credentials: "include",
   });
+  const res = await dados.json();
+
+  if (res.VAZIO) {
+    Swal.fire({
+      icon: "error",
+      title: "Erro",
+      text: "Matricula nao encontrada",
+    });
+  }
+  if (res.success) {
+    Swal.fire({
+      icon: "success",
+      title: "Matricula excluida",
+      text: "Matricula excluida com sucesso",
+    });
+    getDados();
+  }
 }
 
 
@@ -356,3 +319,228 @@ async function openProvas() {
     },
   });
 }
+
+async function openReports() {
+  Swal.fire({
+    title: "Problemas Relatados",
+    width: "1200px",
+    html: `
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 20%">Usuario</th>
+                    <th>Report</th>
+                    <th style="width: 20%">Acoes</th>
+                </tr>
+            </thead>
+            <tbody id="TabelaReports">
+            
+            </tbody>
+        </table>
+    </div>
+    `,
+
+    didOpen: async () => {
+      try {
+        const dados = await fetch("dashbord/dados.php", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const res = await dados.json();
+
+        const tabela = document.getElementById("TabelaReports");
+
+        tabela.innerHTML = res.dReports
+          .map(
+            (p) => `
+            <tr>
+                    <td >${p.nome ?? ""}</td>
+                    <td>${p.reclamacao ?? ""}</td>
+                    <td><button class="btn btn-danger" onclick="excluirReport(${p.id})" ><i class="fa-solid fa-trash fa-flip-horizontal fa-xs" style="color: rgb(0, 0, 0);"></i> Exluir</button></td>   
+                `,
+          )
+          .join("");
+      } catch { }
+    },
+  });
+}
+
+async function excluirReport(id) {
+
+  const verificar = await checkinAdm();
+
+  if (!verificar) return false;
+
+
+  try {
+    const dadosrequest = new FormData();
+    dadosrequest.append("id", id);
+
+    const dados = await fetch("routes/api.php?acao=deletarReport", {
+      method: "POST",
+      body: dadosrequest,
+      credentials: "include",
+    });
+
+    const res = await dados.json();
+    if (res.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Report excluido",
+        text: "Report excluido com sucesso",
+      });
+      getDados();
+
+
+    }
+  } catch { }
+}
+
+async function openUsuarios() {
+  Swal.fire({
+    title: "Usuarios Cadastrados",
+    width: "1200px",
+    html: `
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th >Email</th>
+                    <th>Tipo de Usuario</th>
+                    <th >Nome</th>
+                    <th>Ativo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="TabelaReports">
+            
+            </tbody>
+        </table>
+    </div>
+    `,
+
+    didOpen: async () => {
+      try {
+        const dados = await fetch("dashbord/dados.php", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const res = await dados.json();
+
+        const tabela = document.getElementById("TabelaReports");
+
+        tabela.innerHTML = res.dUsuarios
+          .map(
+            (p) => `
+            <tr>
+                    <td>${p.nome ?? ""}</td>
+                    <td >${p.email ?? ""}</td>
+<td>${p.tipo == 2 ? `Admin` : `Funcionario <button class="btn btn-warning ms-4" onclick="alterarTipo(${p.id})">Alterar</button>`}</td>
+                    <td>${p.acess == 1 ? `<button onclick="alterarAcesso(${p.id})" class="btn btn-success">Ativo</button>` : `<button onclick="alterarAcesso(${p.id})" class="btn btn-danger">Bloqueado</button>`}</td>
+                    <td><button class="btn btn-danger" onclick="excluirUsuario(${p.id})" ><i class="fa-solid fa-trash fa-flip-horizontal fa-xs" style="color: rgb(0, 0, 0);"></i> Exluir</button>
+                    <button class="btn btn-warning" onclick="perfil(${p.id})" ><i class="fa-solid fa-pen-to-square fa-xs" style="color: rgb(0, 0, 0);"></i> Editar</button></td>
+                      
+                `,
+          )
+          .join("");
+      } catch { }
+    },
+  });
+
+}
+
+
+async function alterarAcesso(id) {
+  console.log(id);
+  const liberado = await checkinAdm();
+
+  if (!liberado) return;
+
+  const dadosrequest = new FormData();
+  dadosrequest.append("id", id);
+
+  const dados = await fetch("routes/api.php?acao=alterarTipoDeAcesso", {
+    method: "POST",
+    body: dadosrequest,
+    credentials: "include",
+  });
+
+  const res = await dados.json();
+
+  if (res.success) {
+    Swal.fire({
+      icon: "success",
+      title: "ACesso Alterado",
+      text: "Alterado com sucesso",
+    });
+    openUsuarios();
+
+  }
+}
+
+async function alterarTipo(id) {
+
+  const liberado = await checkinAdm();
+
+  if (!liberado) return;
+
+  const dadosrequest = new FormData();
+  dadosrequest.append("id", id);
+
+  const dados = await fetch("routes/api.php?acao=alterarTipo", {
+    method: "POST",
+    body: dadosrequest,
+    credentials: "include",
+  });
+
+  const res = await dados.json();
+
+  if (res.success) {
+    Swal.fire({
+      icon: "success",
+      title: "Tipo Alterado",
+      text: "Tipo alterado com sucesso",
+    });
+    openUsuarios();
+  }
+
+}
+
+async function excluirUsuario(id) {
+
+  const liberado = await checkinAdm();
+
+  if (!liberado) return;
+
+  try {
+    const dadosrequest = new FormData();
+    dadosrequest.append("id", id);
+
+    const dados = await fetch("routes/api.php?acao=deletarUsuario", {
+      method: "POST",
+      body: dadosrequest,
+      credentials: "include",
+    });
+
+    const res = await dados.json();
+    if (res.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Usuario excluido",
+        text: "Usuario excluido com sucesso",
+      });
+      openUsuarios();
+    }
+    if (res.success == false) {
+      Swal.fire({
+        icon: "error",
+        title: "Usuario Não pode ser excluido",
+        text: res.erro,
+      });
+    }
+  } catch { }
+}
+

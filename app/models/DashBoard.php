@@ -24,4 +24,12 @@ class DashBoard
 
         return (["success" => true]);
     }
+    public function deletaReport($id){
+       
+        $sql = $this->pdo->prepare("DELETE FROM reports where id = :id");
+        $sql->bindParam(":id", $id);
+        $sql->execute();
+
+        return ["success"=> true];
+    }
 }

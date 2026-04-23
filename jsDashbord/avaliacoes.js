@@ -1,5 +1,5 @@
-window.onload = function (){
-  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+window.onload = function () {
+    document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
 }
 
 document.addEventListener('click', () => {
@@ -95,104 +95,44 @@ async function excluirProva(id, idUser, idProvabanco, nota = null, nomeAula, nom
 
     }).then(async (result) => {
         if (result.isConfirmed) {
-            Swal.fire({
-                icon: "error",
-                title: "Tem certeza que deseja excluir essa prova?",
-                html: "Tem certeza que deseja excluir essa prova?<br><strong>Esta ação é irreversível!</strong> <div> <label> confirme o login como usuario para excluir essa prova </label> <input id='emailLogin' type='text' class='swal2-input' placeholder='Email'> <input id='senhaLogin' type='text' class='swal2-input' placeholder='Senha'></div>",
-                showCancelButton: true,
-                confirmButtonText: "Sim, excluir",
-                cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
 
-                    const emailLogin = document.getElementById("emailLogin").value.trim();
-                    const senhaLogin = document.getElementById("senhaLogin").value.trim();
+            const res = await checkinAdm();
 
-                    const formData = new FormData();
-                    formData.append("email", emailLogin);
-                    formData.append("senha", senhaLogin);
+            if (!res) return false;
 
-                    try {
-                        const res = await fetch("control/chekinAdm.php", {
-                            method: "POST",
-                            body: formData,
-                            credentials: "include",
-                        });
+            const formData = new FormData();
+            formData.append("idDohistoricoProva", id),
+                formData.append("id_user", idUser)
+            formData.append("idDaProvanoBanco", idProvabanco);
 
-                        const data = await res.json();
+            try {
+                const res = await fetch("dashbord/avaliacoes.php?action=excluir", {
+                    method: "POST",
+                    body: formData,
+                    credentials: "include",
+                });
 
-                        if (data.liberado) {
-                            const formData = new FormData();
-                            formData.append("idDohistoricoProva", id),
-                                formData.append("id_user", idUser)
-                            formData.append("idDaProvanoBanco", idProvabanco);
+                const result = await res.json();
 
-                            try {
-                                const res = await fetch("dashbord/avaliacoes.php?action=excluir", {
-                                    method: "POST",
-                                    body: formData,
-                                    credentials: "include",
-                                });
-
-                                const result = await res.json();
-
-                                if (result.excluido) {
-                                    swal.fire({
-                                        icon: "success",
-                                        title: "Prova excluida com sucesso",
-                                        timer: 2000,
-                                        showConfirmButton: false
-                                    })
-                                    await buscaProvas();
-                                } else {
-                                    console.error("Erro no servidor:", result.error);
-                                }
-                            } catch (error) {
-                                console.error("Erro na requisição:", error);
-                            }
-
-                        }
-                        if (data.negado) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Erro de login",
-                                html: "usuario não possui permissão para excluir provas",
-                                showConfirmButton: true
-                            })
-                        }
-
-                        if (data.serrada) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Erro de login",
-                                html: "usuario ou senha incorretos",
-                                showConfirmButton: true
-                            })
-                        }
-
-                        if (data.naoexiste) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Erro de login",
-                                html: "usuario nao cadastrado",
-                                showConfirmButton: true
-                            })
-                        }
-
-                    }
-                    catch (error) {
-                        console.error("Erro na requisição:", error);
-                    }
+                if (result.excluido) {
+                    swal.fire({
+                        icon: "success",
+                        title: "Prova excluida com sucesso",
+                        timer: 2000,
+                        showConfirmButton: false
+                    })
+                    await buscaProvas();
+                } else {
+                    console.error("Erro no servidor:", result.error);
                 }
-            })
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+            }
 
         }
     });
-
-
-
-
 }
+
 async function Notas(id, nota = null, idUser, idDaProvanoBanco) {
 
 
@@ -260,10 +200,10 @@ async function Notas(id, nota = null, idUser, idDaProvanoBanco) {
 
 }
 
-async function infoProva(id_curso, user, nome,nome_aula) {
+async function infoProva(id_curso, user, nome, nome_aula) {
     const iduser = user;
     const idCurso = id_curso;
-   
+
 
     const formData = new FormData();
     formData.append("iduser", iduser);
@@ -315,10 +255,10 @@ async function infoProva(id_curso, user, nome,nome_aula) {
 </div>
 `,
 
-    showConfirmButton: true,
-    showCancelButton: true,
-    confirmButtonText: "Gerar Certificado",
-    cancelButtonText: "Cancelar",
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Gerar Certificado",
+        cancelButtonText: "Cancelar",
 
 
         didOpen: () => {
@@ -333,7 +273,7 @@ async function infoProva(id_curso, user, nome,nome_aula) {
 
             const TabelaProvas = document.getElementById("TabelaProvasSwal");
 
-            // 🔥 adiciona abaixo das linhas existentes
+        
             TabelaProvas.innerHTML += lista.map((p, index) => `
         <tr>
             <td>${index + 1}ª Prova</td>
@@ -341,21 +281,25 @@ async function infoProva(id_curso, user, nome,nome_aula) {
         </tr>
     `).join('');
 
-        
+
             if (feitas === total && total > 0) {
                 document.getElementById("provas_feitas").style.color = "green";
                 document.getElementById("provas_totais").style.color = "green";
             }
+            if(feitas < total){
+                document.getElementById("provas_feitas").style.color = "red";
+                document.getElementById("provas_totais").style.color = "red";
+            }
         }
     }).then((result) => {
         if (result.isConfirmed) {
-           const dados = fetch("control/certificado.php",{
-               method: "POST",
-               credentials: "include"
-           })
+            const dados = fetch("control/certificado.php", {
+                method: "POST",
+                credentials: "include"
+            })
         }
     })
 
-    
+
 
 }

@@ -15,22 +15,164 @@ window.onload = function () {
 geral();
 
 function geral() {
-const fotoPerfil = document.getElementById("FotoUser");
+    const fotoPerfil = document.getElementById("FotoUser");
 
-if (fotoPerfil) {
-    fotoPerfil.src = localStorage.getItem("fotoUser") || "semFoto.jpg";
-}
+    if (fotoPerfil) {
+        fotoPerfil.src = localStorage.getItem("fotoUser") || "semFoto.jpg";
+    }
 
-const li = document.getElementById("listOpcoes");
+    const li = document.getElementById("listOpcoes");
 
-if (li) {
-    li.innerHTML = `
+    if (li) {
+        li.innerHTML = `
         <a class="dropdown-item" href="#" onclick="perfil()">Perfil</a>
         <a class="dropdown-item" href="#" onclick="report()">Problemas</a>
         <a class="dropdown-item" href="#" onclick="oflog()">Sair</a>
     `;
+    }
+
 }
 
+async function perfil(id = null) {
+
+    let options = {
+        method: "POST",
+        credentials: "include",
+    };
+
+    if (id != null) {
+        const dadosrequest = new FormData();
+        dadosrequest.append("id", id);
+
+        options.body = dadosrequest;
+    }
+
+    const dados = await fetch("routes/api.php?acao=abrirPerfil", options);
+
+    const dadosJson = await dados.json();
+
+    Swal.fire({
+        title: 'Perfil do Usuário',
+        width: '620px',
+        showCancelButton: true,
+        confirmButtonText: 'Salvar',
+        cancelButtonText: 'Cancelar',
+        html: `
+<div style="display:flex; gap:20px; align-items:center;">
+
+    <!-- ESQUERDA -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:10px;">
+
+        <label style="font-size:13px;">Nome</label>
+        <input id="nome" class="swal2-input" style="margin:0;" value="${dadosJson.nome}">
+
+        <label style="font-size:13px;">Email</label>
+        <input id="email" class="swal2-input" style="margin:0; background:#f1f1f1;" value="${dadosJson.email}" disabled>
+
+        <label style="font-size:13px;">Senha atual</label>
+        <input id="senha" type="password" class="swal2-input" style="margin:0;" placeholder="Senha atual">
+
+        <label style="font-size:13px;">Nova senha</label>
+        <input id="novaSenha" type="password" class="swal2-input" style="margin:0;" placeholder="Opcional">
+
+    </div>
+
+    <!-- DIREITA -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        
+        <div style="
+            padding:4px;
+            border-radius:50%;
+            border:2px solid #ccc;
+        ">
+            <img src="${dadosJson.Foto || 'semFoto.jpg'}" 
+                style="
+                    width:130px; 
+                    height:130px; 
+                    border-radius:50%; 
+                    object-fit:cover;
+                ">
+        </div>
+
+    </div>
+
+</div>
+    `,
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+
+            let nomeNovo = null;
+            let senhaNova = null;
+
+            const nomeInput = document.getElementById("nome").value;
+            const senhaAtual = document.getElementById("senha").value;
+            const novaSenha = document.getElementById("novaSenha").value;
+
+
+            if (novaSenha !== "") {
+
+                if (novaSenha.length < 3) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "A senha deve conter pelo menos 3 caracteres"
+                    })
+                    return;
+                }
+
+                if (senhaAtual === "") {
+                    Swal.showValidationMessage("Digite a senha atual");
+                    return;
+                }
+
+                senhaNova = novaSenha;
+            }
+
+
+            if (nomeInput !== dadosJson.nome) {
+                nomeNovo = nomeInput;
+            }
+
+            const formData = new FormData();
+
+            if (nomeNovo) formData.append("nome", nomeNovo);
+            if (senhaNova) formData.append("senhaNova", senhaNova);
+            if (senhaNova) formData.append("senha", senhaAtual);
+
+            if (id != null) {
+                formData.append("id", id);
+            }
+
+            const response = await fetch("routes/api.php?acao=editarPerfil", {
+                body: formData,
+                method: "POST",
+                credentials: "include"
+            });
+
+            const res = await response.json();
+
+            if (res.serrada) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Senha incorreta"
+                });
+                return;
+            }
+
+            if (res.erro) {
+                Swal.fire({
+                    icon: "warning",
+                    title: res.erro
+                });
+                return;
+            }
+
+            if (res.success) {
+                Swal.fire("Sucesso", "Perfil atualizado!", "success");
+            } else {
+                Swal.fire("Aviso", "Nada foi alterado", "info");
+            }
+        }
+    });
 }
 
 async function report() {
@@ -39,19 +181,45 @@ async function report() {
         width: "1500px",
         input: "text",
         title: 'Relatar um problema',
+        html: 'Descreva o problema que deseja reportar',
         showConfirmButton: true,
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Enviar',
 
-        didOpen: () => {
-            const resposta = Swal.getPopup().querySelector('input');
-            
-            
-        }
+        preConfirm: async (value) => {
+            if (!value) {
+                Swal.showValidationMessage("Digite um problema!");
+                return false;
+            }
 
-    })
-    
+            const dados = new FormData();
+            dados.append("problema", value);
+
+            try {
+                const res = await fetch("routes/api.php?acao=reportarProblema", {
+                    method: "POST",
+                    body: dados,
+                    credentials: "include"
+                });
+
+                const json = await res.json();
+
+                if (json.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Problema reportado com sucesso",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+
+            } catch (err) {
+                Swal.showValidationMessage(err.message);
+            }
+        }
+    });
+
 }
 
 
@@ -513,7 +681,7 @@ if (document.getElementById("cadastro") != null) {
 
 
 
-
+let alerts = 0;
 
 async function checkLogin() {
 
@@ -547,8 +715,92 @@ async function checkLogin() {
         localStorage.clear();
         window.location.href = "index.html";
     }
+    if (dados.BlOQUEADO) {
+
+        alerts++;
+
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Sua conta foi bloqueada',
+            text: 'Contate um administrador...',
+            showConfirmButton: true,
+            confirmButtonText: 'Fechar',
+            timer: 3000,
+            timerProgressBar: true,
+            allowOutsideClick: false
+        });
+
+        if (alerts >= 5) {
+            await fetch("control/logout.php", {
+                method: "POST",
+                credentials: "include"
+            });
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    }
 
 
+}
+
+
+
+async function checkinAdm() {
+
+
+    const result = await Swal.fire({
+        icon: "warning",
+        title: "Verificação de Permissão",
+        html: `
+      Tem certeza que deseja executar essa tarefa?<br>
+      <strong>Esta ação exige permissão</strong>
+      <div>
+        <input id='senhaLogin' type='password' class='swal2-input' placeholder='Senha'>
+      </div>
+    `,
+        showCancelButton: true,
+        confirmButtonText: "Executar",
+        cancelButtonText: "Cancelar",
+    });
+
+    if (!result.isConfirmed) return false;
+
+    const senhaLogin = document.getElementById("senhaLogin").value.trim();
+
+    if (!senhaLogin) {
+        Swal.fire("Erro", "Digite a senha", "error");
+        return false;
+    }
+
+    const formData = new FormData();
+    formData.append("senha", senhaLogin);
+
+    try {
+        const res = await fetch("routes/api.php?acao=checkinAdm", {
+            method: "POST",
+            body: formData,
+            credentials: "include",
+        });
+
+        const dados = await res.json();
+
+        if (dados.SENHAERRADA) {
+            Swal.fire("Erro", "Senha incorreta", "error");
+
+            return false;
+        }
+
+        if (dados.LIBERADO) {
+            erros = 0;
+            return true;
+        }
+
+        return false;
+
+    } catch {
+        Swal.fire("Erro", "Falha na requisição", "error");
+        return false;
+    }
 }
 
 

@@ -142,78 +142,34 @@ async function abrirCurso(id, nome) {
 
 }
 async function deleteModulo(idModulo) {
-  Swal.fire({
-    icon: "error",
-    title: "Verificação de Permissão",
-    html: "Tem certeza que deseja que deseja executar essa tarefa?<br><strong>Esta ação é irreversível!</strong> <div> <label> confirme o login como usuario para excluir essa prova </label> <input id='senhaLogin' type='text' class='swal2-input' placeholder='Senha'></div>",
-    showCancelButton: true,
-    confirmButtonText: "Sim, excluir",
-    cancelButtonText: "Cancelar",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
 
-      const senhaLogin = document.getElementById("senhaLogin").value.trim();
+  const verifica = await checkinAdm();
 
-      const formData = new FormData();
-      formData.append("senha", senhaLogin);
 
-      try {
-        const res = await fetch("routes/api.php?acao=checkinAdm", {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        });
+  const formdata = new FormData();
+  formdata.append("idModulo", idModulo);
 
-        const dados = await res.json();
-
-        if (dados.success == false) {
-          Swal.fire({
-            icon: "error",
-            title: "Erro",
-            text: "Preenca com a senha do seu usario",
-          });
-        }
-
-        if (dados.SENHAERRADA) {
-          Swal.fire({
-            icon: "error",
-            title: "Erro",
-            text: "Senha Incorreta",
-          });
-        }
-        if (dados.LIBERADO) {
-          const formdata = new FormData();
-          formdata.append("idModulo", idModulo);
-
-          const res = await fetch("routes/api.php?acao=deleteModulo", {
-            method: "POST",
-            body: formdata,
-            credentials: "include",
-          });
-
-          const dados = await res.json();
-
-          if (dados.success) {
-            Swal.fire({
-              icon: "success",
-              title: "Modulo Excluido com sucesso",
-              showConfirmButton: false,
-              timer: 1500,
-            })
-            window.location.reload();
-          }
-
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  const res = await fetch("routes/api.php?acao=deleteModulo", {
+    method: "POST",
+    body: formdata,
+    credentials: "include",
   });
 
+  const dados = await res.json();
 
-
+  if (dados.success) {
+    Swal.fire({
+      icon: "success",
+      title: "Modulo Excluido com sucesso",
+      showConfirmButton: false,
+      timer: 1500,
+    })
+    window.location.reload();
+  }
 
 }
+
+
 
 async function abrirModulo(id, nome) {
   document.getElementById("cadCursos").style.display = "none";
@@ -243,6 +199,7 @@ async function abrirModulo(id, nome) {
     .map(
       (a) => `
         <tr>
+        
             <td>${a.nome_aula}</td>
             <td>${a.id ?? "NOT FUND NAME"}</td>
             <td>
@@ -251,7 +208,9 @@ async function abrirModulo(id, nome) {
                 </button>
                 <button class="btn btn-danger" onclick="excluirAula(${a.id}, '${a.nome_aula}')"> 
                     <i class="fa-solid fa-trash"></i>
-                </button>   
+                </button>
+                
+       
             </td>
         </tr>
     `,
@@ -927,58 +886,87 @@ async function criaModulo() {
 }
 
 async function excluirAula(id, nome) {
-  Swal.fire({
-    title: `Excluir Aula ${nome}`,
-    html: `
+  if (nome != "null") {
+    Swal.fire({
+      title: `Excluir Aula ${nome}`,
+      html: `
             <p class="mb-3">Tem certeza que deseja excluir a aula deste curso?</p>
             <p class="text-danger"><strong>Esta ação é irreversível!</strong></p>
             <label>Digite novamente para confirmar <i>${nome}</i><label>
             <input id="confirmNome" type="text" class="swal2-input" placeholder="Digite o nome do curso para confirmar">
         `,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Excluir",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    preConfirm: () => {
-      const nomeDigitado = document.getElementById("confirmNome").value.trim();
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Excluir",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      
+      preConfirm: () => {
+        const nomeDigitado = document.getElementById("confirmNome").value.trim();
 
-      if (nomeDigitado === "") {
-        Swal.showValidationMessage("Digite o nome da aula para confirmar!");
-        return false;
-      }
+        if (nomeDigitado === "") {
+          Swal.showValidationMessage("Digite o nome da aula para confirmar!");
+          return false;
+        }
 
-      if (nomeDigitado !== nome) {
-        Swal.showValidationMessage("O nome da aula não confere!");
-        return false;
-      }
-    },
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      const formdata = new FormData();
-      formdata.append("id", id);
+        if (nomeDigitado !== nome) {
+          Swal.showValidationMessage("O nome da aula não confere!");
+          return false;
+        }
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const formdata = new FormData();
+        formdata.append("id", id);
 
-      const res = await fetch("control/exAula.php", {
-        method: "POST",
-        body: formdata,
-        credentials: "include",
-      });
-
-      const dados = await res.json();
-
-      if (dados.sucesso) {
-        Swal.fire({
-          title: "Aula excluída com sucesso",
-          html: "A aula foi excluída com sucesso",
-          icon: "success",
+        const res = await fetch("control/exAula.php", {
+          method: "POST",
+          body: formdata,
+          credentials: "include",
         });
-        carregarCursosSidebar();
-        abrirModulo(
-          localStorage.getItem("idModulo"),
-          localStorage.getItem("nomeModulo"),
-        );
+
+        const dados = await res.json();
+
+        if (dados.sucesso) {
+          Swal.fire({
+            title: "Aula excluída com sucesso",
+            html: "A aula foi excluída com sucesso",
+            icon: "success",
+          });
+          carregarCursosSidebar();
+          abrirModulo(
+            localStorage.getItem("idModulo"),
+            localStorage.getItem("nomeModulo"),
+          );
+        }
       }
+    });
+  } else {
+    const formdata = new FormData();
+    formdata.append("id", id);
+
+    const res = await fetch("control/exAula.php", {
+      method: "POST",
+      body: formdata,
+      credentials: "include",
+    });
+
+    const dados = await res.json();
+
+    if (dados.sucesso) {
+      Swal.fire({
+        title: "Aula excluída com sucesso",
+        html: "A aula foi excluída com sucesso",
+        icon: "success",
+        timer: 800,
+      });
+      carregarCursosSidebar();
+      abrirModulo(
+        localStorage.getItem("idModulo"),
+        localStorage.getItem("nomeModulo"),
+      );
     }
-  });
+
+  }
 }

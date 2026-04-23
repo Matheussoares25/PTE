@@ -49,19 +49,19 @@
           <a class="nav-link text-white fw-semibold" href="noticias.html">Notícias</a>
           <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
 
-          
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               <img id="FotoUser">
             </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li id="listOpcoes">
-                                <a class="dropdown-item" href="#" onclick="oflog()">
-                                    <i class="bi bi-box-arrow-right me-1"></i> Sair
-                                </a>
-                            </li>
-                        </ul>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li id="listOpcoes">
+                <a class="dropdown-item" href="#" onclick="oflog()">
+                  <i class="bi bi-box-arrow-right me-1"></i> Sair
+                </a>
+              </li>
+            </ul>
           </li>
         </div>
       </div>
@@ -109,7 +109,7 @@
   </div>
 
   <div class="col-md-3 ">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm" style="cursor: pointer;" onclick="openUsuarios()">
       <div class="card-body text-center" style="background-color: rgb(53, 33, 204, 0.544);">
         <h6 class="text-dark">Numero de usuarios</h6>
         <h2 class="fw-bold" id="qtdUsuarios"></h2>
@@ -137,6 +137,17 @@
       </div>
     </div>
   </div>
+
+    <div class="col-md-3 dashcard">
+    <div class="card shadow-sm text-dark" style="background-color: rgba(204, 93, 33, 0.544);">
+      <div class="card-body text-center" style="cursor: pointer;" onclick="openReports()">
+        <h6 class="text-dark"> Problemas Reportados</h6>
+        <h2 class="fw-bold" id="qtdProblemas">0</h2>
+      </div>
+    </div>
+  </div>
+  
+
   <div class="col-md-3 dashcard">
     <div class="card shadow-sm text-dark" style="background-color: rgba(19, 28, 207, 0.637);">
       <a href="vagas.html" style="text-decoration: none;">
@@ -146,8 +157,13 @@
       </a>
     </div>
   </div>
-  </div>
 
+  
+  
+
+
+
+ 
   </div>
 
   <div class="row mt-4">

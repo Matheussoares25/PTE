@@ -42,6 +42,30 @@ if ($acao == "aceitarTermos") {
     $controller = new UsuarioController();
     $controller->verificarAcesso();
 }
+if ($acao == "reportarProblema") {
+    $controller = new UsuarioController();
+    $controller->abrirReclamacao();
+}
+if ($acao == "abrirPerfil") {
+    $controller = new UsuarioController();
+    $controller->abrirPerfil();
+}
+if ($acao == "editarPerfil") {
+    $controller = new UsuarioController();
+    $controller->editarPefil();
+}
+if ($acao == "alterarTipo") {
+    $controller = new UsuarioController();
+    $controller->alterarTipoDoUsuario();
+}
+if( $acao == "alterarTipoDeAcesso") {
+    $controller = new UsuarioController();
+    $controller->alterarTipoDeAcesso();
+}
+if( $acao == "deletarUsuario") {
+    $controller = new UsuarioController();
+    $controller->deletarUsuarioDaPlataforma();
+}
 
 if ($acao == "salvarNoticia") {
     $controller = new NoticiaController();
@@ -127,6 +151,10 @@ if($acao == "checkinAdm"){
 if( $acao == "dashDeleteMatricula"){
     $controller = new DashController();
     $controller->DELETARMATRICULADECURSO();
+}
+if( $acao == "deletarReport"){
+    $controller = new DashController();
+    $controller->deletarReclamacoes() ;
 }
 if( $acao == "deleteModulo"){
     $controller = new CursoController();

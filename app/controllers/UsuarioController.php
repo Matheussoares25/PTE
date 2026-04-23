@@ -116,8 +116,8 @@ class UsuarioController
                 "foto" => $res["Foto"] ?? null
 
             ];
- 
-         
+
+
             if ($res['acess'] == 0) {
                 $this->usuario->atualizarAcesso($res['id']);
             }
@@ -148,6 +148,11 @@ class UsuarioController
 
         $dados = $this->usuario->buscaPorAcesso($email);
 
+        if ($dados["acess"] == 2) {
+            echo json_encode(["BLOQUEADO" => true]);
+            return;
+        }
+
         if ($dados["acess"] == 0) {
             echo json_encode(["PACESS" => true]);
             return;
@@ -155,6 +160,8 @@ class UsuarioController
             echo json_encode(["PACESS" => false]);
 
         }
+
+
     }
 
     public function chekarSessao()
@@ -164,6 +171,16 @@ class UsuarioController
 
         $idUser = $_SESSION['id'] ?? null;
         $token = $_SESSION['token'] ?? null;
+        $email = $_SESSION['email'] ?? null;
+
+        $chekinDeAcesso = $this->usuario->buscaPorAcesso($email);
+        if ($chekinDeAcesso['acess'] == 2) {
+            echo json_encode(['BlOQUEADO' => true]);
+            return;
+        }
+
+
+
 
         $res = $this->usuario->controleDeSessao($idUser, $token);
         if ($res['EXPIRADO'] == true) {
@@ -172,7 +189,125 @@ class UsuarioController
         echo json_encode($res);
     }
 
+    public function abrirReclamacao()
+    {
+
+        try {
+            session_start();
+            $reclamacao = $_POST['problema'] ?? null;
+            $usuario = $_SESSION['id'] ?? null;
+
+            $res = $this->usuario->reportar($reclamacao, $usuario);
+
+            if ($res) {
+                echo json_encode(['success' => true]);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function abrirPerfil()
+    {
+
+        try {
+            session_start();
+            $id = $_POST['id'] ?? null;
+            if ($id == null) {
+                $id = $_SESSION['id'] ?? null;
+            }
+            $res = $this->usuario->buscaporId($id);
+
+
+
+            echo json_encode($res);
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function editarPefil()
+    {
+        try {
+
+            session_start();
+            $id = $_POST['id'] ?? null;
+            if ($id == null) {
+                $id = $_SESSION['id'] ?? null;
+            }
+
+
+
+            $senhaAtual = $_POST['senha'] ?? null;
+            $nome = $_POST['nome'] ?? null;
+            $senhaNova = $_POST['senhaNova'] ?? null;
+
+
+            $resUsuario = $this->usuario->buscaporId($id);
+
+
+            if (!empty($senhaNova)) {
+
+                if (empty($senhaAtual)) {
+                    echo json_encode(['erro' => 'Digite a senha atual']);
+                    return;
+                }
+
+                if (!password_verify($senhaAtual, $resUsuario['senha'])) {
+                    echo json_encode(['serrada' => true]);
+                    return;
+                }
+
+
+                $senhaNova = password_hash($senhaNova, PASSWORD_DEFAULT);
+            }
+
+            $execute = $this->usuario->editrPerfil($nome, $senhaNova, $id);
+
+            echo json_encode(['success' => $execute]);
+
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function alterarTipoDoUsuario()
+    {
+
+        try {
+            $id = $_POST['id'] ?? null;
+            $res = $this->usuario->alterarTipo($id);
+            echo json_encode(['success' => $res]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+    public function alterarTipoDeAcesso()
+    {
+        try {
+            $id = $_POST['id'] ?? null;
+            $res = $this->usuario->BloquearOUDesbloquearAcesso($id);
+            echo json_encode(['success' => $res]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function deletarUsuarioDaPlataforma()
+    {
+
+        try {
+            $id = $_POST['id'] ?? null;
+            $usuario = $this->usuario->deletarUsuario($id);
+            echo json_encode(['success' => $usuario]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+
 
 }
+
+
 
 ?>

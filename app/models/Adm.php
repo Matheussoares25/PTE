@@ -48,6 +48,10 @@ class adm
             return ["NEGADO" => true];
         }
 
+        if($res["acess"] == 2) {
+            return ["BLOQUEADO"=> true];
+        }
+
         return ["LIBERADO" => true];
     }
 
