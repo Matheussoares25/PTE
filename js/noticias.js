@@ -1,8 +1,11 @@
 Noticias();
 document.addEventListener('click', () => {
   checkLogin();
+   
 });
 async function Noticias() {
+
+
 
   try {
     const res = await fetch("routes/api.php?acao=buscarNoticias", {
@@ -16,43 +19,48 @@ async function Noticias() {
 
     const dados = await res.json();
 
-    const html = dados
-      .map(
-        (n) => `
-    <div class="col-md-6 mb-3 card-modern">
-      <div class="card-body p-2">
+const html = dados.map((n) => `
+  <div class="col-12 col-md-6">
+    <div class="card noticia-card h-100">
 
-        <h5 class="card-title">${n.titulo}</h5>
-        <p class="card-text">${n.conteudo}</p>
+      <div class="card-body">
+
+        <h4 class="card-title">${n.titulo}</h4>
+
+        <p class="card-text conteudo-noticia">
+          ${n.conteudo}
+        </p>
+        
         <p class="card-text">
-            <small class="text-muted">${n.data_noticia}</small>
+          <small class="text-muted">${n.data_noticia}</small>
         </p>
 
+        <div class="d-flex gap-2 flex-wrap">
 
+          <button class="btn btn-warning btn-sm btneditar"
+            onclick="editarNoticia(${n.id}, '${n.titulo}', '${n.conteudo}')">
+            <i class="bi bi-pencil-square"></i> Editar
+          </button>
 
-        <div class="btn-group-modern">
-            <button class="btn btn-card btn-edit btneditar" onclick="editarNoticia(${n.id}, '${n.titulo}', '${n.conteudo}')">
-                <i class="bi bi-pencil-square me-1"></i> Editar
+          <button class="btn btn-danger btn-sm btneditar"
+            onclick="exNoticia(${n.id})">
+            <i class="bi bi-trash"></i> Excluir
+          </button>
+
+          ${n.vaga == 1 ? `
+            <button class="btn btn-info btn-sm"
+              onclick="Candidatar(${n.id})">
+              <i class="fa-solid fa-arrow-trend-up"></i> Candidatar-se
             </button>
+          ` : ""}
 
-            <button class="btn btn-card btn-del btneditar" onclick="exNoticia(${n.id})">
-                <i class="bi bi-trash me-1"></i> Excluir
-            </button>
-             ${n.vaga == 1
-            ? `
-                <button class="btn btn-info btn-card" onclick="Candidatar(${n.id})">
-                 <i class="fa-solid fa-arrow-trend-up" style="color: rgb(0, 0, 0);"></i> Candidatar-se
-                </button>
-`
-            : ``
-          }
-            </div>
-
-         </div>
         </div>
-      `,
-      )
-      .join("");
+
+      </div>
+
+    </div>
+  </div>
+`).join("");
 
     document.getElementById("ListaNoticias").innerHTML = html;
 
@@ -122,6 +130,9 @@ async function addNoticia() {
     width: "50%",
 
     preConfirm: async () => {
+
+      
+
       const titulo = document.getElementById("titulo").value;
       const conteudo = document.getElementById("conteudo").value;
       const checkbox = document.getElementById("marcaVaga");
@@ -258,19 +269,14 @@ async function editarNoticia(id, titulo, conteudo) {
     confirmButtonColor: "#3085d6",
   }).then(async (result) => {
     if (result.isConfirmed) {
-      const titulo = document.getElementById("titulo").value;
+      var Titulo = document.getElementById("titulo").value;
       const conteudo = document.getElementById("conteudo").value;
 
-      if (titulo === "" || titulo === null || titulo.length <= 3) {
-        Swal.fire({
-          icon: "error",
-          title: "Erro",
-          text: "O Titulo deve sem preenchido (Com mais de 3 caracteres)",
-        });
-        return false;
+      if (Titulo === "" || Titulo === null || Titulo.length <= 3) {
+        Titulo = titulo;
       }
       const formData = new FormData();
-      formData.append("titulo", titulo);
+      formData.append("titulo", Titulo);
       formData.append("conteudo", conteudo);
       formData.append("id", id);
 

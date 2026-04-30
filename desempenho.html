@@ -22,8 +22,8 @@
   <nav class="navbar navbar-expand-lg ">
     <div class="container-fluid px-3">
 
-      <a class="navbar-brand fw-bold text-white" href="#" style="font-size:22px;">
-        <i class="bi bi-mortarboard-fill me-1"></i> PTE
+      <a class="navbar-brand fw-bold text-white" href="newMenu.html" style="font-size:22px;">
+        <img src="public/Marca-1.png" width="40" height="40"></i> PTE
       </a>
 
       <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -34,9 +34,9 @@
         <div class="navbar-nav align-items-lg-center gap-lg-3">
 
           <a class="nav-link text-white fw-semibold" href="treinamentos.html">Treinamentos</a>
-          <div class="dropdown btnadm" style="background-color: #4682B4;">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" style="background-color: #4682B4;">
+          <div class="dropdown btnadm">
+            <a class="nav-link text-white fw-semibold dropdown-toggle" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
               Desempenho
             </a>
             <ul class="dropdown-menu">
@@ -69,187 +69,177 @@
     </div>
   </nav>
 
-  <div class="container mt-4">
 
-    <h3 class="mb-4">Dashboard de Desempenho</h3>
+  <div class="container p-4 rounded-4 mt-4 dashboard-bg">
 
-    <div class="row g-3">
+    <h3 class="mb-4 text-white">Dashboard de Desempenho</h3>
 
-      <div class="col-md-3 dashcard">
-        <div class="card shadow-sm " style="background-color: rgba(101, 204, 33, 0.544);">
-          <label onclick="openCriados()" style="cursor: pointer;">
-            <div class="card-body text-center">
-              <h6 class="text-dark ">Cursos Criados</h6>
-              <h2 class="fw-bold" id="qtdCursos"></h2>
-          </label>
+    <div class="row g-4">
+
+      <div class="col-6 col-md-3">
+        <div class="card dashcard" onclick="openCriados()" style="background-color: brown;">
+          <div class="card-body text-center text-white">
+            <h6>Cursos Criados</h6>
+            <h2 id="qtdCursos">0</h2>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-3 dashcard">
-      <div class="card shadow-sm " style="background-color: rgba(33, 176, 204, 0.544);">
-        <label onclick="openAlunos()" style="cursor: pointer;">
+      <div class="col-6 col-md-3">
+        <div class="card dashcard" onclick="openAlunos()" style="background-color: rgb(165, 132, 42);">
+          <div class="card-body text-center text-white" >
+            <h6>Alunos em Curso</h6>
+            <h2 id="qtdAlunos">0</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card dashcard" onclick="openProvas()" style="background-color: rgb(60, 60, 213);">
+          <div class="card-body text-center text-white">
+            <h6>Provas Realizadas</h6>
+            <h2 id="qtdProvas">0</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card dashcard" onclick="openUsuarios()" style="background-color: #41d53c;">
+          <div class="card-body text-center text-white">
+            <h6>Número de Usuários</h6>
+            <h2 id="qtdUsuarios">0</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <a href="noticias.html" class="text-decoration-none" >
+          <div class="card dashcard" style="background-color: #3c98d5;">
+            <div class="card-body text-center text-white">
+              <h6>Notícias</h6>
+              <h2 id="qtdNoticias">0</h2>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card dashcard" style="background-color: rgb(196, 48, 51);">
+          <div class="card-body text-center text-white">
+            <h6>Certificados</h6>
+            <h2 id="qtdCertificados">0</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card dashcard" onclick="openReports()" style="background-color: chocolate;">
           <div class="card-body text-center">
-            <h6 class="text-dark">Alunos em Curso</h6>
-            <h2 class="fw-bold" id="qtdAlunos"></h2>
-        </label>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-3 dashcard">
-    <div class="card shadow-sm " style="background-color: rgb(204, 33, 193, 0.544);">
-      <label onclick="openProvas()" style="cursor: pointer;">
-        <div class="card-body text-center">
-          <h6 class="text-dark">Provas Realizadas</h6>
-          <h2 class="fw-bold" id="qtdProvas"></h2>
-      </label>
-    </div>
-  </div>
-  </div>
-
-  <div class="col-md-3 ">
-    <div class="card shadow-sm" style="cursor: pointer;" onclick="openUsuarios()">
-      <div class="card-body text-center" style="background-color: rgb(53, 33, 204, 0.544);">
-        <h6 class="text-dark">Numero de usuarios</h6>
-        <h2 class="fw-bold" id="qtdUsuarios"></h2>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-3 dashcard">
-    <div class="card shadow-sm text-dark" style="background-color: rgb(204, 33, 33, 0.544);">
-      <a href="noticias.html" style="text-decoration: none;">
-        <div class="card-body text-center">
-          <h6 class="text-dark"> Noticias</h6>
-          <h2 class="fw-bold text-dark" id="qtdNoticias">0</h2>
-      </a>
-    </div>
-  </div>
-  </div>
-
-  <div class="col-md-3 dashcard">
-    <div class="card shadow-sm text-dark" style="background-color: rgba(33, 204, 42, 0.544);">
-      <div class="card-body text-center">
-        <h6 class="text-dark"> Certificados Emitidos</h6>
-        <h2 class="fw-bold" id="qtdCertificados">0</h2>
-      </div>
-    </div>
-  </div>
-
-    <div class="col-md-3 dashcard">
-    <div class="card shadow-sm text-dark" style="background-color: rgba(204, 93, 33, 0.544);">
-      <div class="card-body text-center" style="cursor: pointer;" onclick="openReports()">
-        <h6 class="text-dark"> Problemas Reportados</h6>
-        <h2 class="fw-bold" id="qtdProblemas">0</h2>
-      </div>
-    </div>
-  </div>
-  
-
-  <div class="col-md-3 dashcard">
-    <div class="card shadow-sm text-dark" style="background-color: rgba(19, 28, 207, 0.637);">
-      <a href="vagas.html" style="text-decoration: none;">
-        <div class="card-body text-center">
-          <h6 class="text-dark"> Vagas Criadas</h6>
-          <h2 class="fw-bold text-dark" id="qtdVagas">0</h2>
-      </a>
-    </div>
-  </div>
-
-  
-  
-
-
-
- 
-  </div>
-
-  <div class="row mt-4">
-
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5>Desempenho das Provas</h5>
-          <canvas id="graficoProvas" style="max-height:300px;"></canvas>
+            <h6>Problemas Reportados</h6>
+            <h2 id="qtdProblemas">0</h2>
+          </div>
         </div>
       </div>
+
+      <div class="col-6 col-md-3">
+        <a href="vagas.html" class="text-decoration-none" >
+          <div class="card dashcard" style="background-color: rgb(196, 48, 161);">
+            <div class="card-body text-center">
+              <h6>Vagas Criadas</h6>
+              <h2 id="qtdVagas">0</h2>
+            </div>
+          </div>
+        </a>
+      </div>
+
     </div>
 
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5>Aulas assistidas</h5>
-          <canvas id="graficoAulas" style="max-height:300px;"></canvas>
+
+
+    <div class="row mt-4">
+
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5>Desempenho das Provas</h5>
+            <canvas id="graficoProvas" style="max-height:300px;"></canvas>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5>Usuarios Na plataforma</h5><a class="btn btn-primary btn-sm" href="cadastrar.html">Adicionar Usuarios</a>
-          <canvas id="graficoAlunos" style="max-height:300px;"></canvas>
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5>Aulas assistidas</h5>
+            <canvas id="graficoAulas" style="max-height:300px;"></canvas>
+          </div>
         </div>
       </div>
+
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5>Usuarios Na plataforma</h5><a class="btn btn-primary btn-sm" href="cadastrar.html">Adicionar
+              Usuarios</a>
+            <canvas id="graficoAlunos" style="max-height:300px;"></canvas>
+          </div>
+        </div>
+      </div>
+
+
+
     </div>
 
+    <div class="row mt-4">
 
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5>Ranking de Alunos</h5>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Aluno</th>
+                  <th>Pontos</th>
+                </tr>
+              </thead>
+              <tbody id="TebelaRankingAlunos">
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5>Cursos Mais Acessados</h5>
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between">
+                Redes
+                <span class="badge bg-primary">320 acessos</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                Linux
+                <span class="badge bg-primary">280 acessos</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                Segurança
+                <span class="badge bg-primary">190 acessos</span>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
 
   </div>
-
-  <div class="row mt-4">
-
-    <div class="col-md-6">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5>Ranking de Alunos</h5>
-
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Aluno</th>
-                <th>Pontos</th>
-              </tr>
-            </thead>
-            <tbody id="TebelaRankingAlunos">
-
-            </tbody>
-          </table>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5>Cursos Mais Acessados</h5>
-
-          <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between">
-              Redes
-              <span class="badge bg-primary">320 acessos</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              Linux
-              <span class="badge bg-primary">280 acessos</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              Segurança
-              <span class="badge bg-primary">190 acessos</span>
-            </li>
-          </ul>
-
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  </div>
-
 
 
 

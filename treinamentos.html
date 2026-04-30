@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="stylesheet" href="style/styleNAVBAR.css">
+    <link rel="stylesheet" href="style/padrao.css">
 </head>
 
 
@@ -24,8 +25,8 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-3">
 
-            <a class="navbar-brand fw-bold text-white" href="#" style="font-size:22px;">
-                <i class="bi bi-mortarboard-fill me-1"></i> PTE
+            <a class="navbar-brand fw-bold text-white" href="newMenu.html" style="font-size:22px;">
+                <img src="public/Marca-1.png" width="40" height="40"></i> PTE
             </a>
 
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -36,9 +37,9 @@
                 <div class="navbar-nav align-items-lg-center gap-lg-3">
 
                     <a class="nav-link text-white fw-semibold" href="treinamentos.html">Treinamentos</a>
-                    <div class="dropdown btnadm" style="background-color: #4682B4;">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" style="background-color: #4682B4;">
+                    <div class="dropdown btnadm" >
+                        <a class="nav-link text-white fw-semibold dropdown-toggle" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Desempenho
                         </a>
                         <ul class="dropdown-menu">
@@ -78,10 +79,11 @@
     <div id="UserComum" style="display: none;">
         <div class="container mt-5" id="noAdm">
 
-            <div class="row">
+            <div class="row g-4">
 
-                <div class="col-md-6">
-                    <h4 class="mb-4">Treinamentos Concluídos</h4>
+
+                <div class="col-12 session-treinamentos">
+                    <h4 class="mb-4 text-white">Treinamentos Concluídos</h4>
 
                     <div class="table-responsive">
                         <table id="Tbconcluidos"
@@ -101,17 +103,17 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <h4 class="mb-4">Treinamentos Pendentes</h4>
 
-                    <div class=" rowd-flex align-items-center mb-3" id="listaTreinamentos"
-                        style="border: 2px solid black; padding: 15px;">
-                        <i class="bi bi-play-circle-fill text-secondary me-2" style="font-size: 1.7rem;"></i>
+                <div class="col-12 session-treinamentos">
+                    <h4 class="mb-4 text-white">Treinamentos Pendentes</h4>
+
+                    <div class="mb-3 text-white " id="listaTreinamentos">
+
+                        <i class="bi bi-play-circle-fill text-secondary me-2 text-white" style="font-size: 1.7rem;"></i>
                         <div class="flex-grow-1 border-bottom pb-2"></div>
                     </div>
 
                 </div>
-
 
             </div>
         </div>
@@ -124,50 +126,51 @@
 
         <div class="container mt-5">
 
-            <div class="card shadow-lg border-0" style="border-radius: 12px;margin-top: 8%;">
+            <div class="card card-custom mx-auto">
 
-                <div class="card-header bg-primary text-white d-flex align-items-center"
-                    style="border-radius: 12px 12px 0 0;">
-                    <h4 class="mb-0">
-                        <i class="bi bi-grid-fill me-2"></i>
-                        Painel Administrativo - Treinamentos
-                    </h4>
+                <div class="header-blue">
+                    <i class="bi bi-grid-fill"></i> Treinamentos
                 </div>
 
                 <div class="card-body p-4">
+                    <h5 class="mb-3"><i class="bi bi-journal-plus"></i> Realize a avaliação das provas dos usuarios</h5>
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="mb-0 fw-semibold">
-                            <button onclick="treinamentosADM()"
-                                style="all: unset; cursor: pointer; display: inline-flex; align-items:center;">
-                                <i class="bi bi-gear-fill me-1"></i>
-                            </button>
-                            Gerenciar Treinamentos
-                        </h5>
 
-                        <a href="cadTreinamento.html" class="btn btn-success shadow-sm" id="btnCadastrarTreinamento">
-                            <i class="bi bi-plus-circle me-1"></i>
-                            Cadastrar Novo Treinamento
-                        </a>
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0 fw-semibold">
+                                <button onclick="treinamentosADM()"
+                                    style="all: unset; cursor: pointer; display: inline-flex; align-items:center;">
+                                    <i class="bi bi-gear-fill me-1"></i>
+                                </button>
+                                Gerenciar Treinamentos
+                            </h5>
+
+                            <a href="cadTreinamento.html" class="btn btn-success shadow-sm"
+                                id="btnCadastrarTreinamento">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                Cadastrar Novo Treinamento
+                            </a>
+                        </div>
+
+                        <h6 class="text-muted mb-3">
+                            <i class="bi bi-list-task me-1"></i>
+                            Treinamentos Atuais
+                        </h6>
+
+
+                        <ul class="list-group" id="TreinamentosADM" style="border-radius: 10px; overflow: hidden;">
+                        </ul>
+
                     </div>
-
-                    <h6 class="text-muted mb-3">
-                        <i class="bi bi-list-task me-1"></i>
-                        Treinamentos Atuais
-                    </h6>
-
-
-                    <ul class="list-group" id="TreinamentosADM" style="border-radius: 10px; overflow: hidden;">
-                    </ul>
 
                 </div>
 
             </div>
-
         </div>
-    </div>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

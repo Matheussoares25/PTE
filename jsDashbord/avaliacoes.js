@@ -291,12 +291,19 @@ async function infoProva(id_curso, user, nome, nome_aula) {
                 document.getElementById("provas_totais").style.color = "red";
             }
         }
-    }).then((result) => {
+    }).then(async(result) => {
         if (result.isConfirmed) {
-            const dados = fetch("control/certificado.php", {
+            
+            const dados = new FormData();
+            dados.append("idUser", user);
+            dados.append("nomeAula", nome_aula);
+            dados.append("nomeAluno", nome);
+
+            const res = await fetch("routes/api.php?acao=gerarCertificado",{
                 method: "POST",
+                body: dados,
                 credentials: "include"
-            })
+            });
         }
     })
 

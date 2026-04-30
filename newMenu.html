@@ -8,16 +8,34 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <link rel="stylesheet" href="style/styleNAVBAR.css">
     <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="style/padrao.css">
+
+    <style>
+        body {
+            background-color: var(--cor-fundo);
+            background-image: url("public/Marca-1.png");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+
+            background-position: right 20px bottom -20px;
+      
+            background-size: 300px;
+       
+        }
+    </style>
+
 </head>
 
 
+
+
 <body>
+
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-3">
-            <a class="navbar-brand fw-bold text-white" href="newMenu.html" style="font-size:22px;">
+            <a class="navbar-brand fw-bold text-white" href="#" style="font-size:22px;">
                 <img src="public/Marca-1.png" width="40" height="40"></i> PTE
             </a>
 
@@ -29,9 +47,9 @@
                 <div class="navbar-nav align-items-lg-center gap-lg-3">
 
                     <a class="nav-link text-white fw-semibold" href="treinamentos.html">Treinamentos</a>
-                    <div class="dropdown btnadm" >
-                      <a class="nav-link text-white fw-semibold dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" >
+                    <div class="dropdown btnadm">
+                        <a class="nav-link text-white fw-semibold dropdown-toggle" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Desempenho
                         </a>
                         <ul class="dropdown-menu">
@@ -41,7 +59,7 @@
                         </ul>
                     </div>
                     <a class="nav-link text-white fw-semibold" href="ranking.html">Ranking</a>
-                    <a class="nav-link text-white fw-semibold" href="noticias.html">Notícias</a>
+                    <a class="nav-link text-white fw-semibold" href="noticias.html"> Notícias</a>
                     <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
 
 
@@ -64,18 +82,56 @@
         </div>
     </nav>
 
-    <div id="">
-        <div class="container mt-5">
-            <button class="btn btn-primary btn-add btnadm" onclick="addNoticia()">
-                <i class="bi bi-plus-circle me-2"></i> Adicionar Nova Notícia
-            </button>
+    <div class="container pt-5">
+        <div class="row  g-4">
+
+            <div class="col-6 col-md-3">
+                <a href="noticias.html" class="menuOption text-center p-4 d-block">
+                    <img src="public/newspaper-regular.png" class="menuIcon">
+                    <h5>Notícias e vagas</h5>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="certificados.html" class="menuOption text-center p-4 d-block">
+                    <img src="public/award-solid.png" class="menuIcon">
+                    <h5>Certificados</h5>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="ranking.html" class="menuOption text-center p-4 d-block">
+                    <img src="public/ranking-star-solid.png" class="menuIcon">
+                    <h5>Ranking</h5>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="treinamentos.html" class="menuOption text-center p-4 d-block">
+                    <img src="public/person-chalkboard-solid.png" class="menuIcon">
+                    <h5>Meus Treinamentos</h5>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 btnadm">
+                <a href="desempenho.html" class="menuOption text-center p-4 d-block">
+                    <img src="public/tachograph-digital-solid.png" class="menuIcon">
+                    <h5>Dashboard</h5>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a onclick="perfil()" class="menuOption text-center p-4 d-block">
+                    <img src="public/user-gear-solid.png" class="menuIcon">
+                    <h5>Perfil</h5>
+                </a>
+            </div>
+
+
         </div>
     </div>
 
 
-    <div class="container mt-4 ">
-        <div class="row" id="ListaNoticias"></div>
-    </div>
+
+
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -89,3 +145,15 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.min.js"></script>
+
+<script>
+    anime({
+        targets: '.menuOption',
+        translateY: [30, 0],
+        opacity: [0, 1],
+        scale: [0.9, 1],
+        easing: 'easeOutExpo',
+        duration: 800
+    });
+</script>

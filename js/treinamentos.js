@@ -34,9 +34,11 @@ async function buscarTreinamentos() {
         }
 
         const html = resposta.map(t => `
+            
                     <div class="mb-3">
                         <div class="d-flex align-items-center">
-                             <i class="bi bi-play-circle-fill text-secondary me-2" style="font-size: 1.7rem;"></i>
+                        
+                             <i class="bi bi-play-fill"></i> 
                             <strong>${t.nome}</strong>
                         </div>
                          <a href="control/treinamento.php?id=${t.id_curso}" class="btn btn-sm btn-primary mt-2">
@@ -91,6 +93,10 @@ async function treinamentosConcluidos() {
             return;
         }
 
+        if(dados.dados == ""){
+            
+        }
+
 
 
     } catch (error) {
@@ -126,7 +132,7 @@ async function treinamentosADM() {
             return;
         }
 
-        const html = dados.map(t => `
+        const html = dados.map(t => ` 
             <div class="mb-3 p-3 border rounded d-flex justify-content-between align-items-center shadow-sm" 
      style="background:#fdfdfd;">
     

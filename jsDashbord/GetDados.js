@@ -132,7 +132,7 @@ async function openCriados() {
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Status</th>
+
                         <th>Criado</th>
                     </tr>
                 </thead>
@@ -160,7 +160,6 @@ async function openCriados() {
                 <tr>
                     <td>${p.id}</td>
                     <td>${p.nome}</td>
-                    <td>${p.status == 1 ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-danger">Inativo</span>'}</td>
                     <td>${p.criado}</td>    
                 </tr>`,
           )
@@ -220,8 +219,16 @@ async function openAlunos() {
                     <th>${p.status_curso == 1 ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-danger">Inativo</span>'}</td>
                     <th>${p.data_curso.split(" ")[0].split("-").reverse().join("/")}</th>
                     <th><button class="btn btn-danger" onclick="excluirpermanente(${p.matricula})" ><i class="fa-solid fa-trash fa-flip-horizontal fa-xs" style="color: rgb(0, 0, 0);"></i> Exluir</button>
-                    ${p.status_curso != 1 ? '<button class="btn btn-success"><i class="fa-solid fa-arrow-rotate-left fa-sm" style="color: rgb(0, 0, 0);"></i> Reativar</button>' : ''}
-                `,
+                ${p.status_curso != 1
+                ? `<button class="btn btn-success" onclick="alterarMatricula(${p.matricula})">
+            <i class="fa-solid fa-arrow-rotate-left fa-sm" style="color: rgb(0, 0, 0);"></i> 
+            Reativar
+       </button>`
+                : `<button class="btn btn-warning" onclick="alterarMatricula(${p.matricula})">
+            <i class="fa-solid fa-arrow-rotate-left fa-sm" style="color: rgb(0, 0, 0);"></i> 
+            Desativar Matrícula
+       </button>`
+              }                `,
           )
           .join("");
       } catch {
@@ -229,6 +236,38 @@ async function openAlunos() {
       }
     },
   });
+}
+
+async function alterarMatricula(matricula){
+
+  const verifica = await checkinAdm();
+
+  if (!verifica) return false;
+
+  const dados = new FormData();
+
+  dados.append("matricula", matricula);
+
+  const res = await fetch("routes/api.php?acao=alterarMatricula", {
+    method: "POST",
+    body: dados,
+    credentials: "include",
+  });
+
+  const result = await res.json();
+
+  if (result.success) {
+    Swal.fire({
+      icon: "success",
+      title: `Matricula ${matricula} alterada`,
+      text: "Matricula alterada com sucesso",
+      ShowconfirmButton: false,
+    });
+    setTimeout(() => {
+      openAlunos();
+    },1500)
+    
+  }
 }
 
 async function excluirpermanente(matricula) {
@@ -264,7 +303,6 @@ async function excluirpermanente(matricula) {
     getDados();
   }
 }
-
 
 async function openProvas() {
   Swal.fire({
@@ -398,6 +436,8 @@ async function excluirReport(id) {
   } catch { }
 }
 
+
+
 async function openUsuarios() {
   Swal.fire({
     title: "Usuarios Cadastrados",
@@ -451,6 +491,7 @@ async function openUsuarios() {
   });
 
 }
+
 
 
 async function alterarAcesso(id) {

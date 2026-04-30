@@ -19,6 +19,10 @@ if( $acao == "buscarQuestoes"){
     $controller = new DadosCursoContoller();
     $controller->buscadorQuestoes();
 }
+if( $acao == "alterarMatricula"){
+    $controller = new DadosCursoContoller();
+    $controller->alterarmatriculadousuario();
+}
 
 if( $acao == 'ControleLogin'){
     $controller = new UsuarioController();

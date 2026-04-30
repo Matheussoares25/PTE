@@ -14,7 +14,7 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style/styleNAVBAR.css">
-  <link rel="stylesheet" href="style/avaliações.css">
+  <link rel="stylesheet" href="style/padrao.css">
   <link rel="stylesheet" href="style/dash.css">
 
 </head>
@@ -23,8 +23,8 @@
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid px-3">
 
-      <a class="navbar-brand fw-bold text-white" href="#" style="font-size:22px;">
-        <i class="bi bi-mortarboard-fill me-1"></i> PTE
+      <a class="navbar-brand fw-bold text-white" href="newMenu.html" style="font-size:22px;">
+        <img src="public/Marca-1.png" width="40" height="40"></i> PTE
       </a>
 
       <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -35,9 +35,9 @@
         <div class="navbar-nav align-items-lg-center gap-lg-3">
 
           <a class="nav-link text-white fw-semibold" href="treinamentos.html">Treinamentos</a>
-          <div class="dropdown btnadm" style="background-color: #4682B4;">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" style="background-color: #4682B4;">
+          <div class="dropdown btnadm" >
+            <a class="nav-link text-white fw-semibold dropdown-toggle" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
               Desempenho
             </a>
             <ul class="dropdown-menu">
@@ -70,37 +70,40 @@
     </div>
   </nav>
 
-  <div class="card card-custom mx-auto">
-    <div class="header-blue">
-      <i class="bi bi-grid-fill"></i> Provas
-    </div>
+  <div class="container">
 
-    <div class="card-body p-4">
-      <h5 class="mb-3"><i class="bi bi-journal-plus"></i> Realize a avaliação das provas dos usuarios</h5>
+    <div class="card card-custom mx-auto">
+      <div class="header-blue">
+        <i class="bi bi-grid-fill"></i> Provas
+      </div>
+
+      <div class="card-body p-4">
+        <h5 class="mb-3"><i class="bi bi-journal-plus"></i> Realize a avaliação das provas dos usuarios</h5>
 
 
-      <table class="table table-hover">
-        <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Prova</th>
-            <th>Realizada por:</th>
-            <th>Acertos</th>
-            <th>Feita em:</th>
-            <th>Aprovado:</th>
-            <th>% acertos</th>
-            <th>Nº De questoes</th>
-            <th>ºProva</th>
-            <th>Nota</th>
-            <th>Opções</th>
-          </tr>
-        </thead>
-        <tbody id="TabelaProvas">
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Prova</th>
+              <th>Realizada por:</th>
+              <th>Acertos</th>
+              <th>Feita em:</th>
+              <th>Aprovado:</th>
+              <th>% acertos</th>
+              <th>Nº De questoes</th>
+              <th>ºProva</th>
+              <th>Nota</th>
+              <th>Opções</th>
+            </tr>
+          </thead>
+          <tbody id="TabelaProvas">
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
 
-      <hr>
+        <hr>
+      </div>
     </div>
   </div>
 

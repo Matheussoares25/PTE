@@ -71,6 +71,17 @@ class DadosCursoContoller
             echo json_encode(['success'=> false]);
         }
     }
+
+    public function alterarmatriculadousuario(){
+
+        try {
+            $matricula = $_POST["matricula"] ?? 0;
+            $res = $this->cursoContoller->alterarMatricula($matricula);
+            echo json_encode($res);
+        }catch (Exception $e) {
+            echo json_encode(['success'=> false]);
+        }
+    }
 }
 
 ?>

@@ -1,47 +1,74 @@
- .navbar-nav .nav-link {
-    position: relative;
-    transition: color 0.3s ease;
-    
-  }
+ :root {
+   --cor-fundo: #1a3665;
+ }
 
-  .navbar-nav .nav-link::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 0%;
-    background-color: white;
-    transition: width 0.3s ease;
-  }
+ .navbar-nav .nav-link {
+   position: relative;
+   transition: color 0.3s ease;
+
+ }
+
+ .navbar-nav .nav-link::after {
+   content: "";
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   height: 2px;
+   width: 0%;
+   background-color: white;
+   transition: width 0.3s ease;
+ }
 
  .navbar {
-  display: block;
-  margin: 5px 10px 0px 10px;
-  border-radius: 2px;
-  background-color: #4682B4;
-  font-size: 16px;
-  padding: 15px 50px 15px 100px;
-  margin-bottom: 50px;
-   backdrop-filter: blur(80px);
-  
-  box-shadow: 0px 4px 20px rgb(15, 18, 23); 
-}
+   display: block;
+   border-radius: 2px;
+   background-color: rgb(70, 130, 180, 0.5);
+   font-size: 16px;
+   padding: 15px 50px 15px 100px;
+   margin-bottom: 50px;
+   backdrop-filter: blur(90px);
+   box-shadow: 0px 4px 20px rgb(15, 18, 23);
+ }
 
-  .navbar-nav .nav-link:hover {
-    color: #dfeaff !important;
-  }
+ .navbar-nav .nav-link:hover {
+   color: #dfeaff !important;
+ }
 
-  .navbar-nav .nav-link:hover::after {
-    width: 100%;
-  }
-  
-  #cFULL{
-    background-color: #4682B4;
-  }
+ .navbar-nav .nav-link:hover::after {
+   width: 100%;
+ }
 
-  #FotoUser{
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-  }
+ #cFULL {
+   background-color: #4682B4;
+ }
+
+ #FotoUser {
+   width: 45px;
+   height: 45px;
+   border-radius: 50%;
+ }
+
+ .menuOption {
+  background: rgba(100, 137, 168, 0.5); 
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: white;
+   
+ }
+
+ .menuIcon {
+   width: 60%;
+   margin-bottom: 10px;
+   transition: transform 0.25s ease;
+ }
+
+ .menuOption:hover {
+   transform: translateY(-6px);
+   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+ }
+
+ .menuOption:hover .menuIcon {
+   transform: scale(1.1);
+ }
+ 

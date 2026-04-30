@@ -1,4 +1,7 @@
 
+body{
+    background-color: var(--cor-fundo);
+}
 #btMiniDash{
     background-color: #dae1eb;
 }
@@ -9,21 +12,28 @@
     background-color: #959eaa;
     border-radius: 14px;
 }
+.dashboard-bg{
+    background-color: rgba(240, 248, 255,0.2);
+}
 
 .dashcard{
-    padding: 9px 9px;
+    padding: 1px 1px 1px 1px;
+    cursor: pointer;
     font-size: 12px;
     border-radius: 10px;
     font-weight: 40;
     box-shadow: 0 8px 25px rgba(28, 132, 193, 0.1);
     transition: 1.2s;
     background: #fff5f5;
+    border: 1px solid #163f50;
+   
+   
  
 }
 
 .dashcard:hover{
     transform: translateY(-3px);
-   box-shadow: 0 8px 25px rgba(28, 132, 193, 0.1);
+   box-shadow: 0 11px 25px hsl(207, 55%, 43%);
     transition: 0.5s;
     background-color: #d4e5ff;
 }

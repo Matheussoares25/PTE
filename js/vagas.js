@@ -108,6 +108,7 @@ async function excluirVaga(id) {
                 timer: 1500,
             });
             dadosvagas();
+
         }
     }
 });

@@ -33,6 +33,9 @@ function geral() {
 
 }
 
+
+
+
 async function perfil(id = null) {
 
     let options = {
@@ -389,7 +392,7 @@ E-mail geral: contato@pte.dev.br
                                 toast.onmouseleave = Swal.resumeTimer;
                             },
                             didClose: () => {
-                                window.location.href = "noticias.html";
+                                window.location.href = "newMenu.html";
 
                             }
 
@@ -482,7 +485,7 @@ E-mail geral: contato@pte.dev.br
                             toast.onmouseleave = Swal.resumeTimer;
                         },
                         didClose: () => {
-                            window.location.href = "noticias.html";
+                            window.location.href = "newMenu.html";
 
                         }
 

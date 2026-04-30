@@ -56,12 +56,14 @@ try {
 
 <html lang="pt-BR">
 <script src="../js/functions.js"></script>
+
 <head>
   <meta charset="UTF-8" />
   <title>Treinamento</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -254,7 +256,7 @@ try {
   <nav class="navbar navbar-expand-lg shadow-sm" style="background-color:#4682B4;">
     <div class="container">
 
-      <a class="navbar-brand fw-bold text-white" href="noticias.html" style="font-size:22px;">
+      <a class="navbar-brand fw-bold text-white" href="../newMenu.html" style="font-size:22px;">
         <i class="bi bi-mortarboard-fill me-1"></i> PTE
       </a>
 
@@ -266,7 +268,7 @@ try {
         <div class="navbar-nav align-items-lg-center gap-lg-3">
 
           <a class="nav-link text-white fw-semibold" href="../treinamentos.html">Treinamentos</a>
-          
+
           <a class="nav-link text-white fw-semibold" href="/ranking.html">Ranking</a>
           <a class="nav-link text-white fw-semibold" href="../noticias.html">Notícias</a>
           <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
@@ -323,8 +325,8 @@ try {
       <div class="video-container">
 
         <div class="video-placeholder">
-          <i class="fa-solid fa-play-circle"></i>
-          <p>Clique para iniciar o vídeo</p>
+          <i class="bi bi-play-fill"></i>
+          <p class="animacaoGato">Cade a aula..? o ​🐈​😻​​ Comeu</p>
         </div>
       </div>
 
@@ -335,7 +337,7 @@ try {
         </p>
       </div>
 
-    
+
 
     </main>
 
@@ -465,23 +467,23 @@ try {
       })
 
       return;
-    }else{
-       if (dados && dados.dados && dados.dados.desc_midia) {
-            document.getElementById("descAula").innerText = dados.dados.desc_midia;
-          }
+    } else {
+      if (dados && dados.dados && dados.dados.desc_midia) {
+        document.getElementById("descAula").innerText = dados.dados.desc_midia;
+      }
 
-          if (dados.success && dados.dados && dados.dados.video) {
+      if (dados.success && dados.dados && dados.dados.video) {
 
-            document.querySelector(".video-container").innerHTML = `
+        document.querySelector(".video-container").innerHTML = `
       <video id="videoAula" controls autoplay style="width:100%; height:100%;">
         <source src="${dados.dados.video}" type="video/mp4">
       </video>
     `;
 
-            controlarProgressoVideo(id);
+        controlarProgressoVideo(id);
 
 
-          }
+      }
 
     }
 
@@ -719,4 +721,16 @@ try {
 
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.min.js"></script>
 
+<script>
+anime({
+  targets: '.animacaoGato',
+  translateY: [20, 0],
+  opacity: [0, 1],
+  scale: [0.95, 1],
+  duration: 900,
+  easing: 'easeOutExpo',
+  loop: true
+});
+</script>

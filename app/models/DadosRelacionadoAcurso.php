@@ -128,7 +128,7 @@ class DadosDoCurso
 
     public function cadastrarCurso($nomeCurso)
     {
-        $sql = $this->pdo->prepare("INSERT INTO treinamentos (nome,status) VALUES (:nome,1)");
+        $sql = $this->pdo->prepare("INSERT INTO treinamentos (nome,criado) VALUES (:nome,now())");
         $sql->bindParam("nome", $nomeCurso);
         return $sql->execute();
     }
@@ -187,6 +187,16 @@ class DadosDoCurso
             "idAula" => $idAula,
             "caminhoVideo" => $caminhoBanco
         ];
+    }
+
+    public function alterarMatricula($idMatricula){
+
+      $sql = $this->pdo->prepare("UPDATE use_treinamentos SET status_curso = CASE WHEN status_curso = 1 THEN 2 ELSE 1 END
+        WHERE matricula = :idMatricula");
+      $sql->bindParam(":idMatricula", $idMatricula);
+      $sql->execute();
+
+      return (["success" => true]);
     }
 }
 
