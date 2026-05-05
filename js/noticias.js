@@ -5,8 +5,6 @@ document.addEventListener('click', () => {
 });
 async function Noticias() {
 
-
-
   try {
     const res = await fetch("routes/api.php?acao=buscarNoticias", {
       method: "POST",
@@ -19,63 +17,59 @@ async function Noticias() {
 
     const dados = await res.json();
 
-const html = dados.map((n) => `
-  <div class="col-12 col-md-6">
-    <div class="card noticia-card h-100">
+    const html = dados.map((n) => `
+      <div class="noticia-item " style="backgroud-color: white;">
 
-      <div class="card-body">
+        <h5 class="titulo">${n.titulo}</h5>
 
-        <h4 class="card-title">${n.titulo}</h4>
-
-        <p class="card-text conteudo-noticia">
+        <p class="descricao">
           ${n.conteudo}
         </p>
-        
-        <p class="card-text">
-          <small class="text-muted">${n.data_noticia}</small>
-        </p>
 
-        <div class="d-flex gap-2 flex-wrap">
+        <span class="data">
+          ${n.data_noticia}
+        </span>
+
+        <div class="acoes mt-2">
 
           <button class="btn btn-warning btn-sm btneditar"
-            onclick="editarNoticia(${n.id}, '${n.titulo}', '${n.conteudo}')">
-            <i class="bi bi-pencil-square"></i> Editar
+            onclick="editarNoticia(${n.id}, \`${n.titulo}\`, \`${n.conteudo}\`)">
+            <i class="bi bi-pencil-square"></i>
           </button>
 
           <button class="btn btn-danger btn-sm btneditar"
             onclick="exNoticia(${n.id})">
-            <i class="bi bi-trash"></i> Excluir
+            <i class="bi bi-trash"></i>
           </button>
 
           ${n.vaga == 1 ? `
             <button class="btn btn-info btn-sm"
               onclick="Candidatar(${n.id})">
-              <i class="fa-solid fa-arrow-trend-up"></i> Candidatar-se
+              <i class="fa-solid fa-arrow-trend-up"></i>
             </button>
           ` : ""}
 
         </div>
 
       </div>
-
-    </div>
-  </div>
-`).join("");
+    `).join("");
 
     document.getElementById("ListaNoticias").innerHTML = html;
 
+    // esconder botões se não for admin
     if (localStorage.getItem("tipoUsuario") != 2) {
       document.querySelectorAll(".btneditar").forEach((btn) => {
         btn.style.display = "none";
       });
     }
+
   } catch (error) {
     console.log("Erro no fetch:", error);
-
-
   }
 }
 
+
+// esconder elementos admin (fora da função)
 const cargo = localStorage.getItem("tipoUsuario");
 
 if (cargo != 2) {

@@ -364,61 +364,67 @@ try {
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
-  async function abrirModulo(id) {
-    let ul = document.getElementById("AulasMod");
-    ul.style.display = "block";
-    ul.innerHTML = "<li>Carregando aulas...</li>";
+ async function abrirModulo(id) {
+  let ul = document.getElementById("AulasMod");
+  ul.style.display = "block";
+  ul.innerHTML = "<li>Carregando aulas...</li>";
 
-    let dados = new FormData();
-    dados.append("idModulo", id);
+  let dados = new FormData();
+  dados.append("idModulo", id);
 
-    try {
-      const resposta = await fetch("/PTE/routes/api.php?acao=listarAulas", {
-        method: "POST",
-        body: dados
-      });
+  try {
+    const resposta = await fetch("/PTE/routes/api.php?acao=listarAulas", {
+      method: "POST",
+      body: dados
+    });
 
-      const resp = await resposta.json();
+    const resp = await resposta.json();
 
-      ul.innerHTML = "";
+    ul.innerHTML = "";
 
-      if (!resp.aulas || resp.aulas.length === 0) {
-        ul.innerHTML = "<li>Nenhuma aula encontrada</li>";
-        return;
+    if (!resp.aulas || resp.aulas.length === 0) {
+      ul.innerHTML = "<li>Nenhuma aula encontrada</li>";
+      return;
+    }
+
+  
+    const aulasValidas = resp.aulas.filter(a => a.nome_aula && a.nome_aula.trim() !== "");
+
+    if (aulasValidas.length === 0) {
+      ul.innerHTML = "<li>Nenhuma aula válida encontrada</li>";
+      return;
+    }
+
+    aulasValidas.forEach(function (aula) {
+      let func;
+      let icon;
+
+      if (aula.tipo == 1) {
+        func = "abrirAula";
+      } else if (aula.tipo == 2) {
+        func = "abrirProva";
+      } else {
+        func = "abrirAula";
       }
 
-      resp.aulas.forEach(function (aula) {
-        let func;
-        let icon;
+      if (aula.tipo == 2) {
+        icon = "<i class='fa-solid fa-book-tanakh' style='color: rgb(99, 230, 190);'></i> ";
+      } else {
+        icon = "<i class='fa-solid fa-play-circle text-danger'></i> ";
+      }
 
-        if (aula.tipo == 1) {
-          func = "abrirAula";
-        } else if (aula.tipo == 2) {
-          func = "abrirProva";
-        } else {
-          func = "abrirAula";
-        }
+      ul.innerHTML +=
+        "<li style='padding-left:25px; cursor:pointer;' onclick=\"" + func + "('" + aula.id + "')\">" +
+        icon +
+        "<span>" + aula.nome_aula + "</span>" +
+        "</li>";
+    });
 
-        if (aula.tipo == 2) {
-
-          icon = "<i class='fa-solid fa-book-tanakh' style='color: rgb(99, 230, 190);'></i>"
-        } else {
-          icon = "<i class='fa-solid fa-play-circle text-danger'></i> "
-        }
-
-
-        ul.innerHTML +=
-          "<li style='padding-left:25px;' onclick=\"" + func + "('" + aula.id + "')\">" +
-          "" + icon + "" +
-          "<span>" + aula.nome_aula + "</span>" +
-          "</li>";
-      });
-
-    } catch (error) {
-      ul.innerHTML = "<li>Erro ao carregar aulas</li>";
-      console.error(error);
-    }
+  } catch (error) {
+    ul.innerHTML = "<li>Erro ao carregar aulas</li>";
+    console.error(error);
   }
+}
 
 
   async function abrirAula(id) {

@@ -112,3 +112,28 @@
     transition: 1.5s;
     background-color: #97c1ff;
 }
+.noticia-item {
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.titulo {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #222;
+}
+
+.descricao {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.data {
+    font-size: 12px;
+    color: #999;
+}
+
+.acoes button {
+    margin-right: 5px;
+}

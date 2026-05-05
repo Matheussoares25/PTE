@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-include "../control/conn.php";
+include "../config/conn.php";
 include "../control/authADM.php";
 
 try {

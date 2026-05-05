@@ -526,6 +526,7 @@ E-mail geral: contato@pte.dev.br
                 } else {
                     $('#Resposta').html('<p>Erro ao fazer login</p>');
                 }
+                
 
             } catch (error) {
                 $('#Resposta').html('<p>Ocorreu um erro na requisição.</p>');
