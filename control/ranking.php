@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-include("conn.php");
+include("../config/conn.php");
 include("auth.php");
 
 try {

@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=UTF-8');
-include('conn.php');
+include('../config/conn.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['valido' => false]);

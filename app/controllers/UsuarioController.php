@@ -79,6 +79,8 @@ class UsuarioController
             $email = $_POST["email"];
             $senha = $_POST["senha"];
 
+            
+
             $res = $this->usuario->buscaEmail($email);
 
             if (!$res) {

@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 header("Content-Type: application/json");
 
 
-include "conn.php";
+include "../config/conn.php";
 include("authADM.php");
 
 try{

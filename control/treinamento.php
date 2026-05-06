@@ -1,6 +1,6 @@
 <?php
 
-include("conn.php");
+include("../config/conn.php");
 include("auth.php");
 
 
