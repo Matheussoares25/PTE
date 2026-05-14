@@ -14,7 +14,7 @@ window.onload = function () {
 }
 geral();
 
-function geral() {
+async function geral() {
     const fotoPerfil = document.getElementById("FotoUser");
 
     if (fotoPerfil) {
@@ -28,12 +28,28 @@ function geral() {
         <a class="dropdown-item" href="#" onclick="perfil()">Perfil</a>
         <a class="dropdown-item" href="#" onclick="report()">Problemas</a>
         <a class="dropdown-item" href="#" onclick="oflog()">Sair</a>
+  
+        
     `;
     }
 
+    const notificacoes = await fetch("routes/api.php?acao=contagemNotificacoes", {
+        method: "POST",
+        credentials: "include"
+    });
+
+    const dados = await notificacoes.json();
+
+    const mostrar = document.getElementById("qtdMensagem");
+
+    mostrar.innerText = dados?.notificacoes?.total ?? 0;
+
+
+
+
+
+
 }
-
-
 
 
 async function perfil(id = null) {
@@ -526,7 +542,7 @@ E-mail geral: contato@pte.dev.br
                 } else {
                     $('#Resposta').html('<p>Erro ao fazer login</p>');
                 }
-                
+
 
             } catch (error) {
                 $('#Resposta').html('<p>Ocorreu um erro na requisição.</p>');

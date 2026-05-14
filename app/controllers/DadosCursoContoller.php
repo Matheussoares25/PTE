@@ -2,12 +2,15 @@
 
 require_once __DIR__ . "/../models/DadosRelacionadoAcurso.php";
 
+
 class DadosCursoContoller
 {
     private $cursoContoller;
+
     public function __construct()
     {
         $this->cursoContoller = new DadosDoCurso();
+
     }
 
     public function buscadorQuestoes()
@@ -35,7 +38,7 @@ class DadosCursoContoller
     public function cadastrarCurso()
     {
 
-
+    require_once __DIR__ . "/../../control/authADM.php";
 
         try {
             $curso = $_POST["nome"] ?? "";
@@ -56,8 +59,10 @@ class DadosCursoContoller
         }
     }
 
+
     public function cadastrarumaAula()
     {
+        require_once __DIR__ . "/../../control/authADM.php";
         try {
             $idAula = intval($_POST["idAula"] ?? 0);
             $idModulo = intval($_POST["idModulo"] ?? 0);
@@ -74,9 +79,13 @@ class DadosCursoContoller
 
     public function alterarmatriculadousuario(){
 
+    require_once __DIR__ . "/../../control/authADM.php";
+
         try {
             $matricula = $_POST["matricula"] ?? 0;
             $res = $this->cursoContoller->alterarMatricula($matricula);
+
+
             echo json_encode($res);
         }catch (Exception $e) {
             echo json_encode(['success'=> false]);

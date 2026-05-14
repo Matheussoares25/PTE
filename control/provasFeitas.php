@@ -13,6 +13,12 @@ try {
     $idUser = $_POST["iduser"];
     $curso = $_POST["idCurso"];
 
+    $sql1 = $pdo->prepare("SELECT count(*) as total FROM certificado where id_user = :id and curso = :curso");
+    $sql1->bindParam(":id", $idUser);
+    $sql1->bindParam(":curso", $curso);
+    $sql1->execute();
+    $totalCertificados = $sql1->fetch(PDO::FETCH_ASSOC);
+
     $sql = $pdo->prepare("
         SELECT 
             up.porcentagem,
@@ -32,6 +38,8 @@ try {
     $sql->execute();
 
     $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+
 
     $porcentagens = array_column($result, 'porcentagem');
     $nomeUsuario = $result[0]['nome_usuario'] ?? '';
@@ -57,7 +65,8 @@ try {
         "porcentagens" => $porcentagens,
         "media_porcentagem" => $media,
         "total_provas_feitas" => $totalFeitas,
-        "total_provas_curso" => $data1["total_provas_curso"] ?? 0
+        "total_provas_curso" => $data1["total_provas_curso"] ?? 0,
+        "total_certificados" => $totalCertificados["total"]
     ]);
 
 } catch (PDOException $e) {

@@ -35,9 +35,9 @@ class Curso
      */
     public function buscarTreinamentosConcluidosDoUsuario($idUser)
     {
-        $sql = $this->pdo->prepare("SELECT a.id_usuario,a.id_curso,a.status_curso,c.nome  FROM use_treinamentos AS a 
+        $sql = $this->pdo->prepare("SELECT a.id_usuario,a.id_curso,a.status_curso,c.nome as nome_curso,a.data_fim,b.nome as nome_usuario  FROM use_treinamentos AS a 
             INNER JOIN usuarios AS b ON a.id_usuario = b.id 
-            LEFT JOIN treinamentos AS c ON a.id_curso = c.id WHERE a.id_usuario = :idUser AND a.status_curso = 3");
+            LEFT JOIN treinamentos AS c ON a.id_curso = c.id WHERE a.id_usuario = :idUser AND a.status_curso = 2");
         $sql->bindParam(":idUser", $idUser);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);

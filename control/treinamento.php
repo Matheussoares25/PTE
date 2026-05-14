@@ -38,7 +38,21 @@ try {
   $qtdProvas = count($provas);
 
 
+  $sql = $pdo->prepare("SELECT status_curso FROM use_treinamentos where id_usuario = :iduser and id_curso = :idCurso");
+  $sql->bindParam(":iduser", $_SESSION["id"], PDO::PARAM_INT);
+  $sql->bindParam(":idCurso", $id, PDO::PARAM_INT);
+  $sql->execute();
+  $treinamentos = $sql->fetch(PDO::FETCH_ASSOC);
 
+
+  $cursoConcluido = false;
+
+  if (
+    !empty($treinamentos) &&
+    $treinamentos["status_curso"] == 2
+  ) {
+    $cursoConcluido = true;
+  }
 
 
 
@@ -68,188 +82,363 @@ try {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: #f5f6f8;
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef3f9 0%, #f8fafc 100%);
+    font-family: "Inter", "Segoe UI", sans-serif;
+    color: #1f2937;
+    overflow: hidden;
+  }
 
+  /* ===== LAYOUT ===== */
+  .layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 18px;
+    padding: 18px;
+    height: calc(100vh - 72px);
+    background: #f4f7fb;
+  }
+
+  /* ===== LAYOUT ===== */
+.layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 18px;
+  padding: 18px;
+  height: calc(100vh - 72px);
+  background: #f4f7fb;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 18px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  height: 100vh;
+}
+
+/* SCROLL */
+.sidebar::-webkit-scrollbar {
+  width: 7px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+/* TITULO */
+.sidebar h4 {
+  font-size: 19px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.sidebar h4 strong {
+  color: #2563eb;
+}
+
+/* ===== LISTA MODULOS ===== */
+.lista-aulas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-aulas li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  background: #f8fafc;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.lista-aulas li:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  transform: translateX(4px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08);
+}
+
+.lista-aulas li.active {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  border-color: #93c5fd;
+}
+
+.lista-aulas i {
+  font-size: 16px;
+  color: #2563eb;
+  min-width: 18px;
+}
+
+.lista-aulas span {
+  font-size: 15px;
+  font-weight: 500;
+  color: #334155;
+  line-height: 1.5;
+}
+
+/* ===== SUBLISTA ===== */
+#AulasMod {
+  list-style: none;
+  padding: 0;
+  margin-top: 14px;
+}
+
+#AulasMod li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px !important;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: .2s;
+  font-size: 14px;
+}
+
+#AulasMod li:hover {
+  background: #f0f7ff;
+  border-color: #93c5fd;
+  transform: translateX(3px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+/* RESPONSIVO */
+@media (max-width: 992px) {
+  .layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .sidebar {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .sidebar h4 {
+    font-size: 16px;
+  }
+
+  .lista-aulas li {
+    padding: 12px;
+  }
+
+  .lista-aulas span {
+    font-size: 14px;
+  }
+}
+Você está usando o nosso
+
+  /* ===== PLAYER ===== */
+  .player {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  /* ===== VIDEO ===== */
+  .video-container {
+    width: 100%;
+    height: 72vh;
+    background: #0b132b;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+  }
+
+  .video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
+
+  /* ===== PLACEHOLDER ===== */
+  .video-placeholder {
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+  }
+
+  .video-placeholder i {
+    font-size: 82px;
+    margin-bottom: 14px;
+    color: #60a5fa;
+  }
+
+  .video-placeholder p {
+    font-size: 17px;
+    font-weight: 500;
+    color: #e2e8f0;
+  }
+
+  /* ===== DESCRIÇÃO ===== */
+  .aula-descricao {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  .aula-descricao h4 {
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 20px;
+  }
+
+  .aula-descricao h5 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: #475569;
+    line-height: 1.7;
+  }
+
+  /* ===== PROVA ===== */
+  #prova {
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  #ListQuestion {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    border: none !important;
+    border-radius: 18px !important;
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    padding: 16px 20px !important;
+    font-size: 16px;
+  }
+
+  .card-body {
+    padding: 22px !important;
+  }
+
+  .card-body label {
+    transition: .2s;
+  }
+
+  .card-body label:hover {
+    background: #eff6ff;
+    border-color: #93c5fd !important;
+  }
+
+  /* ===== BOTÃO ===== */
+  .btn-primary {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border: none;
+    border-radius: 14px !important;
+    padding: 12px 22px;
+    font-weight: 600;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  }
+
+  /* ===== RESPONSIVO ===== */
+  @media (max-width: 992px) {
+    body {
+      overflow: auto;
     }
 
     .layout {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      height: 100vh;
+      grid-template-columns: 1fr;
+      height: auto;
     }
-
 
     .sidebar {
-      background: #ffffff;
-      border-right: 1px solid #e0e0e0;
-      padding: 24px;
-      overflow-y: auto;
-    }
-
-    .sidebar h4 {
-      font-weight: 600;
-      margin-bottom: 24px;
-    }
-
-    .lista-aulas {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .lista-aulas li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background .2s;
-    }
-
-    .lista-aulas li:hover {
-      background: #f0f2f5;
-    }
-
-    .lista-aulas li.active {
-      background: #e7f1ff;
-      font-weight: 500;
-    }
-
-    .lista-aulas i {
-      font-size: 18px;
-      color: #555;
-    }
-
-    #ListQuestion {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .player {
-      display: flex;
-      flex-direction: column;
-      background: #f5f6f8;
-      justify-content: center;
+      height: auto;
     }
 
     .video-container {
-      position: relative;
-      height: 55vh;
-      width: 100%;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0;
+      height: 48vh;
     }
 
-    .video-container video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #000;
+    #prova {
+      padding: 18px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .layout {
+      padding: 12px;
+      gap: 14px;
     }
 
-    .video-placeholder {
-      color: #fff;
-      text-align: center;
+    .sidebar {
+      padding: 14px;
+      border-radius: 16px;
     }
 
-    .video-placeholder i {
-      font-size: 80px;
-      margin-bottom: 16px;
-    }
-
-    /* CONTROLES (visual) */
-    .controls {
-      background: #ffffff;
-      /* controles em fundo claro */
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      color: #333;
-      border-top: 1px solid #e0e0e0;
-    }
-
-    .progress-bar-custom {
-      flex: 1;
-      height: 4px;
-      background: #333;
-      border-radius: 2px;
-      position: relative;
-    }
-
-    .progress-bar-custom span {
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 30%;
-      background: #e53935;
-      border-radius: 2px;
-    }
-
-    .controls i {
-      cursor: pointer;
-      font-size: 18px;
-      color: #333;
-    }
-
-    @media (max-width: 768px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        display: none;
-      }
+    .video-container {
+      height: 36vh;
+      border-radius: 16px;
     }
 
     .aula-descricao {
-      background: #ffffff;
-      color: #333;
-      padding: 16px 24px;
-      border-top: 1px solid #e0e0e0;
+      padding: 16px;
+      border-radius: 16px;
     }
 
-    .aula-descricao h5 {
-      margin-bottom: 8px;
-      font-weight: 600;
+    .video-placeholder i {
+      font-size: 58px;
     }
 
-    .aula-descricao p {
-      margin: 0;
+    .video-placeholder p {
       font-size: 14px;
-      line-height: 1.5;
     }
 
-    #AulasMod {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .sidebar h4 {
+      font-size: 14px;
     }
 
-    #AulasMod li {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 8px;
-      cursor: pointer;
-      border-radius: 8px;
+    .lista-aulas li {
+      padding: 9px;
     }
-
-    #AulasMod li:hover {
-      background: #f0f2f5;
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
@@ -269,9 +458,9 @@ try {
 
           <a class="nav-link text-white fw-semibold" href="../treinamentos.html">Treinamentos</a>
 
-          <a class="nav-link text-white fw-semibold" href="/ranking.html">Ranking</a>
+          <a class="nav-link text-white fw-semibold" href="../ranking.html">Ranking</a>
           <a class="nav-link text-white fw-semibold" href="../noticias.html">Notícias</a>
-          <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
+          <a class="nav-link text-white fw-semibold" href="../certificados.html">Certificados</a>
 
           <button type="button" onclick="oflog()" class="btn btn-light text-primary fw-semibold px-3 ms-lg-3"
             style="border-radius: 8px;">
@@ -331,10 +520,10 @@ try {
       </div>
 
       <div class="aula-descricao">
-        <h5>Descrição da aula</h5>
-        <p id="descAula">
+        <h4><strong>Descrição da aula</strong></h4>
+        <h5 id="descAula">
 
-        </p>
+        </h5>
       </div>
 
 
@@ -363,68 +552,88 @@ try {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+
+<?php if ($cursoConcluido): ?>
+
+  <script>
+    Swal.fire({
+      title: "Voce concluiu este curso é possivel consultar seu Cerficado no menu anterior.",
+      width: 600,
+      padding: "3em",
+      color: "#ffffff",
+      background: "#6a6ea7 url(../public/confetti-35.gif)",
+      backdrop: `
+    rgba(0,0,123,0.4)
+    url("../public/rocket.gif")
+    left top
+    no-repeat
+  `
+    });
+  </script>
+
+<?php endif; ?>
 <script>
- async function abrirModulo(id) {
-  let ul = document.getElementById("AulasMod");
-  ul.style.display = "block";
-  ul.innerHTML = "<li>Carregando aulas...</li>";
+  async function abrirModulo(id) {
+    let ul = document.getElementById("AulasMod");
+    ul.style.display = "block";
+    ul.innerHTML = "<li>Carregando aulas...</li>";
 
-  let dados = new FormData();
-  dados.append("idModulo", id);
+    let dados = new FormData();
+    dados.append("idModulo", id);
 
-  try {
-    const resposta = await fetch("/PTE/routes/api.php?acao=listarAulas", {
-      method: "POST",
-      body: dados
-    });
+    try {
+      const resposta = await fetch("/PTE/routes/api.php?acao=listarAulas", {
+        method: "POST",
+        body: dados
+      });
 
-    const resp = await resposta.json();
+      const resp = await resposta.json();
 
-    ul.innerHTML = "";
+      ul.innerHTML = "";
 
-    if (!resp.aulas || resp.aulas.length === 0) {
-      ul.innerHTML = "<li>Nenhuma aula encontrada</li>";
-      return;
-    }
-
-  
-    const aulasValidas = resp.aulas.filter(a => a.nome_aula && a.nome_aula.trim() !== "");
-
-    if (aulasValidas.length === 0) {
-      ul.innerHTML = "<li>Nenhuma aula válida encontrada</li>";
-      return;
-    }
-
-    aulasValidas.forEach(function (aula) {
-      let func;
-      let icon;
-
-      if (aula.tipo == 1) {
-        func = "abrirAula";
-      } else if (aula.tipo == 2) {
-        func = "abrirProva";
-      } else {
-        func = "abrirAula";
+      if (!resp.aulas || resp.aulas.length === 0) {
+        ul.innerHTML = "<li>Nenhuma aula encontrada</li>";
+        return;
       }
 
-      if (aula.tipo == 2) {
-        icon = "<i class='fa-solid fa-book-tanakh' style='color: rgb(99, 230, 190);'></i> ";
-      } else {
-        icon = "<i class='fa-solid fa-play-circle text-danger'></i> ";
+
+      const aulasValidas = resp.aulas.filter(a => a.nome_aula && a.nome_aula.trim() !== "");
+
+      if (aulasValidas.length === 0) {
+        ul.innerHTML = "<li>Nenhuma aula válida encontrada</li>";
+        return;
       }
 
-      ul.innerHTML +=
-        "<li style='padding-left:25px; cursor:pointer;' onclick=\"" + func + "('" + aula.id + "')\">" +
-        icon +
-        "<span>" + aula.nome_aula + "</span>" +
-        "</li>";
-    });
+      aulasValidas.forEach(function (aula) {
+        let func;
+        let icon;
 
-  } catch (error) {
-    ul.innerHTML = "<li>Erro ao carregar aulas</li>";
-    console.error(error);
+        if (aula.tipo == 1) {
+          func = "abrirAula";
+        } else if (aula.tipo == 2) {
+          func = "abrirProva";
+        } else {
+          func = "abrirAula";
+        }
+
+        if (aula.tipo == 2) {
+          icon = "<i class='fa-solid fa-book-tanakh' style='color: rgb(99, 230, 190);'></i> ";
+        } else {
+          icon = "<i class='fa-solid fa-play-circle text-danger'></i> ";
+        }
+
+        ul.innerHTML +=
+          "<li style='padding-left:25px; cursor:pointer;' onclick=\"" + func + "('" + aula.id + "')\">" +
+          icon +
+          "<span>" + aula.nome_aula + "</span>" +
+          "</li>";
+      });
+
+    } catch (error) {
+      ul.innerHTML = "<li>Erro ao carregar aulas</li>";
+      console.error(error);
+    }
   }
-}
 
 
   async function abrirAula(id) {
@@ -730,13 +939,40 @@ try {
 <script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.min.js"></script>
 
 <script>
-anime({
-  targets: '.animacaoGato',
-  translateY: [20, 0],
-  opacity: [0, 1],
-  scale: [0.95, 1],
-  duration: 900,
-  easing: 'easeOutExpo',
-  loop: true
-});
+  anime({
+    targets: '.animacaoGato',
+    translateY: [20, 0],
+    opacity: [0, 1],
+    scale: [0.95, 1],
+    duration: 900,
+    easing: 'easeOutExpo',
+    loop: true
+  });
+
+  async function oflog() {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Deseja realmente sair?',
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Nao',
+        backdrop: true,
+        scrollbarPadding: false
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            await fetch("control/logout.php", {
+                method: "POST",
+                credentials: "include"
+            });
+            localStorage.removeItem("token");
+            localStorage.removeItem("idUser");
+            localStorage.removeItem("tipoUsuario");
+            localStorage.clear();
+            window.location.href = "../index.html";
+        }
+    })
+
+
+}
 </script>

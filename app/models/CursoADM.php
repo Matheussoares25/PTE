@@ -1,14 +1,19 @@
 <?php
 require_once __DIR__ . "/../../config/conn.php";
 
+
 class CursoADM
 {
     private $pdo;
+
 
     public function __construct()
     {
         $conexao = new Conexao();
         $this->pdo = $conexao->conn;
+
+
+        
     }
 
     /**
@@ -44,7 +49,7 @@ class CursoADM
         FROM use_treinamentos AS a 
         INNER JOIN usuarios AS b ON a.id_usuario = b.id 
         LEFT JOIN treinamentos AS c ON c.id = a.id_curso 
-        WHERE a.id_curso = :id AND a.status_curso = 1
+        WHERE a.id_curso = :id AND a.status_curso  IN (0, 1)
     ");
         $sql1->bindParam(":id", $id);
         $sql1->execute();
@@ -67,6 +72,32 @@ class CursoADM
     }
 
 
+    public function notificar($assunto, $menssagem, $recebe ){
+        
+        switch ($assunto){
+            case 1:
+                $assunto = "Curso";
+                break;
+            case 2:
+                $assunto = "Certificado";
+                break;
+            case 3:
+                $assunto = "Prova";
+                break;
+            case 4:
+                $assunto = "Outros";
+        }
+
+
+
+        $sql = $this->pdo->prepare("INSERT INTO notificacoes (assunto, mensagem, id_recebe,visualizado,data_envio) VALUES (:assunto, :menssagem, :recebe, :visualizado, now())");
+        $sql->bindParam(":assunto", $assunto);
+        $sql->bindParam(":menssagem", $menssagem);
+        $sql->bindParam(":recebe", $recebe);
+        $sql->bindValue(":visualizado", 0);
+        return $sql->execute();
+    }
+
     public function cadastrarAoCurso($idCurso, $idUser)
     {
 
@@ -75,6 +106,8 @@ class CursoADM
             $sql->bindParam(":idCurso", $idCurso);
             $sql->bindParam(":iduser", $idUser);
             return $sql->execute();
+
+           
 
 
         } catch (PDOException $e) {
@@ -90,6 +123,8 @@ class CursoADM
             $sql = $this->pdo->prepare("UPDATE use_treinamentos SET status_curso = 0 WHERE id_usuario = :u AND id_curso = :c");
             $sql->bindParam(":c", $idCurso);
             $sql->bindParam(":u", $idUser);
+
+
             return $sql->execute();
 
         } catch (Exception $e) {

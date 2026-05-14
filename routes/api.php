@@ -8,9 +8,18 @@ require_once __DIR__ . "/../app/controllers/AdmController.php";
 require_once __DIR__ . "/../app/controllers/DashController.php";
 require_once __DIR__ . "/../app/controllers/RankingController.php";
 require_once __DIR__ . "/../app/controllers/DadosCursoContoller.php";
+require_once __DIR__ . "/../app/controllers/CertificadosController.php";
 
 $acao = $_GET['acao'] ?? '';
 
+if($acao == 'gerarCertificado'){
+    $controller = new CertificadosController();
+    $controller->GerarNewCertificado();
+}
+if($acao == 'buscaCertificados'){
+    $controller = new CertificadosController();
+    $controller->PegaCertificados();
+}
 if ($acao == 'salvarAula') {
     $controller = new DadosCursoContoller();
     $controller->cadastrarumaAula();
@@ -31,6 +40,18 @@ if( $acao == 'ControleLogin'){
 if( $acao == 'cadCurso'){
     $controller = new DadosCursoContoller();
     $controller->cadastrarCurso();
+}
+if( $acao == 'AbrirNotificacoes'){
+    $controller = new UsuarioController();
+    $controller->buscaNotificacoes();
+}
+if( $acao == 'contagemNotificacoes'){
+    $controller = new UsuarioController();
+    $controller->contNotificacoes();
+}
+if( $acao == 'visualizarNotificacoes'){
+    $controller = new UsuarioController();
+    $controller->visualizarNotificacoes();
 }
 
 if ($acao == "cadastrarUsuario") {

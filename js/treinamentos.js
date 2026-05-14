@@ -5,7 +5,7 @@ document.addEventListener('click', () => {
 buscarTreinamentos();
 treinamentosConcluidos();
 async function buscarTreinamentos() {
-  
+
     try {
 
         const res = await fetch("routes/api.php?acao=buscarCursosDoALuno", {
@@ -14,7 +14,7 @@ async function buscarTreinamentos() {
 
         });
 
-        const resposta = await res.json();  
+        const resposta = await res.json();
 
 
 
@@ -93,9 +93,29 @@ async function treinamentosConcluidos() {
             return;
         }
 
-        if(dados.dados == ""){
-            
+        if (dados.dados == "") {
+            document.getElementById("Concluidos").innerHTML =
+                `<tr><td colspan="2">Nenhum treinamento concluido.</td></tr>`;
         }
+
+
+
+        const html = dados.dados.map(t => `
+            <tr>
+                <td>${t.nome_curso}</td>
+                <td>${t.data_fim.split(' ')[0].split('-').reverse().join('/')}</td>
+                <td>
+                    <a href="control/treinamento.php?id=${t.id_curso}" class="btn btn-sm btn-primary mt-2">
+                        Curso
+                    </a>
+                    <a href="control/certificado.php?idUser=${t.id_usuario}&nomeCurso=${t.id_curso}" class="btn btn-sm btn-primary mt-2">
+                        Meu Certificado
+                </td>
+                          
+            </tr>
+        `).join("");
+
+        document.getElementById("Concluidos").innerHTML = html;
 
 
 
@@ -117,11 +137,11 @@ async function treinamentosADM() {
 
         const dados = await res.json();
 
-        if (dados.erro) {
+        if (dados.Negado) {
             Swal.fire({
-                icon: "error",
-                title: "Acesso negado",
-                text: dados.erro
+                icon: "warning",
+                title: "ACESSO NEGADO",
+                html: "REALIZE LOGIN",
             });
 
 
@@ -172,19 +192,19 @@ async function editTreinamento(id) {
     });
 
     const dados = await res.json();
-    
+
     var Text;
 
-    if(dados.treinamentos[0].status == 1){
+    if (dados.treinamentos[0].status == 1) {
         Text = "Ativo";
-    }else{
+    } else {
         Text = "Inativo";
     }
 
 
     Swal.fire({
         title: "Informações do Curso",
-        width: "30%",
+        width: "50%",
         html: `
         <div class="text-start">
             <p><strong>ID: </strong> ${dados.treinamentos[0].id}</p>
@@ -202,7 +222,7 @@ async function editTreinamento(id) {
     }).then(async result => {
 
         if (result.isConfirmed) {
-               window.location = "cadTreinamento.html"
+            window.location = "cadTreinamento.html"
         }
 
         if (result.isDenied) {
@@ -219,6 +239,7 @@ async function editTreinamento(id) {
 
             });
             const dados = await resposta.json();
+
 
             const nome = dados.treinamentos[0].nome;
             const idcurso = dados.treinamentos[0].id;
@@ -252,6 +273,7 @@ async function editTreinamento(id) {
                         <th style="padding:12px; text-align:left;"> ID / Matrícula</th>
                         <th style="padding:12px; text-align:left;"> Email</th>
                         <th style="padding:12px; text-align:left;"> Data Início</th>
+                        <th style="padding:12px; text-align:center;"> Status</th>
                         <th style="padding:12px; text-align:center;"> Ações</th>
                     </tr>
                 </thead>
@@ -262,6 +284,7 @@ async function editTreinamento(id) {
     `,
                 didOpen: () => {
                     const tbody = document.getElementById("relacionados");
+
 
                     dados.relacionados.forEach(item => {
                         tbody.innerHTML += `
@@ -279,6 +302,10 @@ async function editTreinamento(id) {
     <td style="padding:8px;">
         <i class="fa-solid fa-calendar-day" style="color:#777; margin-right:6px;"></i>
         ${item.data_curso}
+    </td>
+
+    <td style="padding:8px; text-align:center;">
+        ${item.status_curso == 1 ? `<i class="fa-solid fa-circle-check" style="color:green;"></i>` : `<i class="fa-solid fa-circle-xmark" style="color:red;"></i>`}
     </td>
 
     <td style="padding:8px; text-align:center;">
@@ -393,22 +420,22 @@ async function editTreinamento(id) {
 
                         if (dados.success) {
                             Swal.fire({
-                                icon: "success", 
+                                icon: "success",
                                 title: "Usuário Cadastrado",
                                 html: `O usuário foi cadastrado ao curso`,
                                 timer: 3000,
                                 showConfirmButton: false
                             });
-                        }else if(dados.EXISTE){
+                        } else if (dados.EXISTE) {
                             Swal.fire({
-                                icon: "error", 
+                                icon: "error",
                                 title: "Usuário Ja Cadastrado",
                                 html: `O usuário ja esta cadastrado nesse curso`,
                                 timer: 3000,
                                 showConfirmButton: false
                             });
                         }
-                        else{
+                        else {
                             alert("errao")
                         }
                     })
@@ -459,31 +486,31 @@ function delmat(idUsuario, idCurso, emailUsuario) {
                 body: dados,
                 credentials: "include"
             })
-            .then(res => res.json())
-            .then(resp => {
-                if(resp.success){
-                Swal.fire({
-                    icon: "success",
-                    title: "Matrícula excluída!",
-                    text: "O usuário foi removido do treinamento.",
-                    confirmButtonColor: "#3085d6"
+                .then(res => res.json())
+                .then(resp => {
+                    if (resp.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Matrícula excluída!",
+                            text: "O usuário foi removido do treinamento.",
+                            confirmButtonColor: "#3085d6"
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Erro!",
+                            text: resp.erro || "Não foi possível remover a matrícula."
+                        });
+                    }
+
+                })
+                .catch(err => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Erro!",
+                        text: "Não foi possível remover a matrícula.",
+                    });
                 });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Erro!",
-                    text: resp.erro || "Não foi possível remover a matrícula."
-                });
-            }
-               
-            })
-            .catch(err => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Erro!",
-                    text: "Não foi possível remover a matrícula.",
-                });
-            });
 
         }
     });

@@ -27,11 +27,6 @@ async function buscaProvas() {
             <td>${p.nome}</td>
             <td>${p.acertos}</td>
             <td>${p.data_inicio}</td>
-            <td>
-                ${p.aprovado == 1
-                    ? '<i class="fa-solid fa-check" style="color: #008fff;"></i>'
-                    : '<i class="fa-solid fa-x" style="color: #ff4d4d;"></i>'} 
-            </td> 
             <td>${p.porcentagem}%</td>
             <td>${p.qtd_questoes ?? ""}</td> >
             <td>${p.ordem_prova}º Do curso</td>
@@ -201,6 +196,12 @@ async function Notas(id, nota = null, idUser, idDaProvanoBanco) {
 }
 
 async function infoProva(id_curso, user, nome, nome_aula) {
+    const verifica = await checkinAdm();
+
+    if (!verifica) {
+        return false;
+    }
+
     const iduser = user;
     const idCurso = id_curso;
 
@@ -273,7 +274,7 @@ async function infoProva(id_curso, user, nome, nome_aula) {
 
             const TabelaProvas = document.getElementById("TabelaProvasSwal");
 
-        
+
             TabelaProvas.innerHTML += lista.map((p, index) => `
         <tr>
             <td>${index + 1}ª Prova</td>
@@ -286,24 +287,54 @@ async function infoProva(id_curso, user, nome, nome_aula) {
                 document.getElementById("provas_feitas").style.color = "green";
                 document.getElementById("provas_totais").style.color = "green";
             }
-            if(feitas < total){
+            if (feitas < total) {
                 document.getElementById("provas_feitas").style.color = "red";
                 document.getElementById("provas_totais").style.color = "red";
             }
         }
-    }).then(async(result) => {
+    }).then(async (result) => {
         if (result.isConfirmed) {
-            
+
+
+
+            const nomeCurso = document.getElementById("curso").textContent;
+            const feitoPor = document.getElementById("feito_por").textContent;
+
+
             const dados = new FormData();
+
             dados.append("idUser", user);
             dados.append("nomeAula", nome_aula);
-            dados.append("nomeAluno", nome);
+            dados.append("nomeAluno", feitoPor);
+            dados.append("nomeCurso", nomeCurso);
+            dados.append("idCurso", idCurso);
 
-            const res = await fetch("routes/api.php?acao=gerarCertificado",{
+            const res = await fetch("routes/api.php?acao=gerarCertificado", {
                 method: "POST",
                 body: dados,
                 credentials: "include"
             });
+
+            const resposta = await res.json();
+
+            if (resposta.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Certificado gerado com sucesso",
+                    timer: 2000,
+                    showConfirmButton: false
+                })
+            }
+
+            if (resposta.EXISTE) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Certificado ja gerado",
+                    timer: 2000,
+                    showConfirmButton: false
+                })
+            }
+
         }
     })
 

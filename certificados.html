@@ -35,8 +35,8 @@
         <div class="navbar-nav align-items-lg-center gap-lg-3">
 
           <a class="nav-link text-white fw-semibold" href="treinamentos.html">Treinamentos</a>
-          <div class="dropdown btnadm" >
-            <a class="nav-link text-white fw-semibold dropdown-toggle" role="button" data-bs-toggle="dropdown"
+          <div class="dropdown btnsAdm">
+            <a class="nav-link text-white fw-semibold dropdown-toggle " role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Desempenho
             </a>
@@ -48,12 +48,15 @@
           </div>
           <a class="nav-link text-white fw-semibold" href="ranking.html">Ranking</a>
           <a class="nav-link text-white fw-semibold" href="noticias.html">Notícias</a>
-          <a class="nav-link text-white fw-semibold" href="certificados.html">Certificados</a>
+          <a class="nav-link text-white fw-semibold" href="#">Certificados</a>
+
 
           <li class="nav-item dropdown">
+
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               <img id="FotoUser">
+
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li id="listOpcoes">
@@ -74,31 +77,30 @@
 
     <div class="card card-custom mx-auto">
       <div class="header-blue">
-        <i class="bi bi-grid-fill"></i> Provas
+        <i class="bi bi-grid-fill"></i> Certificados
       </div>
 
       <div class="card-body p-4">
-        <h5 class="mb-3"><i class="bi bi-journal-plus"></i> Realize a avaliação das provas dos usuarios</h5>
+        <h5 class="mb-3"><i class="bi bi-journal-plus"></i> Certificados Gerados</h5>
 
 
         <table class="table table-hover">
           <thead class="table-dark">
             <tr>
               <th>ID</th>
-              <th>Prova</th>
-              <th>Realizada por:</th>
-              <th>Acertos</th>
-              <th>Feita em:</th>
-              <th>% acertos</th>
-              <th>Nº De questoes</th>
-              <th>ºProva</th>
-              <th>Nota</th>
+              <th>Emitido</th>
+              <th>Curso</th>
+              <th>Usuario</th>
+              <th>Token</th>
               <th>Opções</th>
+
             </tr>
           </thead>
-          <tbody id="TabelaProvas">
+          <tbody id="TabelaCertificados">
+
 
           </tbody>
+
         </table>
 
         <hr>
@@ -113,4 +115,4 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="js/functions.js"></script>
-<script src="jsDashbord/avaliacoes.js"></script>
+<script src="jsDashbord/certificados.js"></script>

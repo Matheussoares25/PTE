@@ -193,9 +193,10 @@ class UsuarioController
 
     public function abrirReclamacao()
     {
+        require_once __DIR__ . "/../../control/auth.php";
 
         try {
-            session_start();
+            
             $reclamacao = $_POST['problema'] ?? null;
             $usuario = $_SESSION['id'] ?? null;
 
@@ -212,8 +213,10 @@ class UsuarioController
     public function abrirPerfil()
     {
 
+       require_once __DIR__ . "/../../control/auth.php";
+
         try {
-            session_start();
+            
             $id = $_POST['id'] ?? null;
             if ($id == null) {
                 $id = $_SESSION['id'] ?? null;
@@ -230,9 +233,10 @@ class UsuarioController
 
     public function editarPefil()
     {
+       require_once __DIR__ . "/../../control/auth.php";
         try {
 
-            session_start();
+            
             $id = $_POST['id'] ?? null;
             if ($id == null) {
                 $id = $_SESSION['id'] ?? null;
@@ -275,7 +279,7 @@ class UsuarioController
 
     public function alterarTipoDoUsuario()
     {
-
+        require_once __DIR__ . "/../../control/authADM.php";
         try {
             $id = $_POST['id'] ?? null;
             $res = $this->usuario->alterarTipo($id);
@@ -286,6 +290,7 @@ class UsuarioController
     }
     public function alterarTipoDeAcesso()
     {
+        require_once __DIR__ . "/../../control/authADM.php";
         try {
             $id = $_POST['id'] ?? null;
             $res = $this->usuario->BloquearOUDesbloquearAcesso($id);
@@ -297,6 +302,7 @@ class UsuarioController
 
     public function deletarUsuarioDaPlataforma()
     {
+        require_once __DIR__ . "/../../control/authADM.php";
 
         try {
             $id = $_POST['id'] ?? null;
@@ -307,6 +313,47 @@ class UsuarioController
         }
     }
 
+    public function buscaNotificacoes(){
+         require_once __DIR__ . "/../../control/auth.php";
+
+         try{
+             $id = $_SESSION['id'] ?? null;
+             $res = $this->usuario->buscaNotificaçoes($id);
+             echo json_encode(['success' => true, 'notificacoes' => $res]);
+         }
+         catch(Exception $e){
+             echo json_encode(['error' => $e->getMessage()]);
+         }
+
+    }
+
+    public function contNotificacoes(){
+         require_once __DIR__ . "/../../control/auth.php";
+
+         try{
+             $id = $_SESSION['id'] ?? null;
+             $res = $this->usuario->contaNotificaçoes($id);
+             echo json_encode(['success' => true, 'notificacoes' => $res]);
+         }
+         catch(Exception $e){
+             echo json_encode(['error' => $e->getMessage()]);
+         }
+
+    }
+
+    public function visualizarNotificacoes(){
+
+        require_once __DIR__ . "/../../control/auth.php";
+
+        try{
+            $id = $_SESSION['id'] ?? null;
+            $res = $this->usuario->visualizarNotificaçoes($id);
+            echo json_encode(['success' => true, 'notificacoes' => $res]);
+        }
+        catch(Exception $e){
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
 
 }
 

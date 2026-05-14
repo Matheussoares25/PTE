@@ -235,4 +235,27 @@ class Usuario
         }
     }
 
+    public function buscaNotificaçoes($id_user){
+
+        $sql = $this->pdo->prepare("SELECT * FROM notificacoes WHERE id_recebe = :idUser ORDER BY data_envio DESC LIMIT 5");
+        $sql->bindParam(":idUser",$id_user);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function contaNotificaçoes($id_user){
+
+        $sql = $this->pdo->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE id_recebe = :idUser and visualizado = 0");
+        $sql->bindParam(":idUser",$id_user);
+        $sql->execute();
+        return $sql->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function visualizarNotificaçoes($id_user){
+
+        $sql = $this->pdo->prepare("UPDATE notificacoes SET visualizado = 1 WHERE id_recebe = :idUser order by data_envio DESC");
+        $sql->bindParam(":idUser",$id_user);
+        return $sql->execute();
+    }
+
 }
