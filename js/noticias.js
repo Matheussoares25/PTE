@@ -138,6 +138,13 @@ async function addNoticia() {
         return false;
       }
 
+      if(conteudo === "" || conteudo === null || conteudo.length <=10){
+        swal.showValidationMessage(
+          "O Campo de Conteudo deve Conter ao menos 10 caracters!"
+        )
+        return false;
+      }
+
       let check = checkbox.checked ? 1 : 2;
 
       const formData = new FormData();
