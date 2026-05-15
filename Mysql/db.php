@@ -226,6 +226,7 @@ function gerabanco()
                 id_user INT,
                 emitido DATETIME,
                 Curso VARCHAR(240),
+                token VARCHAR(64),
                 FOREIGN KEY (id_user) REFERENCES usuarios(id)
             )");
       $criadas++;

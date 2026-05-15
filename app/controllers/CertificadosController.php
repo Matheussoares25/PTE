@@ -4,7 +4,7 @@ require_once __DIR__ . "/../models/Certificados.php";
 class CertificadosController
 {
 
-    private $certificado;
+    public $certificado;
 
     public function __construct()
     {
@@ -40,15 +40,15 @@ class CertificadosController
             } else {
 
                 $atualizar = $this->certificado->atualizarCurso($id_user, $idCurso);
-
             }
 
             echo json_encode(["success" => true]);
         } catch (Exception $ex) {
-            echo json_encode("Erro", $ex->getMessage());
+            echo json_encode([
+                "success" => false,
+                "erro" => $ex->getMessage()
+            ]);
         }
-
-
     }
 
     public function PegaCertificados()
@@ -80,16 +80,13 @@ class CertificadosController
                     "success" => true,
                     "certificados" => $retorno
                 ]);
-
             } catch (Exception $ex) {
 
                 echo json_encode([
                     "success" => false,
                     "erro" => $ex->getMessage()
                 ]);
-
             }
         }
     }
 }
-?>
