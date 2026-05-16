@@ -193,13 +193,6 @@ async function editTreinamento(id) {
 
     const dados = await res.json();
 
-    var Text;
-
-    if (dados.treinamentos[0].status == 1) {
-        Text = "Ativo";
-    } else {
-        Text = "Inativo";
-    }
 
 
     Swal.fire({
@@ -209,7 +202,6 @@ async function editTreinamento(id) {
         <div class="text-start">
             <p><strong>ID: </strong> ${dados.treinamentos[0].id}</p>
             <p><strong>Nome: </strong> ${dados.treinamentos[0].nome}</p>
-            <p><strong>Status: </strong> ${Text}</p>
             <p><strong>Criado em: </strong> ${dados.treinamentos[0].criado}</p>
         </div>
     `,

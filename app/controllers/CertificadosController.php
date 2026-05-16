@@ -73,7 +73,7 @@ class CertificadosController
 
 
             try {
-
+                        
                 $retorno = $this->certificado->buscartodosCertificados();
 
                 echo json_encode([

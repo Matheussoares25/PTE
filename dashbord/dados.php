@@ -31,7 +31,7 @@ try {
 
     $cursos = $pdo->query("SELECT COUNT(*) FROM treinamentos")->fetchColumn();
     $tCursos = $pdo->query("SELECT * FROM treinamentos")->fetchAll();
-    $alunos = $pdo->query("SELECT COUNT(DISTINCT id_usuario) FROM use_treinamentos")->fetchColumn();
+    $alunos = $pdo->query("SELECT COUNT(DISTINCT id_usuario) FROM use_treinamentos where status_curso = 1")->fetchColumn();
     $provas = $pdo->query("SELECT COUNT(*) FROM use_prova")->fetchColumn();
 
     $qtdNoticias = $pdo->query("SELECT COUNT(*) FROM noticias")->fetchColumn();
@@ -56,8 +56,8 @@ try {
                a.id_curso,t.nome AS nome_curso,
                a.status_curso,a.data_curso,a.data_fim,a.modulo
         FROM use_treinamentos a
-        INNER JOIN usuarios c ON a.id_usuario = c.id
-        INNER JOIN treinamentos t ON a.id_curso = t.id;
+        INNER JOIN usuarios c ON a.id_usuario = c.id 
+        INNER JOIN treinamentos t ON a.id_curso = t.id where a.status_curso = 1;
     ");
     $sql->execute();
     $tAlunos = $sql->fetchAll();

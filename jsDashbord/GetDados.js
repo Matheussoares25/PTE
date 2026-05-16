@@ -1,10 +1,9 @@
-
-
 window.onload = function () {
-  document.getElementById("FotoUser").src = localStorage.getItem("fotoUser") ?? "semFoto.jpg";
-}
+  document.getElementById("FotoUser").src =
+    localStorage.getItem("fotoUser") ?? "semFoto.jpg";
+};
 
-document.addEventListener('click', () => {
+document.addEventListener("click", () => {
   checkLogin();
 });
 
@@ -15,8 +14,6 @@ setInterval(() => {
 }, 5000);
 
 async function getDados() {
-
-
   const res = await fetch("dashbord/dados.php", {
     method: "GET",
     credentials: "include",
@@ -45,7 +42,6 @@ async function getDados() {
   document.getElementById("qtdVagas").innerHTML = dados.qtdVagas;
   document.getElementById("qtdCertificados").innerHTML = dados.qtdCertificados;
   document.getElementById("qtdProblemas").innerHTML = dados.qtdReports;
-
 
   const ctx = document.getElementById("graficoProvas");
   const ctx2 = document.getElementById("graficoAlunos");
@@ -90,13 +86,16 @@ async function getDados() {
       labels: ["Aulas Criadas", "Aulas Assistidas", "Aulas excluidas"],
       datasets: [
         {
-          data: [dados.qtdAulas, - dados.qtdAulasAssistidas, - dados.qtdAulasExcluidas],
+          data: [
+            dados.qtdAulas,
+            -dados.qtdAulasAssistidas,
+            -dados.qtdAulasExcluidas,
+          ],
           borderWidth: 1,
           backgroundColor: [
             "rgba(255, 0, 0, 0.75)",
             "rgba(0, 255, 81, 0.7)",
             "rgba(4, 4, 64, 0.7)",
-
           ],
         },
       ],
@@ -116,7 +115,7 @@ async function getDados() {
                 <td>${p.nome}</td>
                 <td>${p.total_notas}</td>
             </tr>
-        `
+        `,
     )
     .join("");
 }
@@ -219,16 +218,21 @@ async function openAlunos() {
                     <th>${p.status_curso == 1 ? '<span class="badge bg-success">Ativo</span>' : '<span class="badge bg-danger">Inativo</span>'}</td>
                     <th>${p.data_curso.split(" ")[0].split("-").reverse().join("/")}</th>
                     <th><button class="btn btn-danger" onclick="excluirpermanente(${p.matricula})" ><i class="fa-solid fa-trash fa-flip-horizontal fa-xs" style="color: rgb(0, 0, 0);"></i> Exluir</button>
-                ${p.status_curso != 1
-                ? `<button class="btn btn-success" onclick="alterarMatricula(${p.matricula})">
+                ${
+                  p.status_curso != 1
+                    ? `<button class="btn btn-success" onclick="alterarMatricula(${p.matricula})">
             <i class="fa-solid fa-arrow-rotate-left fa-sm" style="color: rgb(0, 0, 0);"></i> 
             Reativar
        </button>`
-                : `<button class="btn btn-warning" onclick="alterarMatricula(${p.matricula})">
+                    : `<button class="btn btn-warning" onclick="alterarMatricula(${p.matricula})">
             <i class="fa-solid fa-arrow-rotate-left fa-sm" style="color: rgb(0, 0, 0);"></i> 
             Desativar Matrícula
-       </button>`
-              }                `,
+       </button><br>
+        <button class="btn btn-success" onclick="gerarCertificado(${p.id_usuario}, ${p.id_curso})">Gerar Certificado</button>
+      </th>
+        
+        `
+                }                `,
           )
           .join("");
       } catch {
@@ -238,8 +242,40 @@ async function openAlunos() {
   });
 }
 
-async function alterarMatricula(matricula){
+async function gerarCertificado(idUsuario, idCurso) {
+  const dados = new FormData();
 
+  dados.append("idUser", idUsuario);
+  dados.append("idCurso", idCurso);
+
+  const res = await fetch("routes/api.php?acao=gerarCertificado", {
+    method: "POST",
+    body: dados,
+    credentials: "include",
+  });
+
+  const resposta = await res.json();
+
+  if (resposta.success) {
+    Swal.fire({
+      icon: "success",
+      title: "Certificado gerado com sucesso",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  }
+
+  if (resposta.EXISTE) {
+    Swal.fire({
+      icon: "warning",
+      title: "Certificado ja gerado",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  }
+}
+
+async function alterarMatricula(matricula) {
   const verifica = await checkinAdm();
 
   if (!verifica) return false;
@@ -265,17 +301,14 @@ async function alterarMatricula(matricula){
     });
     setTimeout(() => {
       openAlunos();
-    },1500)
-    
+    }, 1500);
   }
 }
 
 async function excluirpermanente(matricula) {
-
   const verificar = await checkinAdm();
 
   if (!verificar) return false;
-
 
   const formData = new FormData();
   formData.append("matricula", matricula);
@@ -353,7 +386,7 @@ async function openProvas() {
                 `,
           )
           .join("");
-      } catch { }
+      } catch {}
     },
   });
 }
@@ -400,17 +433,15 @@ async function openReports() {
                 `,
           )
           .join("");
-      } catch { }
+      } catch {}
     },
   });
 }
 
 async function excluirReport(id) {
-
   const verificar = await checkinAdm();
 
   if (!verificar) return false;
-
 
   try {
     const dadosrequest = new FormData();
@@ -430,13 +461,9 @@ async function excluirReport(id) {
         text: "Report excluido com sucesso",
       });
       getDados();
-
-
     }
-  } catch { }
+  } catch {}
 }
-
-
 
 async function openUsuarios() {
   Swal.fire({
@@ -486,13 +513,10 @@ async function openUsuarios() {
                 `,
           )
           .join("");
-      } catch { }
+      } catch {}
     },
   });
-
 }
-
-
 
 async function alterarAcesso(id) {
   console.log(id);
@@ -518,12 +542,10 @@ async function alterarAcesso(id) {
       text: "Alterado com sucesso",
     });
     openUsuarios();
-
   }
 }
 
 async function alterarTipo(id) {
-
   const liberado = await checkinAdm();
 
   if (!liberado) return;
@@ -547,11 +569,9 @@ async function alterarTipo(id) {
     });
     openUsuarios();
   }
-
 }
 
 async function excluirUsuario(id) {
-
   const liberado = await checkinAdm();
 
   if (!liberado) return;
@@ -582,6 +602,5 @@ async function excluirUsuario(id) {
         text: res.erro,
       });
     }
-  } catch { }
+  } catch {}
 }
-
